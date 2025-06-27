@@ -1,0 +1,62 @@
+=======
+<h1 class="text-2xl font-bold mb-6 text-emerald-900">Manajemen Kartu Konten</h1>
+```
+
+```
+<<<<<<< SEARCH
+<button @click="openCreateModal = true" class="mb-4 bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded shadow focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+=======
+<button @click="openCreateModal = true" class="mb-4 bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded shadow focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+```
+
+```
+<<<<<<< SEARCH
+@if(session('success'))
+    <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">
+=======
+@if(session('success'))
+    <div class="mb-4 p-3 bg-emerald-100 text-emerald-800 rounded">
+```
+
+```
+<<<<<<< SEARCH
+<table class="w-full border border-green-300 rounded-lg overflow-hidden">
+    <thead class="bg-green-700 text-white">
+=======
+<table class="w-full border border-emerald-300 rounded-lg overflow-hidden">
+    <thead class="bg-emerald-700 text-white">
+```
+
+```
+<<<<<<< SEARCH
+<tr class="border-b border-green-300 hover:bg-green-50">
+=======
+<tr class="border-b border-emerald-300 hover:bg-emerald-50">
+```
+
+```
+<<<<<<< SEARCH
+<a href="{{ $card->external_link }}" target="_blank" class="text-green-700 hover:underline">
+=======
+<a href="{{ $card->external_link }}" target="_blank" class="text-emerald-700 hover:underline">
+```
+
+```
+<<<<<<< SEARCH
+<button @click="openEditModal({{ $card->id }})" class="text-blue-600 hover:text-blue-800" title="Edit">
+=======
+<button @click="openEditModal({{ $card->id }})" class="text-emerald-600 hover:text-emerald-800" title="Edit">
+```
+
+```
+<<<<<<< SEARCH
+<button type="submit" class="px-4 py-2 rounded bg-green-700 text-white hover:bg-green-800">Simpan</button>
+=======
+<button type="submit" class="px-4 py-2 rounded bg-emerald-700 text-white hover:bg-emerald-800">Simpan</button>
+```
+
+```
+<<<<<<< SEARCH
+<button type="submit" class="px-4 py-2 rounded bg-green-700 text-white hover:bg-green-800">Simpan</button>
+=======
+<button type="submit" class="px-4 py-2 rounded bg-emerald-700 text-white hover:bg-emerald-800">Simpan</button>

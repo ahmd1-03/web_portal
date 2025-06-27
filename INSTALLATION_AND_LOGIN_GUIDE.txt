@@ -1,0 +1,68 @@
+Panduan Instalasi dan Login Proyek Laravel Portal Karawang
+
+1. Ekstrak folder proyek dari file zip ke direktori yang diinginkan, misalnya:
+   c:/xampp/htdocs/aptika/wesitePortal
+
+2. Pastikan Anda sudah menginstal:
+   - PHP (minimal versi 8.0)
+   - Composer (dependency manager PHP)
+   - XAMPP (untuk Apache dan MySQL) atau server web lain yang kompatibel
+
+3. Buka terminal (cmd atau PowerShell) dan arahkan ke folder proyek:
+   cd c:/xampp/htdocs/aptika/wesitePortal
+
+4. Install dependensi PHP dengan Composer:
+   composer install
+
+5. Salin file .env.example menjadi .env:
+   copy .env.example .env
+
+6. Buka file .env dan sesuaikan konfigurasi database:
+   - Jika menggunakan MySQL di XAMPP, isi:
+     DB_CONNECTION=mysql
+     DB_HOST=127.0.0.1
+     DB_PORT=3306
+     DB_DATABASE=nama_database_anda
+     DB_USERNAME=root (atau sesuai konfigurasi Anda)
+     DB_PASSWORD= (kosong jika tidak ada password)
+   - Jika menggunakan SQLite, atur:
+     DB_CONNECTION=sqlite
+     Buat file database SQLite sesuai kebutuhan
+
+7. Generate application key:
+   php artisan key:generate
+
+8. Jalankan migrasi database untuk membuat tabel:
+   php artisan migrate
+
+9. Jalankan seeder untuk mengisi data awal (termasuk admin dan konten):
+   php artisan db:seed
+
+10. Pastikan Apache diarahkan ke folder public proyek Laravel:
+    c:/xampp/htdocs/aptika/wesitePortal/public
+    dan mod_rewrite sudah aktif.
+
+11. Jalankan server development Laravel (opsional):
+    php artisan serve
+    Server akan berjalan di http://localhost:8000
+
+12. Akses halaman utama di http://localhost:8000
+
+13. Untuk login admin, buka:
+    http://localhost:8000/admin/login
+
+14. Gunakan kredensial admin default yang sudah di-seed:
+    Email: admin@karawang.go.id
+    Password: admin123
+
+15. Setelah login berhasil, Anda akan diarahkan ke dashboard admin.
+
+Jika mengalami kendala pada langkah tertentu, silakan hubungi pengembang untuk bantuan lebih lanjut.
+
+
+
+
+
+php artisan storage:link
+npm install
+npm run dev
