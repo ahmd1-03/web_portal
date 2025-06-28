@@ -4,7 +4,6 @@
     <div class="p-4 transition-all duration-300" x-data="{ ...userManager(), sidebarOpen: sidebarOpen }" x-cloak
         @keydown.escape.window="closeAllModals()">
 
-
         <!-- Judul Halaman -->
         <h1 class="text-4xl font-extrabold mb-12 text-emerald-900 text-center tracking-wide">
             Manajemen Pengguna Admin
@@ -13,13 +12,13 @@
         <!-- Baris Utama: Tombol Tambah, Total Pengguna, dan Pencarian -->
         <div class="mb-6 flex items-center justify-between flex-wrap gap-4">
 
-            <!-- Grup Kiri: Tambah + Total -->
+            <!-- Grup Kiri: Tombol Tambah + Total Pengguna -->
             <div class="flex items-center gap-4 flex-wrap">
 
                 <!-- Tombol Tambah -->
                 <button @click="openCreateModal = true" class="flex items-center gap-2 bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-700 text-white 
-                px-5 py-2.5 rounded shadow-md text-sm font-semibold whitespace-nowrap transition 
-                hover:-translate-y-0.5 hover:brightness-110">
+                                    px-5 py-2.5 rounded shadow-md text-sm font-semibold whitespace-nowrap transition 
+                                    hover:-translate-y-0.5 hover:brightness-110">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -29,7 +28,7 @@
 
                 <!-- Kartu Total Pengguna -->
                 <div class="flex items-center gap-2 bg-gradient-to-r from-emerald-900 to-emerald-700 text-white px-5 py-2.5 
-                rounded shadow-md text-sm font-medium whitespace-nowrap">
+                                    rounded shadow-md text-sm font-medium whitespace-nowrap">
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -43,12 +42,14 @@
             <!-- Form Pencarian -->
             <form method="GET" action="{{ url()->current() }}" class="relative max-w-sm w-full sm:w-auto">
                 <div class="relative w-full">
-                    <input type="text" name="search" placeholder="Cari pengguna..." value="{{ request('search') }}" class="w-full rounded-full px-3 py-2 pr-12 border border-emerald-700 shadow-sm 
-                    text-sm text-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-600 transition" />
+                    <input type="text" name="search" placeholder="Cari pengguna..." value="{{ request('search') }}"
+                        class="w-full rounded-full px-3 py-2 pr-12 border border-emerald-700 shadow-sm 
+                                        text-sm text-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-600 transition" />
 
-                    <button type="submit" class="absolute top-1/2 right-1 -translate-y-1/2 bg-gradient-to-r from-emerald-900 to-emerald-700 
-                    hover:from-emerald-700 hover:to-emerald-600 text-white rounded-full p-1.5 
-                    flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-emerald-600 transition">
+                    <button type="submit"
+                        class="absolute top-1/2 right-1 -translate-y-1/2 bg-gradient-to-r from-emerald-900 to-emerald-700 
+                                        hover:from-emerald-700 hover:to-emerald-600 text-white rounded-full p-1.5 
+                                        flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-emerald-600 transition">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" stroke="currentColor"
                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                             <circle cx="11" cy="11" r="7"></circle>
@@ -59,10 +60,6 @@
             </form>
 
         </div>
-
-
-
-
 
         <!-- Notifikasi -->
         @if(session('success'))
@@ -84,15 +81,16 @@
             </thead>
             <tbody>
                 @foreach($users as $index => $user)
-                    <tr class="border-b border-emerald-300 hover:bg-emerald-50">
+                    <tr class="border-b border-emerald-300 hover:bg-emerald-100 transition-colors duration-200">
                         <td class="p-3">{{ $index + 1 }}</td>
                         <td class="p-3">{{ $user->name }}</td>
                         <td class="p-3">{{ $user->email }}</td>
                         <td class="p-3">{{ $user->created_at->format('d M Y') }}</td>
                         <td class="p-3 text-center space-x-2">
-                            <button @click="openEditModal({{ $user->id }})" class="text-emerald-600 hover:text-emerald-800"
+                            <button @click="openEditModal({{ $user->id }})"
+                                class="text-emerald-600 hover:text-emerald-800 transform transition-transform duration-200 hover:scale-110 hover:-translate-y-1"
                                 title="Edit">
-                                <!-- SVG icon edit -->
+                                <!-- Icon Edit -->
                                 <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-5 h-5" fill="none"
                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                     viewBox="0 0 24 24">
@@ -100,9 +98,10 @@
                                     <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
                                 </svg>
                             </button>
-                            <button @click="openDeleteModal({{ $user->id }})" class="text-red-600 hover:text-red-800"
+                            <button @click="openDeleteModal({{ $user->id }})"
+                                class="text-red-600 hover:text-red-800 ml-4 transform transition-transform duration-200 hover:scale-110 hover:-translate-y-1"
                                 title="Hapus">
-                                <!-- SVG icon trash -->
+                                <!-- Icon Trash -->
                                 <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-5 h-5" fill="none"
                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                     viewBox="0 0 24 24">
@@ -122,47 +121,108 @@
             {{ $users->links() }}
         </div>
 
+
+
         <!-- Modal Create -->
         <div x-cloak>
             <div x-show="openCreateModal" x-cloak
                 class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
                 <div @click.away="openCreateModal = false" x-transition
-                    class="bg-white rounded-xl p-6 w-full max-w-lg shadow-xl space-y-4">
+                    class="bg-white rounded-xl p-6 w-full max-w-lg shadow-xl space-y-6"
+                    @keydown.escape.window="openCreateModal = false">
+
+                    <!-- Judul -->
                     <h2 class="text-2xl font-bold text-emerald-700">Tambah Pengguna Admin</h2>
 
-                    <!-- URL route disimpan di input hidden agar JS bisa baca -->
+                    <!-- Hidden route -->
                     <input type="hidden" id="store_route" value="{{ route('admin.users.store') }}">
-                    <form x-ref="createForm" @submit.prevent="submitCreateForm" class="space-y-4">
+
+                    <!-- Form Create -->
+                    <form x-ref="createForm" @submit.prevent="submitCreateForm" class="space-y-4" novalidate>
                         @csrf
 
                         <!-- Nama -->
                         <div>
-                            <label for="name" class="block text-sm font-medium text-emerald-800 mb-1">Nama</label>
-                            <input type="text" name="name" id="name" required placeholder="Masukkan nama pengguna"
-                                class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-400 focus:outline-none shadow-sm placeholder:text-emerald-500" />
+                            <label for="create_name" class="block text-sm font-medium text-emerald-800 mb-1">Nama</label>
+                            <input type="text" name="name" id="create_name" required placeholder="Masukkan nama pengguna"
+                                class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 placeholder:text-emerald-500 shadow-sm focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
+                            <template x-if="errors.name">
+                                <p class="text-red-600 text-sm mt-1" x-text="errors.name[0]"></p>
+                            </template>
                         </div>
 
                         <!-- Email -->
                         <div>
-                            <label for="email" class="block text-sm font-medium text-emerald-800 mb-1">Email</label>
-                            <input type="email" name="email" id="email" required placeholder="Masukkan email pengguna"
-                                class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-400 focus:outline-none shadow-sm placeholder:text-emerald-500" />
+                            <label for="create_email" class="block text-sm font-medium text-emerald-800 mb-1">Email</label>
+                            <input type="email" name="email" id="create_email" required
+                                placeholder="Masukkan email pengguna"
+                                class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 placeholder:text-emerald-500 shadow-sm focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
+                            <template x-if="errors.email">
+                                <p class="text-red-600 text-sm mt-1" x-text="errors.email[0]"></p>
+                            </template>
                         </div>
 
                         <!-- Password -->
                         <div>
-                            <label for="password" class="block text-sm font-medium text-emerald-800 mb-1">Password</label>
-                            <input type="password" name="password" id="password" required placeholder="Masukkan password"
-                                class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-400 focus:outline-none shadow-sm placeholder:text-emerald-500" />
+                            <label for="create_password"
+                                class="block text-sm font-medium text-emerald-800 mb-1">Password</label>
+                            <div class="relative">
+                                <input type="password" name="password" id="create_password" required autocomplete="off"
+                                    placeholder="Masukkan password minimal 8 karakter, huruf besar, kecil, angka, simbol"
+                                    class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 pr-10 placeholder:text-emerald-500 shadow-sm focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
+                                <button type="button" onclick="togglePasswordVisibility('create_password', this)"
+                                    class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600" tabindex="-1">
+                                    <!-- Icon Mata -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <template x-if="errors.password">
+                                <p class="text-red-600 text-sm mt-1" x-text="errors.password[0]"></p>
+                            </template>
+                        </div>
+
+                        <!-- Konfirmasi Password -->
+                        <div>
+                            <label for="create_password_confirmation"
+                                class="block text-sm font-medium text-emerald-800 mb-1">Konfirmasi Password</label>
+                            <div class="relative">
+                                <input type="password" name="password_confirmation" id="create_password_confirmation"
+                                    required autocomplete="off" placeholder="Konfirmasi ulang password"
+                                    class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 pr-10 placeholder:text-emerald-500 shadow-sm focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
+                                <button type="button"
+                                    onclick="togglePasswordVisibility('create_password_confirmation', this)"
+                                    class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600" tabindex="-1">
+                                    <!-- Icon Mata -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <template x-if="errors.password_confirmation">
+                                <p class="text-red-600 text-sm mt-1" x-text="errors.password_confirmation[0]"></p>
+                            </template>
                         </div>
 
                         <!-- Tombol -->
-                        <div class="flex justify-end space-x-3 pt-2">
+                        <div class="flex justify-end gap-3 pt-2">
                             <button type="button" @click="openCreateModal = false"
-                                class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 shadow">Batal</button>
-                            <button type="submit"
-                                class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white"
-                                :disabled="loading">Simpan</button>
+                                class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-sm text-gray-800 shadow">
+                                Batal
+                            </button>
+                            <button type="submit" :disabled="loading"
+                                class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow">
+                                Simpan
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -173,46 +233,120 @@
         <div x-show="openEditModalId !== null" x-cloak
             class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
             <div @click.away="openEditModalId = null" x-transition
-                class="bg-white rounded-xl p-6 w-full max-w-lg shadow-xl space-y-4">
+                class="bg-white rounded-xl p-6 w-full max-w-lg shadow-xl space-y-6">
+
+                <!-- Judul -->
                 <h2 class="text-2xl font-bold text-emerald-700">Edit Pengguna Admin</h2>
 
-                <form :action="`{{ url('admin/users') }}/${openEditModalId}`" method="POST" x-ref="editForm"
-                    @submit.prevent="submitEditForm" class="space-y-4" novalidate>
+                <!-- Form Edit -->
+                <form :action="`{{ url('admin/users') }}/${openEditModalId}`" method="POST" @submit.prevent="submitEditForm"
+                    x-ref="editForm" class="space-y-4" novalidate>
                     @csrf
                     @method('PUT')
 
-                    <!-- Nama -->
+                    <!-- Input Nama -->
                     <div>
                         <label for="edit_name" class="block text-sm font-medium text-emerald-800 mb-1">Nama</label>
-                        <input type="text" name="name" id="edit_name" required x-model="userData.name"
-                            class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-400 focus:outline-none shadow-sm placeholder:text-emerald-500" />
+                        <input type="text" name="name" id="edit_name" x-model="userData.name" required
+                            class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 placeholder:text-emerald-500 shadow-sm focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
                     </div>
 
-                    <!-- Email -->
+                    <!-- Input Email -->
                     <div>
                         <label for="edit_email" class="block text-sm font-medium text-emerald-800 mb-1">Email</label>
-                        <input type="email" name="email" id="edit_email" required x-model="userData.email"
-                            class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-400 focus:outline-none shadow-sm placeholder:text-emerald-500" />
+                        <input type="email" name="email" id="edit_email" x-model="userData.email" required
+                            class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 placeholder:text-emerald-500 shadow-sm focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
                     </div>
 
-                    <!-- Password -->
+                    <!-- Input Password -->
                     <div>
                         <label for="edit_password" class="block text-sm font-medium text-emerald-800 mb-1">Password</label>
-                        <input type="password" name="password" id="edit_password"
-                            placeholder="Kosongkan jika tidak ingin mengubah password"
-                            class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-400 focus:outline-none shadow-sm placeholder:text-emerald-500" />
+                        <div class="relative">
+                            <input type="password" name="password" id="edit_password" autocomplete="off"
+                                placeholder="Kosongkan jika tidak ingin mengubah password"
+                                class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 placeholder:text-emerald-500 pr-10 shadow-sm focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
+                            <button type="button" onclick="togglePasswordVisibility('edit_password', this)"
+                                class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600" tabindex="-1"
+                                aria-label="Toggle password visibility">
+                                <!-- Icon Mata -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- Tombol -->
-                    <div class="flex justify-end space-x-3 pt-2">
+                    <!-- Konfirmasi Password -->
+                    <div>
+                        <label for="edit_password_confirmation"
+                            class="block text-sm font-medium text-emerald-800 mb-1">Konfirmasi Password</label>
+                        <div class="relative">
+                            <input type="password" name="password_confirmation" id="edit_password_confirmation"
+                                placeholder="Konfirmasi ulang password" autocomplete="off"
+                                class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 placeholder:text-emerald-500 pr-10 shadow-sm focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
+                            <button type="button" onclick="togglePasswordVisibility('edit_password_confirmation', this)"
+                                class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600" tabindex="-1"
+                                aria-label="Toggle password visibility">
+                                <!-- Icon Mata -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Aksi -->
+                    <div class="flex justify-end gap-3 pt-2">
                         <button type="button" @click="openEditModalId = null"
-                            class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-sm text-gray-800 shadow">Batal</button>
-                        <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white"
-                            :disabled="loading">Simpan</button>
+                            class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-sm text-gray-800 shadow">
+                            Batal
+                        </button>
+                        <button type="submit" :disabled="loading"
+                            class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow">
+                            Simpan
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
+
+
+        {{--
+        <script>
+            // Fungsi toggle password visibility untuk input password edit
+            function togglePasswordVisibility(inputId, button) {
+                const input = document.getElementById(inputId);
+                if (input.type === "password") {
+                    input.type = "text";
+                    button.innerHTML = `
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 012.563-4.306m1.557-1.628A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.195 5.411M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                    `;
+                } else {
+                    input.type = "password";
+                    button.innerHTML = `
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                    `;
+                }
+            }
+        </script> --}}
 
         <!-- Delete Modal -->
         <div x-show="openDeleteModalId !== null" x-cloak
@@ -266,8 +400,8 @@
             </div>
         </div>
 
-
         <script>
+            // Fungsi utama untuk mengelola state dan aksi user manager dengan Alpine.js
             function userManager() {
                 return {
                     openCreateModal: false,
@@ -279,6 +413,13 @@
                     openValidationModal: false,
                     openSuccessModal: false,
                     successMessage: '',
+
+                    if (localStorage.getItem('justReloaded')) {
+    // Hapus flag dan jangan tampilkan modal validasi
+    localStorage.removeItem('justReloaded');
+    this.openValidationModal = false;
+}
+
 
                     openEditModal(id) {
                         this.loading = true;
@@ -317,22 +458,37 @@
 
                     closeValidationModal() {
                         this.openValidationModal = false;
+                        this.openSuccessModal = false;
                         this.errors = {};
+                        
                     },
 
                     closeSuccessModal() {
                         this.openSuccessModal = false;
                         this.successMessage = '';
+                        
                         window.location.reload();
                     },
 
                     submitCreateForm() {
-                        console.log('Form create dikirim');
                         this.loading = true;
                         this.errors = {};
 
                         const form = this.$refs.createForm;
                         const formData = new FormData(form);
+
+                        const password = formData.get('password');
+                        const passwordConfirmation = formData.get('password_confirmation');
+
+                        if (password !== passwordConfirmation) {
+                            this.loading = false;
+                            this.errors = {
+                                password_confirmation: ['Konfirmasi password tidak cocok.']
+                            };
+                            this.openValidationModal = true;
+                            return;
+                        }
+
                         const storeUrl = document.querySelector('#store_route').value;
 
                         fetch(storeUrl, {
@@ -447,6 +603,62 @@
                     },
                 }
             }
+
+//  <!-- SCRIPT: Toggle Password Visibility -->
+        
+            function togglePasswordVisibility(inputId, button) {
+                const input = document.getElementById(inputId);
+                if (!input) return;
+
+                if (input.type === "password") {
+                    input.type = "text";
+                    button.innerHTML = `
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 012.563-4.306m1.557-1.628A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.195 5.411M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>`;
+                } else {
+                    input.type = "password";
+                    button.innerHTML = `
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>`;
+                }
+            }
+       
+
+
+            // Fungsi toggle password visibility untuk input password edit
+            function togglePasswordVisibility(inputId, button) {
+                const input = document.getElementById(inputId);
+                if (input.type === "password") {
+                    input.type = "text";
+                    button.innerHTML = `
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 012.563-4.306m1.557-1.628A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.195 5.411M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                    `;
+                } else {
+                    input.type = "password";
+                    button.innerHTML = `
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                    `;
+                }
+            }
         </script>
 
+    </div>
 @endsection

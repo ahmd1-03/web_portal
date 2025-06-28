@@ -5,17 +5,19 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class AdminSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
         DB::table('admins')->insert([
-            'name' => 'Admin Utama',
-            'email' => 'admin@karawang.go.id',
-            'password' => Hash::make('admin123'),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'name' => 'Admin Portal',
+            'email' => 'adminPortal@gmail.com',
+            'password' => Hash::make('adminPortal123#'), // Ini akan dijamin cocok
+            'remember_token' => null,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
     }
 }

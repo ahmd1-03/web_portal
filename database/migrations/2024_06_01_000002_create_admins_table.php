@@ -18,6 +18,7 @@ class CreateAdminsTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->rememberToken(); // Menambahkan kolom remember_token untuk fitur remember me
             $table->timestamps();
         });
     }

@@ -61,8 +61,19 @@ Jika mengalami kendala pada langkah tertentu, silakan hubungi pengembang untuk b
 
 
 
-
+warnd dan gradasi warna memakai emerald,  from-emerald-900 via-emerald-800 to-emerald-700
 
 php artisan storage:link
 npm install
 npm run dev
+
+
+Cara login menggunakan akun ini:
+
+Buka halaman login admin di URL /admin/login.
+Nama: Admin Portal
+Email: adminPortal@gmail.com
+Password: adminPortal123#
+Klik tombol "Masuk".
+Jika validasi berhasil dan data cocok, Anda akan diarahkan ke dashboard admin dan muncul notifikasi popup "Login berhasil!".
+Jika ada kesalahan, pesan error akan ditampilkan sesuai masalahnya (misal email tidak terdaftar atau password salah).

@@ -133,16 +133,16 @@
       @forelse ($cards as $card)
       <article tabindex="0" data-aos="fade-up"
       class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.015] flex flex-col overflow-hidden">
-      <img src="{{ $card->image_url }}" alt="Logo {{ $card->title }}" class="h-24 object-contain bg-gray-100 p-4" />
+      <img src="{{ $card->image_url }}" alt="Logo {{ $card->title }}" class="w-full h-48 object-cover bg-gray-100" />
       <div class="p-4 flex flex-col flex-grow">
-        <h2 class="text-lg font-semibold text-emerald-900 mb-1">{{ $card->title }}</h2>
-        <p class="text-emerald-700 text-sm flex-grow">{{ $card->description }}</p>
+        <h2 class="text-base font-semibold text-emerald-900 mb-1">{{ $card->title }}</h2>
+        <p class="text-emerald-700 text-xs flex-grow">{{ $card->description }}</p>
         <a href="{{ $card->external_link }}" target="_blank" rel="noopener noreferrer"
-        class="mt-4 inline-flex items-center gap-2 text-white font-medium px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-900 to-emerald-700 hover:from-emerald-700 hover:to-emerald-600 transition">
+        class="mt-3 inline-flex items-center gap-2 text-white font-medium px-3 py-1.5 rounded-lg bg-gradient-to-r from-emerald-900 to-emerald-700 hover:from-emerald-700 hover:to-emerald-600 transition text-sm">
         Baca Selengkapnya
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="currentColor" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 1 1 .708-.708l4 4a.5.5 0 0 1 0 
-        .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+      .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
         </svg>
         </a>
       </div>

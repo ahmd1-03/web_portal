@@ -11,9 +11,20 @@ use Illuminate\Support\Facades\Response;
 
 class CardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $cards = Card::orderBy('created_at', 'desc')->paginate(10);
+        $query = Card::query();
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%')
+                  ->orWhere('external_link', 'like', '%' . $search . '%');
+            });
+        }
+
+        $cards = $query->orderBy('created_at', 'desc')->paginate(10)->appends($request->only('search'));
         return View::make('admin.cards.index', compact('cards'));
     }
 

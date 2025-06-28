@@ -75,8 +75,8 @@
     @endif
 
     <!-- Tabel Kartu -->
-    <table class="w-full border border-emerald-300 rounded-lg overflow-hidden">
-    <thead class="bg-emerald-700 text-white">
+    <table class="w-full border border-emerald-300 rounded-lg overflow-hidden table-auto">
+    <thead class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-700 text-white">
       <tr>
       <th class="p-3 text-left">No</th>
       <th class="p-3 text-left">Judul</th>
@@ -86,42 +86,53 @@
       <th class="p-3 text-center">Aksi</th>
       </tr>
     </thead>
+
     <tbody>
       @foreach($cards as $index => $card)
-      <tr class="border-b border-emerald-300 hover:bg-emerald-50">
-      <td class="p-3">{{ $index + 1 }}</td>
-      <td class="p-3">{{ $card->title }}</td>
-      <td class="p-3">{{ Str::limit($card->description, 50) }}</td>
-      <td class="p-3">
-      <a href="{{ $card->external_link }}" target="_blank" class="text-emerald-700 hover:underline">
+      <tr class="border-b border-emerald-300 hover:bg-emerald-100 transition-colors duration-200">
+      <td class="p-3 align-top">{{ $index + 1 }}</td>
+      <td class="p-3 align-top">{{ $card->title }}</td>
+      <td class="p-3 align-top">{{ Str::limit($card->description, 50) }}</td>
+      <td class="p-3 align-top">
+      <a href="{{ $card->external_link }}" target="_blank"
+      class="text-emerald-800 font-medium hover:text-emerald-600 hover:underline transition-all duration-200">
       {{ Str::limit($card->external_link, 30) }}
       </a>
       </td>
-      <td class="p-3">
+      <td class="p-3 align-top">
       <img src="{{ asset($card->image_url) }}" alt="Logo {{ $card->title }}" class="h-10 object-contain" />
       </td>
-      <td class="p-3 text-center space-x-2">
-      <button @click="openEditModal({{ $card->id }})" class="text-emerald-600 hover:text-emerald-800" title="Edit">
-      <!-- SVG icon edit -->
-      <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-5 h-5" fill="none" stroke="currentColor"
-        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+      <td class="p-3 text-center align-top">
+      <div class="flex justify-center items-center space-x-6">
+      <!-- Tombol Edit -->
+      <button @click="openEditModal({{ $card->id }})" title="Edit"
+        class="text-emerald-700 hover:text-emerald-900 transform transition-transform duration-200 hover:scale-110 hover:-translate-y-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor"
+        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
         <path d="M12 20h9" />
         <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
-      </svg>
+        </svg>
       </button>
-      <button @click="openDeleteModal({{ $card->id }})" class="text-red-600 hover:text-red-800" title="Hapus">
-      <!-- SVG icon trash -->
-      <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-5 h-5" fill="none" stroke="currentColor"
-        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-        <polyline points="3 6 5 6 21 6" />
-        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m5-3h4a2 2 0 0 1 2 2v1H8V5a2 2 0 0 1 2-2z" />
-      </svg>
+
+      <!-- Tombol Hapus -->
+      <button @click="openDeleteModal({{ $card->id }})" title="Hapus"
+        class="text-red-600 hover:text-red-900 transform transition-transform duration-200 hover:scale-110 hover:-translate-y-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor"
+        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <path d="M3 6h18" />
+        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+        <path d="M10 11v6" />
+        <path d="M14 11v6" />
+        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+        </svg>
       </button>
+      </div>
       </td>
       </tr>
     @endforeach
     </tbody>
     </table>
+
 
     <!-- Pagination -->
     <div class="mt-4">
@@ -239,6 +250,7 @@
         <label for="edit_external_link" class="block text-sm font-medium text-emerald-800 mb-1">Link
           Eksternal</label>
         <input type="url" name="external_link" id="edit_external_link" required placeholder="https://contoh.com"
+          x-model="cardData.external_link"
           class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-400 focus:outline-none shadow-sm placeholder:text-emerald-500" />
         </div>
 
