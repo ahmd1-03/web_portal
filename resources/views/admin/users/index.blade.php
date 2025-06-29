@@ -1,664 +1,530 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <div class="p-4 transition-all duration-300" x-data="{ ...userManager(), sidebarOpen: sidebarOpen }" x-cloak
-        @keydown.escape.window="closeAllModals()">
+  <!-- Main Container with sidebar state management -->
+  {{-- <div class="p-4 transition-all duration-300" x-data="userManager()" x-cloak
+    :class="sidebarOpen ? 'lg:ml-64 md:ml-16' : 'ml-0'"> --}}
 
-        <!-- Judul Halaman -->
-        <h1 class="text-4xl font-extrabold mb-12 text-emerald-900 text-center tracking-wide">
-            Manajemen Pengguna Admin
-        </h1>
+    {{-- <div class="p-4 transition-all duration-300" x-data="userManager()" x-cloak
+    :class="$store.sidebar.open ? 'ml-64' : 'ml-16'"> --}}
 
-        <!-- Baris Utama: Tombol Tambah, Total Pengguna, dan Pencarian -->
-        <div class="mb-6 flex items-center justify-between flex-wrap gap-4">
+    {{-- <div class="transition-all duration-300" x-data="userManager()" x-cloak> --}}
 
-            <!-- Grup Kiri: Tombol Tambah + Total Pengguna -->
-            <div class="flex items-center gap-4 flex-wrap">
+      <div class="p-4 transition-all duration-300" x-data="userManager()" x-cloak>
 
-                <!-- Tombol Tambah -->
-                <button @click="openCreateModal = true" class="flex items-center gap-2 bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-700 text-white 
-                                    px-5 py-2.5 rounded shadow-md text-sm font-semibold whitespace-nowrap transition 
-                                    hover:-translate-y-0.5 hover:brightness-110">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                    </svg>
-                    Tambah Pengguna Baru
-                </button>
 
-                <!-- Kartu Total Pengguna -->
-                <div class="flex items-center gap-2 bg-gradient-to-r from-emerald-900 to-emerald-700 text-white px-5 py-2.5 
-                                    rounded shadow-md text-sm font-medium whitespace-nowrap">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m8-4a4 4 0 10-8 0 4 4 0 008 0zM17 11a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                    Total Pengguna: {{ $usersCount ?? $users->total() }}
-                </div>
+      <!-- SweetAlert2 for notifications -->
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-            </div>
-
-            <!-- Form Pencarian -->
-            <form method="GET" action="{{ url()->current() }}" class="relative max-w-sm w-full sm:w-auto">
-                <div class="relative w-full">
-                    <input type="text" name="search" placeholder="Cari pengguna..." value="{{ request('search') }}"
-                        class="w-full rounded-full px-3 py-2 pr-12 border border-emerald-700 shadow-sm 
-                                        text-sm text-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-600 transition" />
-
-                    <button type="submit"
-                        class="absolute top-1/2 right-1 -translate-y-1/2 bg-gradient-to-r from-emerald-900 to-emerald-700 
-                                        hover:from-emerald-700 hover:to-emerald-600 text-white rounded-full p-1.5 
-                                        flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-emerald-600 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <circle cx="11" cy="11" r="7"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                    </button>
-                </div>
-            </form>
-
+      <!-- Header Section -->
+      <div class="mb-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <!-- Page Title with Gradient Text -->
+        <div>
+          <h1
+          class="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">
+          Manajemen Pengguna Admin</h1>
+          <p class="text-sm text-gray-600 mt-1">Kelola data pengguna dengan hak akses admin</p>
         </div>
 
-        <!-- Notifikasi -->
-        @if(session('success'))
-            <div class="mb-4 p-3 bg-emerald-100 text-emerald-800 rounded">
-                {{ session('success') }}
-            </div>
-        @endif
+        <!-- Search Form with loading state -->
+        <form method="GET" action="{{ url()->current() }}" class="relative w-full md:w-64"
+          x-data="{ searching: false }" @submit.prevent="handleSearch">
+          <div class="relative">
+          <input type="text" name="search" placeholder="Cari pengguna..." value="{{ request('search') }}"
+            x-model="searchQuery" x-on:input.debounce.500ms="searching = true" class="w-full text-sm rounded-lg px-4 py-2 pr-10 border border-gray-300 shadow-sm 
+      focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300
+      hover:border-emerald-300 hover:shadow-md" />
+          <button type="submit" class="absolute top-1/2 right-2 -translate-y-1/2 text-gray-400 
+      hover:text-emerald-600 flex items-center justify-center focus:outline-none transition-all duration-300">
+            <!-- Search icon or loading spinner -->
+            <template x-if="!searching">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="7"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            </template>
+            <template x-if="searching">
+            <svg class="animate-spin w-5 h-5 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+              </path>
+            </svg>
+            </template>
+          </button>
+          </div>
+        </form>
+        </div>
 
-        <!-- Tabel Pengguna -->
-        <table class="w-full border border-emerald-300 rounded-lg overflow-hidden">
-            <thead class="bg-emerald-700 text-white">
-                <tr>
-                    <th class="p-3 text-left">No</th>
-                    <th class="p-3 text-left">Nama</th>
-                    <th class="p-3 text-left">Email</th>
-                    <th class="p-3 text-left">Dibuat Pada</th>
-                    <th class="p-3 text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($users as $index => $user)
-                    <tr class="border-b border-emerald-300 hover:bg-emerald-100 transition-colors duration-200">
-                        <td class="p-3">{{ $index + 1 }}</td>
-                        <td class="p-3">{{ $user->name }}</td>
-                        <td class="p-3">{{ $user->email }}</td>
-                        <td class="p-3">{{ $user->created_at->format('d M Y') }}</td>
-                        <td class="p-3 text-center space-x-2">
-                            <button @click="openEditModal({{ $user->id }})"
-                                class="text-emerald-600 hover:text-emerald-800 transform transition-transform duration-200 hover:scale-110 hover:-translate-y-1"
-                                title="Edit">
-                                <!-- Icon Edit -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-5 h-5" fill="none"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                    viewBox="0 0 24 24">
-                                    <path d="M12 20h9" />
-                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
-                                </svg>
-                            </button>
-                            <button @click="openDeleteModal({{ $user->id }})"
-                                class="text-red-600 hover:text-red-800 ml-4 transform transition-transform duration-200 hover:scale-110 hover:-translate-y-1"
-                                title="Hapus">
-                                <!-- Icon Trash -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-5 h-5" fill="none"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                    viewBox="0 0 24 24">
-                                    <polyline points="3 6 5 6 21 6" />
-                                    <path
-                                        d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m5-3h4a2 2 0 0 1 2 2v1H8V5a2 2 0 0 1 2-2z" />
-                                </svg>
-                            </button>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
+        <!-- Action Cards Grid - Responsive layout -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+        <!-- Add User Button (Clickable) -->
+        <div @click="openCreateModal = true" class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl shadow-sm p-4 border border-emerald-100 hover:border-emerald-300 hover:shadow-lg transition-all duration-300 cursor-pointer
+      hover:-translate-y-1 transform">
+          <div class="flex items-center gap-4">
+          <div
+            class="w-12 h-12 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-white group-hover:from-emerald-600 group-hover:to-teal-600 transition-all duration-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-medium text-gray-800 group-hover:text-emerald-700 transition-colors duration-300">
+            Tambah
+            Pengguna Baru</h3>
+            <p class="text-sm text-gray-500 group-hover:text-gray-600 transition-colors duration-300">Buat akun
+            admin baru</p>
+          </div>
+          </div>
+        </div>
+
+        <!-- Total Users (Static - No click effects) -->
+        <div
+          class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-sm p-4 border border-blue-100 hover:shadow-md transition-all duration-300">
+          <div class="flex items-center gap-4">
+          <div
+            class="w-12 h-12 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m8-4a4 4 0 10-8 0 4 4 0 008 0zM17 11a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-medium text-gray-800">Total Pengguna</h3>
+            <p id="totalCount" class="text-2xl font-bold text-blue-700">{{ $usersCount ?? $users->total() }}</p>
+          </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Success Notification -->
+      @if(session('success'))
+      <div
+      class="mb-6 p-4 text-sm bg-gradient-to-r from-emerald-100 to-emerald-50 border-l-4 border-emerald-500 text-emerald-700 rounded-lg transition-all duration-300 flex items-center shadow-sm">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      {{ session('success') }}
+      </div>
+    @endif
+
+      <!-- Users Table Section -->
+      <div
+        class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+        <!-- Responsive Table Container -->
+        <div class="overflow-x-auto">
+        <table class="w-full min-w-full">
+          <thead class="bg-gradient-to-r from-emerald-600 to-teal-600">
+          <tr>
+            <!-- Table Headers -->
+            <th
+            class="px-4 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-white uppercase tracking-wider">
+            No</th>
+            <th
+            class="px-4 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-white uppercase tracking-wider">
+            Nama</th>
+            <th
+            class="px-4 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-white uppercase tracking-wider">
+            Email</th>
+            <th
+            class="px-4 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-white uppercase tracking-wider">
+            Tanggal Dibuat</th>
+            <th
+            class="px-4 py-3 sm:px-6 sm:py-4 text-right text-xs font-medium text-white uppercase tracking-wider">
+            Aksi</th>
+          </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+          @foreach($users as $index => $user)
+        <tr
+        class="hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 transition-colors duration-150 group">
+        <!-- Row Number -->
+        <td
+        class="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap text-sm text-gray-500 group-hover:text-gray-700 transition-colors duration-300">
+        {{ ($users->currentPage() - 1) * $users->perPage() + $index + 1 }}
+        </td>
+
+        <!-- User Name -->
+        <td class="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap">
+        <div
+          class="text-sm font-medium text-gray-900 group-hover:text-emerald-700 transition-colors duration-300">
+          {{ $user->name }}
+        </div>
+        </td>
+
+        <!-- User Email -->
+        <td class="px-4 py-3 sm:px-6 sm:py-4">
+        <div
+          class="text-sm text-gray-500 max-w-xs truncate group-hover:text-gray-700 transition-colors duration-300">
+          {{ $user->email }}
+        </div>
+        </td>
+
+        <!-- Created At -->
+        <td class="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap">
+        <div class="text-sm text-gray-500 group-hover:text-gray-700 transition-colors duration-300">
+          {{ $user->created_at->format('d/m/Y') }}
+        </div>
+        </td>
+
+        <!-- Action Buttons -->
+        <td class="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap text-right text-sm font-medium">
+        <div class="flex justify-end space-x-2">
+          <!-- Edit Button -->
+          <button @click="openEditModal({{ $user->id }})"
+          class="flex items-center gap-2 px-2 py-1 rounded-lg transition-all duration-300 bg-blue-600 text-white hover:bg-blue-700 group/edit"
+          title="Edit">
+          <svg xmlns="http://www.w3.org/2000/svg"
+          class="w-4 h-4 group-hover/edit:scale-110 transition-transform duration-300" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          viewBox="0 0 24 24">
+          <path d="M12 20h9" />
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+          </svg>
+          </button>
+
+          <!-- Delete Button -->
+          <button @click="openDeleteModal({{ $user->id }})"
+          class="flex items-center gap-2 px-2 py-1 rounded-lg transition-all duration-300 bg-red-600 text-white hover:bg-red-700 group/delete"
+          title="Hapus">
+          <svg xmlns="http://www.w3.org/2000/svg"
+          class="w-4 h-4 group-hover/delete:scale-110 transition-transform duration-300" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          viewBox="0 0 24 24">
+          <polyline points="3 6 5 6 21 6" />
+          <path
+          d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m5-3h4a2 2 0 0 1 2 2v1H8V5a2 2 0 0 1 2-2z" />
+          </svg>
+          </button>
+        </div>
+        </td>
+        </tr>
+      @endforeach
+          </tbody>
         </table>
-
-        <!-- Pagination -->
-        <div class="mt-4">
-            {{ $users->links() }}
         </div>
 
+        <!-- Pagination with responsive padding -->
+        <div class="px-4 sm:px-6 py-4 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
+        {{ $users->onEachSide(1)->links() }}
+        </div>
+      </div>
 
+      <!-- Create User Modal -->
+      <div x-show="openCreateModal" x-cloak
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/50"
+        x-transition:enter="ease-out duration-200" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-100"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div @click.away="openCreateModal = false" x-transition
+        class="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border-2 border-emerald-200">
+        <!-- Modal Header -->
+        <div class="border-b border-gray-200 p-6 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-t-xl">
+          <h2 class="text-xl font-bold text-white">Tambah Pengguna Admin</h2>
+          <p class="mt-1 text-sm text-emerald-100">Isi form berikut untuk menambahkan pengguna admin baru</p>
+        </div>
 
-        <!-- Modal Create -->
-        <div x-cloak>
-            <div x-show="openCreateModal" x-cloak
-                class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                <div @click.away="openCreateModal = false" x-transition
-                    class="bg-white rounded-xl p-6 w-full max-w-lg shadow-xl space-y-6"
-                    @keydown.escape.window="openCreateModal = false">
+        <!-- Modal Body -->
+        <div class="p-6">
+          <input type="hidden" id="store_route" value="{{ route('admin.users.store') }}">
 
-                    <!-- Judul -->
-                    <h2 class="text-2xl font-bold text-emerald-700">Tambah Pengguna Admin</h2>
+          <form x-ref="createForm" @submit.prevent="submitCreateForm" class="space-y-5">
+          @csrf
 
-                    <!-- Hidden route -->
-                    <input type="hidden" id="store_route" value="{{ route('admin.users.store') }}">
+          <!-- Name Field -->
+          <div>
+            <label for="create_name" class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap <span
+              class="text-red-500">*</span></label>
+            <input type="text" name="name" id="create_name" required placeholder="Masukkan nama lengkap"
+            x-model="createForm.name"
+            :class="errors.name ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-emerald-500 focus:border-emerald-500'"
+            class="w-full px-4 py-2 text-sm border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-300
+      hover:border-emerald-300 hover:shadow-md">
+            <template x-if="errors.name">
+            <p class="mt-2 text-sm text-red-600" x-text="errors.name[0]"></p>
+            </template>
+          </div>
 
-                    <!-- Form Create -->
-                    <form x-ref="createForm" @submit.prevent="submitCreateForm" class="space-y-4" novalidate>
-                        @csrf
+          <!-- Email Field -->
+          <div>
+            <label for="create_email" class="block text-sm font-medium text-gray-700 mb-2">Email <span
+              class="text-red-500">*</span></label>
+            <input type="email" name="email" id="create_email" required placeholder="Masukkan alamat email"
+            x-model="createForm.email"
+            :class="errors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-emerald-500 focus:border-emerald-500'"
+            class="w-full px-4 py-2 text-sm border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-300
+      hover:border-emerald-300 hover:shadow-md">
+            <template x-if="errors.email">
+            <p class="mt-2 text-sm text-red-600" x-text="errors.email[0]"></p>
+            </template>
+          </div>
 
-                        <!-- Nama -->
-                        <div>
-                            <label for="create_name" class="block text-sm font-medium text-emerald-800 mb-1">Nama</label>
-                            <input type="text" name="name" id="create_name" required placeholder="Masukkan nama pengguna"
-                                class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 placeholder:text-emerald-500 shadow-sm focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
-                            <template x-if="errors.name">
-                                <p class="text-red-600 text-sm mt-1" x-text="errors.name[0]"></p>
-                            </template>
-                        </div>
-
-                        <!-- Email -->
-                        <div>
-                            <label for="create_email" class="block text-sm font-medium text-emerald-800 mb-1">Email</label>
-                            <input type="email" name="email" id="create_email" required
-                                placeholder="Masukkan email pengguna"
-                                class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 placeholder:text-emerald-500 shadow-sm focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
-                            <template x-if="errors.email">
-                                <p class="text-red-600 text-sm mt-1" x-text="errors.email[0]"></p>
-                            </template>
-                        </div>
-
-                        <!-- Password -->
-                        <div>
-                            <label for="create_password"
-                                class="block text-sm font-medium text-emerald-800 mb-1">Password</label>
-                            <div class="relative">
-                                <input type="password" name="password" id="create_password" required autocomplete="off"
-                                    placeholder="Masukkan password minimal 8 karakter, huruf besar, kecil, angka, simbol"
-                                    class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 pr-10 placeholder:text-emerald-500 shadow-sm focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
-                                <button type="button" onclick="togglePasswordVisibility('create_password', this)"
-                                    class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600" tabindex="-1">
-                                    <!-- Icon Mata -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <template x-if="errors.password">
-                                <p class="text-red-600 text-sm mt-1" x-text="errors.password[0]"></p>
-                            </template>
-                        </div>
-
-                        <!-- Konfirmasi Password -->
-                        <div>
-                            <label for="create_password_confirmation"
-                                class="block text-sm font-medium text-emerald-800 mb-1">Konfirmasi Password</label>
-                            <div class="relative">
-                                <input type="password" name="password_confirmation" id="create_password_confirmation"
-                                    required autocomplete="off" placeholder="Konfirmasi ulang password"
-                                    class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 pr-10 placeholder:text-emerald-500 shadow-sm focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
-                                <button type="button"
-                                    onclick="togglePasswordVisibility('create_password_confirmation', this)"
-                                    class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600" tabindex="-1">
-                                    <!-- Icon Mata -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <template x-if="errors.password_confirmation">
-                                <p class="text-red-600 text-sm mt-1" x-text="errors.password_confirmation[0]"></p>
-                            </template>
-                        </div>
-
-                        <!-- Tombol -->
-                        <div class="flex justify-end gap-3 pt-2">
-                            <button type="button" @click="openCreateModal = false"
-                                class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-sm text-gray-800 shadow">
-                                Batal
-                            </button>
-                            <button type="submit" :disabled="loading"
-                                class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow">
-                                Simpan
-                            </button>
-                        </div>
-                    </form>
-                </div>
+          <!-- Password Field with Preview -->
+          <div x-data="{ showPassword: false }">
+            <label for="create_password" class="block text-sm font-medium text-gray-700 mb-2">Password <span
+              class="text-red-500">*</span></label>
+            <div class="relative">
+            <input :type="showPassword ? 'text' : 'password'" name="password" id="create_password" required
+              placeholder="Minimal 8 karakter" x-model="createForm.password"
+              :class="errors.password ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-emerald-500 focus:border-emerald-500'"
+              class="w-full px-4 py-2 text-sm border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-300 pr-10
+      hover:border-emerald-300 hover:shadow-md">
+            <button type="button" @click="showPassword = !showPassword"
+              class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-gray-700 transition-all duration-300">
+              <svg x-show="!showPassword" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M3.98 8.223A10.477 10.477 0 001.934 12c1.292 4.338 5.31 7.5 10.066 7.5.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.066 7.5a10.523 10.523 0 01-4.064 5.942m-3.058-3.058a4 4 0 01-5.656-5.656m2.121 5.656a4 4 0 01-5.657-5.657" />
+              </svg>
+              <svg x-show="showPassword" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </button>
             </div>
-        </div>
+            <template x-if="errors.password">
+            <p class="mt-2 text-sm text-red-600" x-text="errors.password[0]"></p>
+            </template>
+          </div>
 
-        <!-- Edit Modal -->
-        <div x-show="openEditModalId !== null" x-cloak
-            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div @click.away="openEditModalId = null" x-transition
-                class="bg-white rounded-xl p-6 w-full max-w-lg shadow-xl space-y-6">
-
-                <!-- Judul -->
-                <h2 class="text-2xl font-bold text-emerald-700">Edit Pengguna Admin</h2>
-
-                <!-- Form Edit -->
-                <form :action="`{{ url('admin/users') }}/${openEditModalId}`" method="POST" @submit.prevent="submitEditForm"
-                    x-ref="editForm" class="space-y-4" novalidate>
-                    @csrf
-                    @method('PUT')
-
-                    <!-- Input Nama -->
-                    <div>
-                        <label for="edit_name" class="block text-sm font-medium text-emerald-800 mb-1">Nama</label>
-                        <input type="text" name="name" id="edit_name" x-model="userData.name" required
-                            class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 placeholder:text-emerald-500 shadow-sm focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
-                    </div>
-
-                    <!-- Input Email -->
-                    <div>
-                        <label for="edit_email" class="block text-sm font-medium text-emerald-800 mb-1">Email</label>
-                        <input type="email" name="email" id="edit_email" x-model="userData.email" required
-                            class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 placeholder:text-emerald-500 shadow-sm focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
-                    </div>
-
-                    <!-- Input Password -->
-                    <div>
-                        <label for="edit_password" class="block text-sm font-medium text-emerald-800 mb-1">Password</label>
-                        <div class="relative">
-                            <input type="password" name="password" id="edit_password" autocomplete="off"
-                                placeholder="Kosongkan jika tidak ingin mengubah password"
-                                class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 placeholder:text-emerald-500 pr-10 shadow-sm focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
-                            <button type="button" onclick="togglePasswordVisibility('edit_password', this)"
-                                class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600" tabindex="-1"
-                                aria-label="Toggle password visibility">
-                                <!-- Icon Mata -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Konfirmasi Password -->
-                    <div>
-                        <label for="edit_password_confirmation"
-                            class="block text-sm font-medium text-emerald-800 mb-1">Konfirmasi Password</label>
-                        <div class="relative">
-                            <input type="password" name="password_confirmation" id="edit_password_confirmation"
-                                placeholder="Konfirmasi ulang password" autocomplete="off"
-                                class="w-full bg-emerald-50 border border-emerald-300 rounded-lg px-4 py-2 placeholder:text-emerald-500 pr-10 shadow-sm focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
-                            <button type="button" onclick="togglePasswordVisibility('edit_password_confirmation', this)"
-                                class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600" tabindex="-1"
-                                aria-label="Toggle password visibility">
-                                <!-- Icon Mata -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Tombol Aksi -->
-                    <div class="flex justify-end gap-3 pt-2">
-                        <button type="button" @click="openEditModalId = null"
-                            class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-sm text-gray-800 shadow">
-                            Batal
-                        </button>
-                        <button type="submit" :disabled="loading"
-                            class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow">
-                            Simpan
-                        </button>
-                    </div>
-                </form>
+          <!-- Confirm Password Field -->
+          <div x-data="{ showConfirmPassword: false }">
+            <label for="create_password_confirmation"
+            class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Password <span
+              class="text-red-500">*</span></label>
+            <div class="relative">
+            <input :type="showConfirmPassword ? 'text' : 'password'" name="password_confirmation"
+              id="create_password_confirmation" required placeholder="Ketik ulang password"
+              x-model="createForm.password_confirmation"
+              :class="errors.password_confirmation ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-emerald-500 focus:border-emerald-500'"
+              class="w-full px-4 py-2 text-sm border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-300 pr-10
+      hover:border-emerald-300 hover:shadow-md">
+            <button type="button" @click="showConfirmPassword = !showConfirmPassword"
+              class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-gray-700 transition-all duration-300">
+              <svg x-show="!showConfirmPassword" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M3.98 8.223A10.477 10.477 0 001.934 12c1.292 4.338 5.31 7.5 10.066 7.5.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.066 7.5a10.523 10.523 0 01-4.064 5.942m-3.058-3.058a4 4 0 01-5.656-5.656m2.121 5.656a4 4 0 01-5.657-5.657" />
+              </svg>
+              <svg x-show="showConfirmPassword" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </button>
             </div>
+            <template x-if="errors.password_confirmation">
+            <p class="mt-2 text-sm text-red-600" x-text="errors.password_confirmation[0]"></p>
+            </template>
+          </div>
+          </form>
         </div>
 
+        <!-- Modal Footer -->
+        <div
+          class="border-t border-gray-200 px-6 py-4 flex justify-end gap-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-b-xl">
+          <button type="button" @click="openCreateModal = false" class="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 shadow-sm text-sm font-medium transition-all duration-300
+      hover:-translate-y-0.5 hover:shadow-md">
+          Batal
+          </button>
+          <button type="button" @click="submitCreateForm" :disabled="loading" class="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-md text-sm font-medium transition-all duration-300
+      disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px]
+      hover:-translate-y-0.5 hover:shadow-lg">
+          <span x-show="!loading">Simpan</span>
+          <span x-show="loading" class="flex items-center justify-center">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+            </circle>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+            </svg>
+            Memproses...
+          </span>
+          </button>
+        </div>
+        </div>
+      </div>
 
-        {{--
-        <script>
-            // Fungsi toggle password visibility untuk input password edit
-            function togglePasswordVisibility(inputId, button) {
-                const input = document.getElementById(inputId);
-                if (input.type === "password") {
-                    input.type = "text";
-                    button.innerHTML = `
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 012.563-4.306m1.557-1.628A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.195 5.411M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                    `;
-                } else {
-                    input.type = "password";
-                    button.innerHTML = `
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                    `;
-                }
-            }
-        </script> --}}
+      <!-- Edit User Modal -->
+      <div x-show="openEditModalId !== null" x-cloak
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/50"
+        x-transition:enter="ease-out duration-200" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-100"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div @click.away="openEditModalId = null" x-transition
+        class="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border-2 border-blue-200">
+        <!-- Modal Header -->
+        <div class="border-b border-gray-200 p-6 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-t-xl">
+          <h2 class="text-xl font-bold text-white">Edit Pengguna Admin</h2>
+          <p class="mt-1 text-sm text-blue-100">Perbarui informasi pengguna admin</p>
+        </div>
 
-        <!-- Delete Modal -->
-        <div x-show="openDeleteModalId !== null" x-cloak
-            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div @click.away="openDeleteModalId = null"
-                class="bg-white rounded-lg p-6 w-full max-w-md shadow-2xl ring-1 ring-black ring-opacity-5"
-                style="z-index: 9999;">
-                <h2 class="text-xl font-semibold mb-4">Hapus Pengguna Admin</h2>
-                <p>Apakah Anda yakin ingin menghapus pengguna admin ini?</p>
-                <form :action="`{{ url('admin/users') }}/${openDeleteModalId}`" method="POST" class="mt-4"
-                    @submit.prevent="submitDeleteForm">
-                    @csrf
-                    @method('DELETE')
-                    <div class="flex justify-end space-x-3">
-                        <button type="button" @click="openDeleteModalId = null"
-                            class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400" tabindex="0">Batal</button>
-                        <button type="submit" class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
-                            tabindex="0">Hapus</button>
-                    </div>
-                </form>
+        <!-- Modal Body -->
+        <div class="p-6">
+          <form x-ref="editForm" @submit.prevent="submitEditForm" class="space-y-5">
+          @csrf
+          @method('PUT')
+
+          <!-- Name Field -->
+          <div>
+            <label for="edit_name" class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap <span
+              class="text-red-500">*</span></label>
+            <input type="text" name="name" id="edit_name" required x-model="userData.name"
+            :class="errors.name ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
+            class="w-full px-4 py-2 text-sm border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-300
+      hover:border-blue-300 hover:shadow-md">
+            <template x-if="errors.name">
+            <p class="mt-2 text-sm text-red-600" x-text="errors.name[0]"></p>
+            </template>
+          </div>
+
+          <!-- Email Field -->
+          <div>
+            <label for="edit_email" class="block text-sm font-medium text-gray-700 mb-2">Email <span
+              class="text-red-500">*</span></label>
+            <input type="email" name="email" id="edit_email" required x-model="userData.email"
+            :class="errors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
+            class="w-full px-4 py-2 text-sm border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-300
+      hover:border-blue-300 hover:shadow-md">
+            <template x-if="errors.email">
+            <p class="mt-2 text-sm text-red-600" x-text="errors.email[0]"></p>
+            </template>
+          </div>
+
+          <!-- Password Field -->
+          <div x-data="{ showEditPassword: false }">
+            <label for="edit_password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+            <div class="relative">
+            <input :type="showEditPassword ? 'text' : 'password'" name="password" id="edit_password"
+              placeholder="Kosongkan jika tidak ingin mengubah" x-model="userData.password"
+              :class="errors.password ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
+              class="w-full px-4 py-2 text-sm border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-300 pr-10
+      hover:border-blue-300 hover:shadow-md">
+            <button type="button" @click="showEditPassword = !showEditPassword"
+              class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-gray-700 transition-all duration-300">
+              <svg x-show="!showEditPassword" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M3.98 8.223A10.477 10.477 0 001.934 12c1.292 4.338 5.31 7.5 10.066 7.5.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.066 7.5a10.523 10.523 0 01-4.064 5.942m-3.058-3.058a4 4 0 01-5.656-5.656m2.121 5.656a4 4 0 01-5.657-5.657" />
+              </svg>
+              <svg x-show="showEditPassword" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </button>
             </div>
+            <template x-if="errors.password">
+            <p class="mt-2 text-sm text-red-600" x-text="errors.password[0]"></p>
+            </template>
+          </div>
+          </form>
         </div>
 
-        <!-- Modal Validasi -->
-        <div x-show="openValidationModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
-                <h2 class="text-xl font-semibold text-red-600 mb-4">Validasi Gagal</h2>
-                <ul class="list-disc list-inside text-red-500">
-                    <template x-for="(messages, field) in errors" :key="field">
-                        <template x-for="message in messages">
-                            <li x-text="message"></li>
-                        </template>
-                    </template>
-                </ul>
-                <div class="flex justify-end mt-4">
-                    <button @click="closeValidationModal"
-                        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">OK</button>
-                </div>
+        <!-- Modal Footer -->
+        <div
+          class="border-t border-gray-200 px-6 py-4 flex justify-end gap-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-b-xl">
+          <button type="button" @click="openEditModalId = null" class="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 shadow-sm text-sm font-medium transition-all duration-300
+      hover:-translate-y-0.5 hover:shadow-md">
+          Batal
+          </button>
+          <button type="button" @click="submitEditForm" :disabled="loading" class="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md text-sm font-medium transition-all duration-300
+      disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px]
+      hover:-translate-y-0.5 hover:shadow-lg">
+          <span x-show="!loading">Simpan Perubahan</span>
+          <span x-show="loading" class="flex items-center justify-center">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+            </circle>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+            </svg>
+            Memproses...
+          </span>
+          </button>
+        </div>
+        </div>
+      </div>
+
+      <!-- Delete Confirmation Modal -->
+      <div x-show="openDeleteModalId !== null" x-cloak
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/50"
+        x-transition:enter="ease-out duration-200" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-100"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div @click.away="openDeleteModalId = null" x-transition
+        class="bg-white rounded-xl shadow-2xl w-full max-w-md border-2 border-red-200">
+        <!-- Modal Header -->
+        <div class="border-b border-gray-200 p-6 bg-gradient-to-r from-red-600 to-pink-600 rounded-t-xl">
+          <div class="flex items-center gap-3">
+          <div class="p-2 rounded-full bg-white/20 text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-white">Hapus Pengguna Admin</h2>
+            <p class="text-sm text-red-100">Aksi ini tidak dapat dibatalkan</p>
+          </div>
+          </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-6">
+          <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+          <div class="flex">
+            <div class="ml-2">
+            <p class="text-sm font-medium text-red-800" x-text="'Nama: ' + userData.name"></p>
+            <p class="text-sm text-red-700 mt-1" x-text="'Email: ' + userData.email"></p>
             </div>
+          </div>
+          </div>
+          <p class="mt-4 text-sm text-gray-600">Anda yakin ingin menghapus pengguna admin ini? Semua data yang
+          terkait
+          akan
+          dihapus secara permanen.</p>
         </div>
 
-        <!-- Modal Sukses -->
-        <div x-show="openSuccessModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
-                <h2 class="text-xl font-semibold text-emerald-700 mb-4">Sukses</h2>
-                <p x-text="successMessage" class="text-emerald-600"></p>
-                <div class="flex justify-end mt-4">
-                    <button @click="closeSuccessModal"
-                        class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700">OK</button>
-                </div>
-            </div>
+        <!-- Modal Footer -->
+        <div
+          class="border-t border-gray-200 px-6 py-4 flex justify-end gap-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-b-xl">
+          <button type="button" @click="openDeleteModalId = null" class="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 shadow-sm text-sm font-medium transition-all duration-300
+      hover:-translate-y-0.5 hover:shadow-md">
+          Batal
+          </button>
+          <button type="button" @click="submitDeleteForm" :disabled="loading" class="px-4 py-2 rounded-lg bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white shadow-md text-sm font-medium transition-all duration-300
+      disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px]
+      hover:-translate-y-0.5 hover:shadow-lg">
+          <span x-show="!loading">Hapus</span>
+          <span x-show="loading" class="flex items-center justify-center">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+            </circle>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+            </svg>
+            Memproses...
+          </span>
+          </button>
         </div>
-
-        <script>
-            // Fungsi utama untuk mengelola state dan aksi user manager dengan Alpine.js
-            function userManager() {
-                return {
-                    openCreateModal: false,
-                    openEditModalId: null,
-                    openDeleteModalId: null,
-                    userData: {},
-                    errors: {},
-                    loading: false,
-                    openValidationModal: false,
-                    openSuccessModal: false,
-                    successMessage: '',
-
-                    if (localStorage.getItem('justReloaded')) {
-    // Hapus flag dan jangan tampilkan modal validasi
-    localStorage.removeItem('justReloaded');
-    this.openValidationModal = false;
-}
-
-
-                    openEditModal(id) {
-                        this.loading = true;
-                        fetch(`/admin/users/${id}/edit`)
-                            .then(response => {
-                                if (!response.ok) throw new Error('Gagal mengambil data pengguna.');
-                                return response.json();
-                            })
-                            .then(data => {
-                                this.userData = data;
-                                this.openEditModalId = id;
-                                this.errors = {};
-                            })
-                            .catch(error => {
-                                alert(error.message);
-                            })
-                            .finally(() => {
-                                this.loading = false;
-                            });
-                    },
-
-                    openDeleteModal(id) {
-                        this.openDeleteModalId = id;
-                    },
-
-                    closeAllModals() {
-                        this.openCreateModal = false;
-                        this.openEditModalId = null;
-                        this.openDeleteModalId = null;
-                        this.errors = {};
-                        this.loading = false;
-                        this.openValidationModal = false;
-                        this.openSuccessModal = false;
-                        this.successMessage = '';
-                    },
-
-                    closeValidationModal() {
-                        this.openValidationModal = false;
-                        this.openSuccessModal = false;
-                        this.errors = {};
-                        
-                    },
-
-                    closeSuccessModal() {
-                        this.openSuccessModal = false;
-                        this.successMessage = '';
-                        
-                        window.location.reload();
-                    },
-
-                    submitCreateForm() {
-                        this.loading = true;
-                        this.errors = {};
-
-                        const form = this.$refs.createForm;
-                        const formData = new FormData(form);
-
-                        const password = formData.get('password');
-                        const passwordConfirmation = formData.get('password_confirmation');
-
-                        if (password !== passwordConfirmation) {
-                            this.loading = false;
-                            this.errors = {
-                                password_confirmation: ['Konfirmasi password tidak cocok.']
-                            };
-                            this.openValidationModal = true;
-                            return;
-                        }
-
-                        const storeUrl = document.querySelector('#store_route').value;
-
-                        fetch(storeUrl, {
-                            method: 'POST',
-                            headers: { 'Accept': 'application/json' },
-                            body: formData
-                        })
-                            .then(async response => {
-                                if (response.status === 422) {
-                                    const data = await response.json();
-                                    this.errors = data.errors || {};
-                                    this.openValidationModal = true;
-                                    throw new Error('validasi');
-                                }
-                                if (!response.ok) throw new Error('Gagal menyimpan data.');
-                                return response.json();
-                            })
-                            .then(data => {
-                                this.openSuccessModal = true;
-                                this.successMessage = data.message || 'Pengguna berhasil ditambahkan.';
-                                this.openCreateModal = false;
-                            })
-                            .catch(error => {
-                                if (error.message !== 'validasi') {
-                                    alert(error.message);
-                                }
-                            })
-                            .finally(() => {
-                                this.loading = false;
-                            });
-                    },
-
-                    submitEditForm() {
-                        this.loading = true;
-                        this.errors = {};
-                        const form = this.$refs.editForm;
-                        const formData = new FormData(form);
-                        formData.set('_method', 'PUT');
-
-                        fetch(`/admin/users/${this.openEditModalId}`, {
-                            method: 'POST',
-                            headers: { 'Accept': 'application/json' },
-                            body: formData
-                        })
-                            .then(async response => {
-                                if (response.status === 422) {
-                                    const data = await response.json();
-                                    this.errors = data.errors || {};
-                                    this.openValidationModal = true;
-                                    throw new Error('validasi');
-                                }
-                                if (!response.ok) throw new Error('Gagal menyimpan data.');
-                                return response.json();
-                            })
-                            .then(data => {
-                                this.openSuccessModal = true;
-                                this.successMessage = data.message || 'Data berhasil disimpan.';
-                            })
-                            .catch(error => {
-                                if (error.message !== 'validasi') {
-                                    alert(error.message);
-                                }
-                            })
-                            .finally(() => {
-                                this.loading = false;
-                            });
-                    },
-
-                    submitDeleteForm() {
-                        this.loading = true;
-                        this.errors = {};
-                        const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
-                        if (!csrfTokenMeta) {
-                            alert('CSRF token meta tag tidak ditemukan. Tambahkan <meta name="csrf-token" content="{{ csrf_token() }}"> di bagian <head>.');
-                            this.loading = false;
-                            return;
-                        }
-                        const csrfToken = csrfTokenMeta.getAttribute('content');
-
-                        fetch(`/admin/users/${this.openDeleteModalId}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': csrfToken,
-                                'Accept': 'application/json'
-                            }
-                        })
-                            .then(async response => {
-                                if (response.status === 422) {
-                                    const data = await response.json();
-                                    this.errors = data.errors || {};
-                                    this.openValidationModal = true;
-                                    throw new Error('validasi');
-                                }
-                                if (!response.ok) {
-                                    const errorData = await response.json().catch(() => ({}));
-                                    throw new Error(errorData.message || 'Gagal menghapus data.');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                this.openSuccessModal = true;
-                                this.successMessage = data.message || 'Data berhasil dihapus.';
-                            })
-                            .catch(error => {
-                                if (error.message !== 'validasi') {
-                                    alert(error.message);
-                                }
-                            })
-                            .finally(() => {
-                                this.loading = false;
-                            });
-                    },
-                }
-            }
-
-//  <!-- SCRIPT: Toggle Password Visibility -->
-        
-            function togglePasswordVisibility(inputId, button) {
-                const input = document.getElementById(inputId);
-                if (!input) return;
-
-                if (input.type === "password") {
-                    input.type = "text";
-                    button.innerHTML = `
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 012.563-4.306m1.557-1.628A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.195 5.411M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>`;
-                } else {
-                    input.type = "password";
-                    button.innerHTML = `
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>`;
-                }
-            }
-       
-
-
-            // Fungsi toggle password visibility untuk input password edit
-            function togglePasswordVisibility(inputId, button) {
-                const input = document.getElementById(inputId);
-                if (input.type === "password") {
-                    input.type = "text";
-                    button.innerHTML = `
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 012.563-4.306m1.557-1.628A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.195 5.411M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                    `;
-                } else {
-                    input.type = "password";
-                    button.innerHTML = `
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                    `;
-                }
-            }
-        </script>
-
-    </div>
-@endsection
+        </div>
+      </div>
+      </div>
+  @endsection

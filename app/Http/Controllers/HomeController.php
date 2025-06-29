@@ -11,7 +11,9 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        $query = Card::query();
+        // $query = Card::query();
+
+         $query = Card::where('is_active', true); // hanya ambil yang aktif
 
         if ($search) {
             $query->where('title', 'like', '%' . $search . '%')

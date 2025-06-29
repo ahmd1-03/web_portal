@@ -1,0 +1,730 @@
+<!-- Menggunakan template dasar 'admin.layouts.app' sebagai layout utama halaman -->
+@extends('admin.layouts.app')
+
+<!-- Mendefinisikan isi dari section 'content' yang akan ditampilkan di dalam layout -->
+@section('content')
+  <!-- Container utama dengan padding 4 dan transisi animasi untuk perubahan lebar sidebar -->
+  <div class="p-4 transition-all duration-300" x-data="cardManager()" x-cloak
+    :class="sidebarOpen ? 'lg:ml-64 md:ml-16' : 'ml-0'">
+
+    <!-- Memasukkan library SweetAlert2 untuk menampilkan notifikasi interaktif -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Bagian header untuk judul dan form pencarian -->
+    <div class="mb-8">
+    <!-- Flex container untuk menata judul dan form pencarian secara responsif -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <!-- Bagian judul halaman -->
+      <div>
+      <!-- Judul utama dengan efek gradient pada teks -->
+      <h1
+        class="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">
+        Manajemen Kartu Konten</h1>
+      <!-- Deskripsi singkat di bawah judul -->
+      <p class="text-sm text-gray-600 mt-1">Kelola konten kartu yang ditampilkan di halaman utama</p>
+      </div>
+
+      <!-- Form pencarian kartu dengan status loading -->
+      <form method="GET" action="{{ url()->current() }}" class="relative w-full md:w-64" x-data="{ searching: false }"
+      @submit.prevent="handleSearch">
+      <!-- Container input dengan posisi relatif untuk ikon -->
+      <div class="relative">
+        <!-- Input teks untuk pencarian kartu -->
+        <input type="text" name="search" placeholder="Cari kartu..." value="{{ request('search') }}"
+        x-model="searchQuery" x-on:input.debounce.500ms="searching = true" class="w-full text-sm rounded-lg px-4 py-2 pr-10 border border-gray-300 shadow-sm 
+      focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 
+      transition-all duration-300 hover:border-emerald-300 hover:shadow-md" />
+        <!-- Tombol submit untuk memulai pencarian -->
+        <button type="submit" class="absolute top-1/2 right-2 -translate-y-1/2 text-gray-400 
+      hover:text-emerald-600 flex items-center justify-center focus:outline-none transition-all duration-300">
+        <!-- Template untuk ikon pencarian saat tidak sedang memproses -->
+        <template x-if="!searching">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <!-- Ikon kaca pembesar untuk pencarian -->
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </template>
+        <!-- Template untuk ikon loading saat pencarian sedang berlangsung -->
+        <template x-if="searching">
+          <svg class="animate-spin w-5 h-5 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+          viewBox="0 0 24 24">
+          <!-- Animasi spinner untuk menunjukkan proses loading -->
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+          </path>
+          </svg>
+        </template>
+        </button>
+      </div>
+      </form>
+    </div>
+
+    <!-- Grid untuk menampilkan kartu aksi (tambah kartu dan total kartu) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+      <!-- Kartu untuk tombol tambah kartu baru -->
+      <div @click="openCreateModal = true" class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl shadow-sm p-4 border border-emerald-100 hover:border-emerald-300 hover:shadow-lg transition-all duration-300 cursor-pointer
+      hover:-translate-y-1 transform">
+      <!-- Flex container untuk ikon dan teks -->
+      <div class="flex items-center gap-4">
+        <!-- Ikon tambah kartu dengan efek gradient -->
+        <div
+        class="w-12 h-12 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-white group-hover:from-emerald-600 group-hover:to-teal-600 transition-all duration-300">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <!-- Ikon tanda plus untuk menambah kartu -->
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        </div>
+        <div>
+        <!-- Judul kartu tambah kartu -->
+        <h3 class="font-medium text-gray-800 group-hover:text-emerald-700 transition-colors duration-300">Tambah
+          Kartu Baru</h3>
+        <!-- Deskripsi kartu tambah kartu -->
+        <p class="text-sm text-gray-500 group-hover:text-gray-600 transition-colors duration-300">Buat konten kartu
+          baru</p>
+        </div>
+      </div>
+      </div>
+
+      <!-- Kartu untuk menampilkan total kartu -->
+      <div
+      class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-sm p-4 border border-blue-100 hover:shadow-md transition-all duration-300">
+      <!-- Flex container untuk ikon dan teks -->
+      <div class="flex items-center gap-4">
+        <!-- Ikon kartu dengan efek gradient -->
+        <div
+        class="w-12 h-12 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <!-- Ikon untuk merepresentasikan kartu -->
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+        </div>
+        <div>
+        <!-- Judul kartu total kartu -->
+        <h3 class="font-medium text-gray-800">Total Kartu</h3>
+        <!-- Menampilkan jumlah kartu -->
+        <p id="totalCount" class="text-2xl font-bold text-blue-700">{{ $cardsCount ?? $cards->total() }}</p>
+        </div>
+      </div>
+      </div>
+
+      <!-- Kartu untuk menampilkan jumlah kartu aktif -->
+      <div
+      class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl shadow-sm p-4 border border-green-100 hover:shadow-md transition-all duration-300">
+      <!-- Flex container untuk ikon dan teks -->
+      <div class="flex items-center gap-4">
+        <!-- Ikon kartu aktif dengan efek gradient -->
+        <div
+        class="w-12 h-12 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <!-- Ikon untuk merepresentasikan kartu aktif -->
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        </div>
+        <div>
+        <!-- Judul kartu aktif -->
+        <h3 class="font-medium text-gray-800">Kartu Aktif</h3>
+        <!-- Menampilkan jumlah kartu aktif -->
+        <p id="activeCount" class="text-2xl font-bold text-green-700">
+          {{ $activeCardsCount ?? $cards->where('is_active', true)->count() }}
+        </p>
+        </div>
+      </div>
+      </div>
+    </div>
+    </div>
+
+    <!-- Notifikasi sukses jika ada pesan sukses dari sesi -->
+    @if(session('success'))
+    <!-- Container notifikasi dengan efek gradient -->
+    <div
+    class="mb-6 p-4 text-sm bg-gradient-to-r from-emerald-100 to-emerald-50 border-l-4 border-emerald-500 text-emerald-700 rounded-lg transition-all duration-300 flex items-center shadow-sm">
+    <!-- Ikon centang untuk notifikasi sukses -->
+    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <!-- Menampilkan pesan sukses dari sesi -->
+    {{ session('success') }}
+    </div>
+    @endif
+
+    <!-- Tabel untuk menampilkan daftar kartu -->
+    <div
+    class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+    <!-- Container tabel dengan scroll horizontal untuk responsivitas -->
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-full">
+      <thead class="bg-gradient-to-r from-emerald-600 to-teal-600">
+        <tr>
+        <!-- Kolom nomor urut -->
+        <th class="px-4 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-white uppercase tracking-wider">No
+        </th>
+        <!-- Kolom judul kartu -->
+        <th class="px-4 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-white uppercase tracking-wider">
+          Judul</th>
+        <!-- Kolom deskripsi kartu -->
+        <th
+          class="px-4 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-white uppercase tracking-wider hidden sm:table-cell">
+          Deskripsi</th>
+        <!-- Kolom status aktif -->
+        <th class="px-4 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-white uppercase tracking-wider">
+          Status</th>
+        <!-- Kolom link eksternal -->
+        <th
+          class="px-4 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-white uppercase tracking-wider hidden md:table-cell">
+          Link</th>
+        <!-- Kolom gambar kartu -->
+        <th class="px-4 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-white uppercase tracking-wider">
+          Gambar</th>
+        <!-- Kolom aksi (edit/hapus) -->
+        <th class="px-4 py-3 sm:px-6 sm:py-4 text-right text-xs font-medium text-white uppercase tracking-wider">
+          Aksi</th>
+        </tr>
+      </thead>
+      <!-- Bagian isi tabel -->
+      <tbody class="bg-white divide-y divide-gray-200">
+        <!-- Looping untuk setiap kartu dalam data -->
+        @foreach($cards as $index => $card)
+      <!-- Baris tabel dengan efek hover -->
+      <tr
+      class="hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 transition-colors duration-150 group">
+      <!-- Nomor urut berdasarkan halaman dan indeks -->
+      <td
+        class="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap text-sm text-gray-500 group-hover:text-gray-700 transition-colors duration-300">
+        {{ ($cards->currentPage() - 1) * $cards->perPage() + $index + 1 }}
+      </td>
+
+      <!-- Kolom judul kartu -->
+      <td class="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap">
+        <div
+        class="text-sm font-medium text-gray-900 group-hover:text-emerald-700 transition-colors duration-300">
+        {{ $card->title }}
+        </div>
+      </td>
+
+      <!-- Kolom deskripsi kartu dengan batasan panjang teks -->
+      <td class="px-4 py-3 sm:px-6 sm:py-4  hidden sm:table-cell">
+        <div
+        class="text-sm text-gray-500 max-w-xs truncate group-hover:text-gray-700 transition-colors duration-300">
+        {{ Str::limit($card->description, 50) }}
+        </div>
+      </td>
+
+      <!-- Kolom status aktif/nonaktif -->
+      <td class="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap">
+        <span x-data="{ isActive: {{ $card->is_active ? 'true' : 'false' }} }"
+        :class="isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+        class="px-2 py-1 text-xs font-semibold rounded-full">
+        <span x-text="isActive ? 'Aktif' : 'Nonaktif'"></span>
+        </span>
+      </td>
+
+
+
+      <!-- Kolom link eksternal -->
+      <td class="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap hidden md:table-cell">
+        <a href="{{ $card->external_link }}" target="_blank"
+        class="text-sm text-blue-600 hover:text-blue-800 hover:underline transition-all duration-300 inline-flex items-center group/link">
+        {{ Str::limit($card->external_link, 20) }}
+        <!-- Ikon panah untuk menunjukkan tautan eksternal -->
+        <svg class="w-4 h-4 ml-1 group-hover/link:translate-x-1 transition-transform duration-300" fill="none"
+        stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+        </a>
+      </td>
+
+      <!-- Kolom gambar kartu dengan pratinjau modal -->
+      <td class="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap">
+        <!-- Komponen Alpine.js untuk mengelola modal pratinjau gambar -->
+        <div x-data="{ showImageModal: false }">
+        <!-- Thumbnail gambar yang dapat diklik -->
+        <img src="{{ asset('storage/' . $card->image_url) }}" @click="showImageModal = true" alt="Gambar Kartu"
+        class="h-12 w-12 sm:h-16 sm:w-16 object-cover rounded-md cursor-pointer border-2 border-gray-200 hover:border-emerald-400 transition-all duration-300" />
+
+        <!-- Modal untuk menampilkan gambar secara penuh -->
+        <div x-show="showImageModal" x-cloak @click.away="showImageModal = false"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/80">
+        <div class="relative max-w-4xl max-h-[90vh]">
+        <!-- Gambar penuh dalam modal -->
+        <img :src="'{{ asset('storage/' . $card->image_url) }}'" alt="Gambar Kartu"
+          class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl" />
+        <!-- Tombol untuk menutup modal -->
+        <button @click="showImageModal = false"
+          class="absolute top-4 right-4 p-2 rounded-full bg-white/80 hover:bg-white text-gray-800 shadow-md transition-all duration-300">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <!-- Ikon silang untuk menutup modal -->
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        </div>
+        </div>
+        </div>
+      </td>
+
+      <!-- Kolom aksi dengan tombol edit, toggle status, dan hapus -->
+      <td class="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap text-right text-sm font-medium">
+        <div class="flex justify-end space-x-2">
+        <!-- Tombol edit kartu -->
+        <button @click="openEditModal({{ $card->id }})"
+        class="text-blue-600 hover:text-blue-800 transition-all duration-300 p-2 rounded-lg hover:bg-blue-50 group/edit"
+        title="Edit">
+        <svg xmlns="http://www.w3.org/2000/svg"
+        class="w-5 h-5 group-hover/edit:scale-110 transition-transform duration-300" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        viewBox="0 0 24 24">
+        <!-- Ikon pensil untuk edit -->
+        <path d="M12 20h9" />
+        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+        </svg>
+        </button>
+
+
+
+        <!-- Tombol hapus kartu -->
+        <button @click="openDeleteModal({{ $card->id }})"
+        class="text-red-600 hover:text-red-800 transition-all duration-300 p-2 rounded-lg hover:bg-red-50 group/delete"
+        title="Hapus">
+        <svg xmlns="http://www.w3.org/2000/svg"
+        class="w-5 h-5 group-hover/delete:scale-110 transition-transform duration-300" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        viewBox="0 0 24 24">
+        <!-- Ikon tempat sampah untuk hapus -->
+        <polyline points="3 6 5 6 21 6" />
+        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m5-3h4a2 2 0 0 1 2 2v1H8V5a2 2 0 0 1 2-2z" />
+        </svg>
+        </button>
+
+        <!-- Tombol toggle status aktif/nonaktif -->
+        <button
+        @click="console.log('Button clicked for card {{ $card->id }}'); toggleCardStatus({{ $card->id }}, {{ $card->is_active ? 'true' : 'false' }})"
+        class="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 
+       {{ $card->is_active ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-red-100 text-red-700 hover:bg-red-200' }}"
+        :title="{{ $card->is_active ? 'Nonaktifkan' : 'Aktifkan' }}">
+        <svg xmlns="http://www.w3.org/2000/svg"
+        class="w-5 h-5 transition-transform duration-300 group-hover:scale-110" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        viewBox="0 0 24 24">
+        @if(!$card->is_active)
+      <!-- Ikon power untuk status nonaktif (mengaktifkan kartu) -->
+      <path d="M18.36 6.64a9 9 0 1 1-12.73 0" />
+      <line x1="12" y1="2" x2="12" y2="12" />
+      @else
+      <!-- Ikon slashed circle untuk status aktif (menonaktifkan kartu) -->
+      <circle cx="12" cy="12" r="10" />
+      <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+      @endif
+        </svg>
+        <span class="text-sm font-medium">
+        {{ $card->is_active ? 'Nonaktifkan' : 'Aktifkan' }}
+        </span>
+        </button>
+        {{-- <button @click="toggleCardStatus({{ $card->id }}, {{ $card->is_active ? 'true' : 'false' }})"
+        class="text-yellow-600 hover:text-yellow-800 transition-all duration-300 p-2 rounded-lg hover:bg-yellow-50 group/toggle"
+        :title="{{ $card->is_active ? "'Nonaktifkan'" : "'Aktifkan'" }}">
+        <svg xmlns="http://www.w3.org/2000/svg"
+        class="w-5 h-5 group-hover/toggle:scale-110 transition-transform duration-300" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        viewBox="0 0 24 24">
+        <path x-show="{{ !$card->is_active }}" d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+        <path x-show="{{ !$card->is_active }}" d="M13.73 21a2 2 0 0 1-3.46 0" />
+        <path x-show="{{ $card->is_active }}"
+          d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+        </svg>
+        </button> --}}
+        </div>
+      </td>
+      </tr>
+      @endforeach
+      </tbody>
+      </table>
+    </div>
+
+    <!-- Bagian pagination dengan gaya responsif -->
+    <div class="px-4 sm:px-6 py-4 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
+      {{ $cards->onEachSide(1)->links() }}
+    </div>
+    </div>
+
+    <!-- Modal untuk menambah kartu baru -->
+    <div x-show="openCreateModal" x-cloak
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/50">
+    <!-- Container modal dengan klik di luar untuk menutup -->
+    <div @click.away="openCreateModal = false" x-transition
+      class="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border-2 border-emerald-200">
+      <!-- Header modal dengan efek gradient -->
+      <div class="border-b border-gray-200 p-6 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-t-xl">
+      <h2 class="text-xl font-bold text-white">Tambah Kartu Konten</h2>
+      <p class="mt-1 text-sm text-emerald-100">Isi form berikut untuk menambahkan kartu konten baru</p>
+      </div>
+
+      <!-- Body modal untuk form input -->
+      <div class="p-6">
+      <!-- Input tersembunyi untuk menyimpan rute penyimpanan data -->
+      <input type="hidden" id="store_route" value="{{ route('admin.cards.store') }}">
+
+      <!-- Form untuk menambah kartu dengan dukungan upload file -->
+      <form x-ref="createForm" @submit.prevent="submitCreateForm" enctype="multipart/form-data" class="space-y-5">
+        @csrf
+
+        <!-- Field untuk judul kartu -->
+        <div>
+        <label for="create_title" class="block text-sm font-medium text-gray-700 mb-2">Judul Kartu <span
+          class="text-red-500">*</span></label>
+        <input type="text" name="title" id="create_title" required placeholder="Masukkan judul kartu"
+          x-model="createForm.title"
+          :class="errors.title ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-emerald-500 focus:border-emerald-500'"
+          class="w-full px-4 py-2 text-sm border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-300
+      hover:border-emerald-300 hover:shadow-md">
+        <!-- Menampilkan pesan error jika ada -->
+        <template x-if="errors.title">
+          <p class="mt-2 text-sm text-red-600" x-text="errors.title[0]"></p>
+        </template>
+        </div>
+
+        <!-- Field untuk deskripsi kartu -->
+        <div>
+        <label for="create_description" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi <span
+          class="text-red-500">*</span></label>
+        <textarea name="description" id="create_description" rows="3" required
+          placeholder="Tulis deskripsi singkat..." x-model="createForm.description"
+          :class="errors.description ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-emerald-500 focus:border-emerald-500'"
+          class="w-full px-4 py-2 text-sm border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-300 resize-none
+      hover:border-emerald-300 hover:shadow-md"></textarea>
+        <!-- Menampilkan pesan error jika ada -->
+        <template x-if="errors.description">
+          <p class="mt-2 text-sm text-red-600" x-text="errors.description[0]"></p>
+        </template>
+        </div>
+
+        <!-- Field untuk upload gambar dengan pratinjau -->
+        <div>
+        <label for="create_image_url" class="block text-sm font-medium text-gray-700 mb-2">Gambar Kartu <span
+          class="text-red-500">*</span></label>
+        <!-- Area untuk upload gambar dengan border putus-putus -->
+        <div class="flex items-center justify-center w-full">
+          <label for="create_image_url" class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-300
+      hover:border-emerald-300 hover:shadow-inner">
+          <!-- Template untuk tampilan saat belum ada pratinjau -->
+          <template x-if="!preview">
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+            <!-- Ikon upload -->
+            <svg class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+            <p class="mb-2 text-sm text-gray-500">Klik untuk upload gambar</p>
+            <p class="text-xs text-gray-500">PNG, JPG (Max. 2MB)</p>
+            </div>
+          </template>
+          <!-- Template untuk menampilkan pratinjau gambar -->
+          <template x-if="preview">
+            <img :src="preview" alt="Preview Gambar" class="h-full w-full object-contain p-2 rounded-lg">
+          </template>
+          <!-- Input file untuk upload gambar -->
+          <input id="create_image_url" name="image_url" type="file" accept="image/*" required @change="
+      preview = URL.createObjectURL($event.target.files[0]);
+      createForm.image_url = $event.target.files[0];
+      " class="hidden" />
+          </label>
+        </div>
+        <!-- Menampilkan pesan error jika ada -->
+        <template x-if="errors.image_url">
+          <p class="mt-2 text-sm text-red-600" x-text="errors.image_url[0]"></p>
+        </template>
+        </div>
+
+        <!-- Field untuk link eksternal -->
+        <div>
+        <label for="create_external_link" class="block text-sm font-medium text-gray-700 mb-2">Link Eksternal <span
+          class="text-red-500">*</span></label>
+        <input type="url" name="external_link" id="create_external_link" required placeholder="https://contoh.com"
+          x-model="createForm.external_link"
+          :class="errors.external_link ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-emerald-500 focus:border-emerald-500'"
+          class="w-full px-4 py-2 text-sm border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-300
+      hover:border-emerald-300 hover:shadow-md">
+        <!-- Menampilkan pesan error jika ada -->
+        <template x-if="errors.external_link">
+          <p class="mt-2 text-sm text-red-600" x-text="errors.external_link[0]"></p>
+        </template>
+        </div>
+
+        <!-- Field untuk status aktif -->
+        <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+        <div class="flex items-center">
+          <input type="checkbox" name="is_active" id="create_is_active" checked
+          class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+          <label for="create_is_active" class="ml-2 block text-sm text-gray-700">
+          Aktifkan kartu ini
+          </label>
+        </div>
+        </div>
+      </form>
+      </div>
+
+      <!-- Footer modal dengan tombol batal dan simpan -->
+      <div
+      class="border-t border-gray-200 px-6 py-4 flex justify-end gap-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-b-xl">
+      <!-- Tombol batal untuk menutup modal -->
+      <button type="button" @click="openCreateModal = false" class="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 shadow-sm text-sm font-medium transition-all duration-300
+      hover:-translate-y-0.5 hover:shadow-md">
+        Batal
+      </button>
+      <!-- Tombol simpan untuk mengirimkan form -->
+      <button type="button" @click="submitCreateForm" :disabled="loading" class="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-md text-sm font-medium transition-all duration-300
+      disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px]
+      hover:-translate-y-0.5 hover:shadow-lg">
+        <!-- Teks tombol saat tidak loading -->
+        <span x-show="!loading">Simpan</span>
+        <!-- Teks dan spinner saat loading -->
+        <span x-show="loading" class="flex items-center justify-center">
+        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+          viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+          </circle>
+          <path class="opacity-75" fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+          </path>
+        </svg>
+        Memproses...
+        </span>
+      </button>
+      </div>
+    </div>
+    </div>
+
+    <!-- Modal untuk mengedit kartu -->
+    <div x-show="openEditModalId !== null" x-cloak
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/50">
+    <!-- Container modal dengan klik di luar untuk menutup -->
+    <div @click.away="openEditModalId = null" x-transition
+      class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto border-2 border-blue-200 p-4 sm:p-6">
+      <!-- Header modal dengan efek gradient -->
+      <div class="border-b border-gray-200 p-6 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-t-xl">
+      <h2 class="text-xl font-bold text-white">Edit Kartu Konten</h2>
+      <p class="mt-1 text-sm text-blue-100">Perbarui informasi kartu konten</p>
+      </div>
+
+      <!-- Body modal untuk form edit -->
+      <div>
+      <!-- Form untuk mengedit kartu dengan dukungan upload file -->
+      <form x-ref="editForm" @submit.prevent="submitEditForm" enctype="multipart/form-data" class="space-y-5">
+        @csrf
+        @method('PUT')
+
+        <!-- Field untuk judul kartu -->
+        <div>
+        <label for="edit_title" class="block text-sm font-medium text-gray-700 mb-2">Judul Kartu <span
+          class="text-red-500">*</span></label>
+        <input type="text" name="title" id="edit_title" required x-model="cardData.title"
+          :class="errors.title ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
+          class="w-full px-4 py-2 text-sm border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-300
+      hover:border-blue-300 hover:shadow-md">
+        <!-- Menampilkan pesan error jika ada -->
+        <template x-if="errors.title">
+          <p class="mt-2 text-sm text-red-600" x-text="errors.title[0]"></p>
+        </template>
+        </div>
+
+        <!-- Field untuk deskripsi kartu -->
+        <div>
+        <label for="edit_description" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi <span
+          class="text-red-500">*</span></label>
+        <textarea name="description" id="edit_description" rows="3" required x-model="cardData.description"
+          :class="errors.description ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
+          class="w-full px-4 py-2 text-sm border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-300 resize-none
+      hover:border-blue-300 hover:shadow-md"></textarea>
+        <!-- Menampilkan pesan error jika ada -->
+        <template x-if="errors.description">
+          <p class="mt-2 text-sm text-red-600" x-text="errors.description[0]"></p>
+        </template>
+        </div>
+
+        <!-- Field untuk upload gambar -->
+        <div>
+        <label for="edit_image_url" class="block text-sm font-medium text-gray-700 mb-2">Gambar Kartu</label>
+
+        <!-- Menampilkan gambar saat ini -->
+        <div class="mb-4 border p-3 rounded-lg bg-gray-50">
+          <p class="text-sm font-semibold text-gray-700 mb-2">Gambar Saat Ini</p>
+          <!-- Gambar saat ini dengan pratinjau saat diklik -->
+          <img :src="cardData.image_url" alt="Gambar Saat Ini"
+          class="h-40 w-full object-contain rounded-lg border-2 border-gray-200 hover:border-blue-300 transition-all duration-300 cursor-pointer">
+        </div>
+
+        <!-- Area untuk upload gambar baru -->
+        <div class="mt-4 border p-3 rounded-lg bg-gray-50">
+          <p class="text-sm font-semibold text-gray-700 mb-2">Upload Gambar Baru</p>
+          <div class="flex items-center justify-center w-full">
+          <label for="edit_image_url" class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-300
+      hover:border-blue-300 hover:shadow-inner relative">
+            <!-- Template untuk tampilan saat belum ada pratinjau -->
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+            <!-- Ikon upload -->
+            <svg class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+            <p class="mb-2 text-sm text-gray-500">Klik untuk upload gambar baru</p>
+            <p class="text-xs text-gray-500">PNG, JPG (Max. 2MB)</p>
+            </div>
+            <!-- Input file untuk upload gambar baru -->
+            <input id="edit_image_url" name="image_url" type="file" accept="image/*" class="hidden"
+            x-ref="editImageInput" @change="
+      cardData.image_url = URL.createObjectURL($event.target.files[0]);
+      " />
+          </label>
+          </div>
+        </div>
+        <!-- Menampilkan pesan error jika ada -->
+        <template x-if="errors.image_url">
+          <p class="mt-2 text-sm text-red-600" x-text="errors.image_url[0]"></p>
+        </template>
+        </div>
+
+        <!-- Field untuk link eksternal -->
+        <div>
+        <label for="edit_external_link" class="block text-sm font-medium text-gray-700 mb-2">Link Eksternal <span
+          class="text-red-500">*</span></label>
+        <input type="url" name="external_link" id="edit_external_link" required x-model="cardData.external_link"
+          :class="errors.external_link ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
+          class="w-full px-4 py-2 text-sm border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-300
+      hover:border-blue-300 hover:shadow-md">
+        <!-- Menampilkan pesan error jika ada -->
+        <template x-if="errors.external_link">
+          <p class="mt-2 text-sm text-red-600" x-text="errors.external_link[0]"></p>
+        </template>
+        </div>
+
+        <!-- Field untuk status aktif -->
+        <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+        <div class="flex items-center">
+          <input type="checkbox" name="is_active" id="edit_is_active" x-model="cardData.is_active"
+          class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+          <label for="edit_is_active" class="ml-2 block text-sm text-gray-700">
+          Aktifkan kartu ini
+          </label>
+        </div>
+        </div>
+      </form>
+      </div>
+
+      <!-- Footer modal dengan tombol batal dan simpan -->
+      <div
+      class="border-t border-gray-200 px-4 py-3 flex justify-end gap-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-b-xl">
+      <!-- Tombol batal untuk menutup modal -->
+      <button type="button" @click="openEditModalId = null" class="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 shadow-sm text-sm font-medium transition-all duration-300
+      hover:-translate-y-0.5 hover:shadow-md">
+        Batal
+      </button>
+      <!-- Tombol simpan untuk mengirimkan perubahan -->
+      <button type="button" @click="submitEditForm" :disabled="loading" class="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md text-sm font-medium transition-all duration-300
+      disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px]
+      hover:-translate-y-0.5 hover:shadow-lg">
+        <!-- Teks tombol saat tidak loading -->
+        <span x-show="!loading">Simpan Perubahan</span>
+        <!-- Teks dan spinner saat loading -->
+        <span x-show="loading" class="flex items-center justify-center">
+        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+          viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+          </circle>
+          <path class="opacity-75" fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+          </path>
+        </svg>
+        Memproses...
+        </span>
+      </button>
+      </div>
+    </div>
+    </div>
+
+    <!-- Modal konfirmasi untuk menghapus kartu -->
+    <div x-show="openDeleteModalId !== null" x-cloak
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/50">
+    <!-- Container modal dengan klik di luar untuk menutup -->
+    <div @click.away="openDeleteModalId = null" x-transition
+      class="bg-white rounded-xl shadow-2xl w-full max-w-md border-2 border-red-200">
+      <!-- Header modal dengan efek gradient -->
+      <div class="border-b border-gray-200 p-6 bg-gradient-to-r from-red-600 to-pink-600 rounded-t-xl">
+      <div class="flex items-center gap-3">
+        <!-- Ikon peringatan untuk hapus -->
+        <div class="p-2 rounded-full bg-white/20 text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        </div>
+        <div>
+        <!-- Judul modal hapus kartu -->
+        <h2 class="text-xl font-bold text-white">Hapus Kartu Konten</h2>
+        <!-- Peringatan bahwa aksi tidak dapat dibatalkan -->
+        <p class="text-sm text-red-100">Aksi ini tidak dapat dibatalkan</p>
+        </div>
+      </div>
+      </div>
+
+      <!-- Body modal untuk konfirmasi hapus -->
+      <div class="p-6">
+      <!-- Informasi kartu yang akan dihapus -->
+      <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+        <div class="flex">
+        <div class="ml-2">
+          <!-- Menampilkan judul kartu -->
+          <p class="text-sm font-medium text-red-800" x-text="'Judul: ' + cardData.title"></p>
+          <!-- Menampilkan deskripsi kartu -->
+          <p class="text-sm text-red-700 mt-1" x-text="'Deskripsi: ' + cardData.description"></p>
+          <!-- Menampilkan status kartu -->
+          <p class="text-sm text-red-700 mt-1" x-text="'Status: ' + (cardData.is_active ? 'Aktif' : 'Nonaktif')">
+          </p>
+        </div>
+        </div>
+      </div>
+      <!-- Peringatan konfirmasi penghapusan -->
+      <p class="mt-4 text-sm text-gray-600">Anda yakin ingin menghapus kartu konten ini? Semua data yang terkait akan
+        dihapus secara permanen.</p>
+      </div>
+
+      <!-- Footer modal dengan tombol batal dan hapus -->
+      <div
+      class="border-t border-gray-200 px-6 py-4 flex justify-end gap-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-b-xl">
+      <!-- Tombol batal untuk menutup modal -->
+      <button type="button" @click="openDeleteModalId = null" class="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 shadow-sm text-sm font-medium transition-all duration-300
+      hover:-translate-y-0.5 hover:shadow-md">
+        Batal
+      </button>
+      <!-- Tombol hapus untuk mengkonfirmasi penghapusan -->
+      <button type="button" @click="submitDeleteForm" :disabled="loading" class="px-4 py-2 rounded-lg bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white shadow-md text-sm font-medium transition-all duration-300
+      disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px]
+      hover:-translate-y-0.5 hover:shadow-lg">
+        <!-- Teks tombol saat tidak loading -->
+        <span x-show="!loading">Hapus</span>
+        <!-- Teks dan spinner saat loading -->
+        <span x-show="loading" class="flex items-center justify-center">
+        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+          viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+          </circle>
+          <path class="opacity-75" fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+          </path>
+        </svg>
+        Memproses...
+        </span>
+      </button>
+      </div>
+    </div>
+    </div>
+  </div>
+  <!-- Mengakhiri section 'content' -->
+@endsection

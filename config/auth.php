@@ -76,7 +76,12 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
-        // Bisa ditambah password broker untuk admin jika diperlukan
+        'admins' => [
+            'provider' => 'admins',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
     ],
 
     /*

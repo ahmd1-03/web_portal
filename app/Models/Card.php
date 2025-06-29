@@ -11,5 +11,10 @@ class Card extends Model
         'description',
         'image_url',
         'external_link',
+        'is_active'
     ];
+
+    protected $casts = [
+    'is_active' => 'boolean' // tambahkan ini
+];
 }
