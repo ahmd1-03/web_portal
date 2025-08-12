@@ -2,7 +2,9 @@
 
 @section('content')
   <!-- Container utama dengan padding responsif dan penyesuaian margin sidebar -->
-  <div class="max-w-full mx-auto px-4 transition-all duration-300" x-data="cardManager({{ json_encode(['from' => $cards->firstItem() ?: 0, 'to' => $cards->lastItem() ?: 0, 'total' => $cards->total()]) }})" x-cloak>
+  <div class="max-w-full mx-auto px-4 transition-all duration-300"
+    x-data="cardManager({{ json_encode(['from' => $cards->firstItem() ?: 0, 'to' => $cards->lastItem() ?: 0, 'total' => $cards->total()]) }})"
+    x-cloak>
     <!-- Memasukkan library SweetAlert2 untuk notifikasi interaktif -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -226,14 +228,14 @@
         </td>
         <td class="px-2 py-2 whitespace-nowrap">
         <div x-data="{ showImageModal: false }">
-        <img src="{{ asset('storage/' . $card->image_url) }}" @click="showImageModal = true"
+        <img src="{{ Storage::url($card->image_url) }}" @click="showImageModal = true"
         alt="Gambar Kartu {{ $card->title }}"
         class="h-12 w-12 sm:h-16 sm:w-16 object-cover rounded-md cursor-pointer border-2 border-gray-200 hover:border-emerald-400 transition-all duration-300" />
         <div x-show="showImageModal" x-cloak @click.away="showImageModal = false"
         class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/80"
         role="dialog" aria-labelledby="imageModalTitle">
         <div class="relative max-w-4xl max-h-[90vh]">
-          <img :src="'{{ asset('storage/' . $card->image_url) }}'" alt="Gambar Kartu {{ $card->title }}"
+          <img :src="'{{ Storage::url($card->image_url) }}'" alt="Gambar Kartu {{ $card->title }}"
           class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl" />
           <button @click="showImageModal = false"
           class="absolute top-4 right-4 p-2 rounded-full bg-white/80 hover:bg-white text-gray-800 shadow-md transition-all duration-300"
@@ -305,9 +307,9 @@
       <!-- Bagian pagination dengan gaya responsif -->
       <div class="px-4 sm:px-6 py-4 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
       <!-- Informasi jumlah data -->
-      <div class="text-sm text-gray-700 mb-2"
+      {{-- <div class="text-sm text-gray-700 mb-2"
         x-text="`Menampilkan ${pagination.from} sampai ${pagination.to} dari ${pagination.total} hasil`">
-      </div>
+      </div> --}}
       {{-- <div class="text-sm text-gray-700 mb-2">
         Menampilkan <span>{{ $cards->firstItem() ?: 0 }}</span> sampai
         <span>{{ $cards->lastItem() ?: 0 }}</span> dari
@@ -514,8 +516,7 @@
               Kartu</label>
             <div class="mb-4 border p-3 rounded-lg bg-gray-50">
               <p class="text-sm font-semibold text-gray-700 mb-2">Gambar Saat Ini</p>
-              <img :src="cardData.image_url" alt="Gambar Kartu Saat Ini"
-              class="h-40 w-full object-contain rounded-lg border-2 border-gray-200 hover:border-blue-300 transition-all duration-300 cursor-pointer">
+            <img x-show="cardData && cardData.image_url" :src="cardData.image_url ? '/storage/' + cardData.image_url : ''" :alt="cardData && cardData.name ? cardData.name : ''" class="h-40 w-full object-contain rounded-lg border-2 border-gray-200 hover:border-blue-300 transition-all duration-300 cursor-pointer" @click="cardData && cardData.image_url && openImageModal('/storage/' + cardData.image_url)">
             </div>
             <div class="mt-4 border p-3 rounded-lg bg-gray-50">
               <p class="text-sm font-semibold text-gray-700 mb-2">Upload Gambar Baru</p>
@@ -621,6 +622,7 @@
           role="dialog" aria-labelledby="deleteModalTitle">
           <div @click.away="openDeleteModalId = null"
             class="bg-white rounded-xl shadow-2xl w-full max-w-md border-2 border-red-200"> --}}
+
             <div class="border-b border-gray-200 p-6 bg-gradient-to-r from-red-600 to-pink-600 rounded-t-xl">
             <div class="flex items-center gap-3">
               <div class="p-2 rounded-full bg-white/20 text-white">

@@ -51,18 +51,106 @@
       /* Border hijau */
     }
 
-    /* Efek hover untuk card */
-    .card-hover {
-      transition: all 0.3s ease;
+    /* CSS Khusus untuk Mobile - Teks Karawang */
+    @media (max-width: 768px) {
+
+      /* Navbar container adjustments */
+      nav {
+        padding: 0.5rem 0.75rem !important;
+      }
+
+      /* Logo adjustments */
+      nav img {
+        height: 2.5rem !important;
+        /* 40px */
+        width: 2.5rem !important;
+        /* 40px */
+        margin-right: 0.5rem !important;
+      }
+
+      /* Text container adjustments */
+      nav .flex.items-center>div {
+        margin-left: 0.25rem !important;
+      }
+
+      /* Main title adjustments */
+      nav h1 {
+        font-size: 1.25rem !important;
+        /* 20px */
+        line-height: 1.2 !important;
+        margin-bottom: 0 !important;
+      }
+
+      /* Subtitle adjustments - Portal Informasi Karawang */
+      nav p {
+        font-size: 0.625rem !important;
+        /* 10px */
+        line-height: 1.1 !important;
+        margin-top: 0 !important;
+        letter-spacing: -0.025em !important;
+      }
+
+      /* Reduce spacing between logo and text */
+      nav .flex.items-center {
+        gap: 0.375rem !important;
+      }
+
+      /* Admin button adjustments for mobile */
+      nav a[href*="admin"] {
+        padding: 0.375rem 0.75rem !important;
+        font-size: 0.75rem !important;
+      }
     }
 
-    .card-hover:hover {
-      transform: translateY(-4px);
-      /* Efek mengambang */
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    /* Extra small mobile adjustments */
+    @media (max-width: 375px) {
+
+      /* Atur flex agar logo & teks sejajar vertikal */
+      .flex.items-center {
+        align-items: center;
+      }
+
+      /* Perbesar logo */
+      .flex.items-center img {
+        height: 10rem !important;
+        /* 64px */
+        width: 10rem !important;
+        /* 64px */
+        margin-right: 0.27rem;
+        /* Dekatkan teks ke logo */
+      }
+
+      /* Atur container teks (div setelah img) */
+      .flex.items-center>div {
+        display: flex;
+        flex-direction: column;
+        /* Susun h1 & p vertikal */
+        justify-content: center;
+        /* Tengah vertikal */
+        align-items: flex-start;
+        /* Rapat ke kiri */
+      }
+
+      /* Judul */
+      .flex.items-center h1 {
+        font-size: 1.125rem !important;
+        /* 18px */
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      /* Subjudul */
+      .flex.items-center p {
+        font-size: 0.55rem !important;
+        /* ~8.8px */
+        margin: 0;
+        line-height: 1.1;
+      }
     }
 
-    /* Container untuk wave SVG */
+
+
+    /* Container untuk wave SVG
     .wave-container {
       height: 120px;
       overflow: hidden;
@@ -71,9 +159,10 @@
     .wave-container svg {
       width: 100%;
       height: 100%;
-    }
+    } */
 
     /* Animasi untuk empty state */
+    
     @keyframes float {
 
       0%,
@@ -92,7 +181,8 @@
   </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-emerald-50 text-gray-800">
+
   <!-- Navbar -->
   <nav
     class="fixed top-0 left-0 right-0 bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-700 shadow-md px-5 py-3 z-50 flex items-center justify-between">
@@ -122,7 +212,7 @@
   @endauth
   </nav>
 
-  <!-- Hero Section -->
+  {{-- <!-- Hero Section -->
   <section
     class="relative pt-40 pb-28 px-4 text-center overflow-hidden bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-700">
     <div class="max-w-4xl mx-auto">
@@ -159,18 +249,132 @@
         </path>
       </svg>
     </div>
+  </section> --}}
+
+
+  <section
+    class="relative pt-28 pb-9 px-4 sm:px-6 text-center overflow-hidden bg-gradient-to-br from-emerald-950 via-teal-900 to-emerald-800 min-h-[30vh] sm:min-h-[40vh] flex flex-col items-center justify-center">
+    <div class="max-w-3xl mx-auto relative z-10">
+      <!-- Hero Title -->
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 leading-tight tracking-tight"
+        data-aos="fade-down" data-aos-duration="600">
+        Web Portal Karawang
+      </h1>
+      <!-- Hero Subtitle -->
+      <p class="text-teal-100 text-sm sm:text-base md:text-lg max-w-xl mx-auto mb-6 font-light" data-aos="fade-up"
+        data-aos-delay="150" data-aos-duration="600">
+        Jelajahi informasi dan layanan publik Kabupaten Karawang
+      </p>
+
+      <!-- Search Form -->
+      <div class="mx-auto max-w-lg" data-aos="zoom-in" data-aos-delay="300" data-aos-duration="600">
+        <div class="relative w-full">
+          <label for="search" class="sr-only">Cari konten</label>
+          <input type="text" id="search" name="query" placeholder="Cari konten..."
+            class="search-input w-full rounded-full px-4 py-2.5 pr-12 border-2 border-teal-500 shadow-md text-gray-900 bg-white/95 backdrop-blur-sm focus:ring-2 focus:ring-teal-400 focus:border-teal-400 transition-all duration-300 ease-in-out">
+          <button type="button" id="search-btn"
+            class="absolute top-1/2 right-2 -translate-y-1/2 bg-gradient-to-r from-teal-600 to-emerald-500 text-white rounded-full p-2 hover:from-teal-500 hover:to-emerald-400 transition-all duration-300">
+            <!-- Search Icon -->
+            <svg id="search-icon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="7"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <!-- Loading Spinner -->
+            <svg id="search-spinner" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 hidden animate-spin" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
+        </div>
+        <div id="search-loading" class="hidden text-center mt-2">
+          <div class="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-teal-500"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Static Subtle Gradient Background -->
+    <div class="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none" class="w-full h-full">
+        <defs>
+          <linearGradient id="staticGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#064e3b" stop-opacity="0.5" />
+            <stop offset="50%" stop-color="#047857" stop-opacity="0.4" />
+            <stop offset="100%" stop-color="#059669" stop-opacity="0.5" />
+          </linearGradient>
+          <pattern id="subtlePattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+            <circle cx="50" cy="50" r="20" fill="rgba(255, 255, 255, 0.1)" />
+            <circle cx="25" cy="25" r="10" fill="rgba(255, 255, 255, 0.05)" />
+            <circle cx="75" cy="75" r="15" fill="rgba(255, 255, 255, 0.08)" />
+          </pattern>
+        </defs>
+        <rect width="1440" height="320" fill="url(#staticGradient)" />
+        <rect width="1440" height="320" fill="url(#subtlePattern)" opacity="0.3" />
+      </svg>
+    </div>
+
+    <style>
+      /* Smooth Search Input Transition */
+      .search-input:focus {
+        transform: scale(1.02);
+        box-shadow: 0 0 10px rgba(20, 184, 166, 0.3);
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 640px) {
+        .min-h-\[40vh\] {
+          min-height: 40vh;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        p {
+          font-size: 0.875rem;
+          margin-bottom: 1rem;
+        }
+
+        .search-input {
+          padding: 0.5rem 2.5rem 0.5rem 1rem;
+          font-size: 0.875rem;
+        }
+
+        #search-btn {
+          padding: 0.5rem;
+        }
+
+        #search-btn svg {
+          width: 1rem;
+          height: 1rem;
+        }
+
+        section {
+          padding-top: 4rem;
+        }
+      }
+    </style>
   </section>
 
+  <!-- Include AOS for animations -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+
+
+
+
   <!-- Main Content -->
-  <main class="px-4 max-w-7xl mx-auto relative z-10 mt-8">
-    <!-- Search Form -->
-    <form method="GET" action="{{ url('/') }}" class="mx-auto my-12 md:my-16 max-w-xl" data-aos="zoom-in">
+  <main class="px-4 max-w-7xl mx-auto relative z-10 mt-0 sm:mt-8">
+    {{-- <!-- Search Form -->
+    <div class="mx-auto my-12 md:my-16 max-w-xl" data-aos="zoom-in">
       <div class="relative w-full">
         <label for="search" class="sr-only">Cari konten</label>
         <input type="text" id="search" name="search" placeholder="Cari konten..."
-          value="{{ old('search', $search ?? '') }}"
           class="search-input w-full rounded-full px-5 py-3 pr-14 border-2 border-emerald-600 shadow-sm text-gray-800 transition">
-        <button type="submit"
+        <button type="button" id="search-btn"
           class="absolute top-1/2 right-2 -translate-y-1/2 bg-gradient-to-r from-emerald-700 to-emerald-600 text-white rounded-full p-2 hover:from-emerald-600 hover:to-emerald-500 transition">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
             stroke-width="2">
@@ -179,25 +383,35 @@
           </svg>
         </button>
       </div>
-    </form>
+      <div id="search-loading" class="hidden text-center mt-4">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
+      </div>
+    </div> --}}
 
     <!-- Cards Grid -->
-    <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 pb-24" aria-live="polite">
+    <section id="cards-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 pb-24"
+      aria-live="polite">
       @forelse ($cards as $card)
-      <!-- Card Item -->
+      <!-- Card Item dengan Efek Hover Animasi -->
       <article tabindex="0" data-aos="fade-up"
-      class="bg-white rounded-xl shadow-md hover:shadow-lg transition hover:scale-[1.01] flex flex-col overflow-hidden card-hover">
-      <div class="w-full">
-        <img src="{{ asset('storage/' . $card->image_url) }}" alt="Logo {{ $card->title }}"
-        class="w-full max-h-40 object-cover bg-gray-100" />
+      class="bg-white rounded-xl shadow-lg hover:shadow-2xl hover:shadow-emerald-500/20 hover:-translate-y-2 hover:scale-[1.02] transition-all duration-300 ease-out flex flex-col overflow-hidden cursor-pointer group">
+      <div class="w-full overflow-hidden">
+        <img src="{{ Storage::url($card->image_url) }}" alt="Logo {{ $card->title }}"
+        class="w-full max-h-40 object-cover bg-gray-100 transition-transform duration-300 group-hover:scale-110" />
       </div>
       <div class="p-3 flex flex-col flex-grow">
-        <h2 class="text-sm font-semibold text-emerald-900 mb-1">{{ $card->title }}</h2>
-        <p class="text-emerald-700 text-xs mb-3 line-clamp-3">{{ $card->description }}</p>
+        <h2 class="text-sm font-semibold text-emerald-900 mb-1 group-hover:text-emerald-700 transition-colors">
+        {{ $card->title }}
+        </h2>
+        <p class="text-emerald-700 text-xs mb-3 line-clamp-3 group-hover:text-emerald-600 transition-colors">
+        {{ $card->description }}
+        </p>
         <a href="{{ $card->external_link }}" target="_blank" rel="noopener noreferrer"
-        class="mt-auto inline-flex items-center gap-1 text-white font-medium px-3 py-1 rounded bg-gradient-to-r from-emerald-900 to-emerald-700 text-xs hover:from-emerald-700 hover:to-emerald-600">
-        Baca Selengkapnya...
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="currentColor" viewBox="0 0 16 16">
+        class="mt-auto inline-flex items-center gap-1 text-white font-medium px-3 py-1 rounded bg-gradient-to-r from-emerald-900 to-emerald-700 text-xs hover:from-emerald-700 hover:to-emerald-600 transition-all duration-300 group-hover:shadow-md">
+        Lihat selengkapnya...
+        <svg xmlns="http://www.w3.org/2000/svg"
+          class="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" fill="currentColor"
+          viewBox="0 0 16 16">
           <path fill-rule="evenodd"
           d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 1 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
         </svg>
@@ -276,7 +490,134 @@
       once: true, // Animasi hanya sekali
       offset: 100 // Offset trigger
     });
+
+    // Dynamic Search Functionality
+    const searchInput = document.getElementById('search');
+    const searchBtn = document.getElementById('search-btn');
+    const cardsContainer = document.getElementById('cards-container');
+    const searchLoading = document.getElementById('search-loading');
+
+    let searchTimeout;
+
+    // Function to perform search
+    async function performSearch(query) {
+      if (query.length < 1) {
+        loadInitialCards();
+        return;
+      }
+
+      searchLoading.classList.remove('hidden');
+
+      try {
+        const response = await fetch(`/search?query=${encodeURIComponent(query)}`);
+        const data = await response.json();
+
+        displaySearchResults(data.cards, data.message);
+      } catch (error) {
+        console.error('Error searching:', error);
+        displaySearchResults([], 'Terjadi kesalahan saat mencari');
+      } finally {
+        searchLoading.classList.add('hidden');
+      }
+    }
+
+    // Function to display search results
+    function displaySearchResults(cards, message) {
+      if (cards.length === 0) {
+        cardsContainer.innerHTML = `
+                <div class="col-span-full text-center py-16">
+                    <div class="relative inline-block mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 float-animation" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-medium text-gray-600 mb-2">Oops! Tidak ada konten ditemukan</h3>
+                    <p class="text-gray-400 max-w-md mx-auto">${message || 'Kami tidak dapat menemukan apa yang Anda cari.'}</p>
+                    <div class="mt-6">
+                        <button onclick="clearSearch()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-emerald-700 to-emerald-600 hover:from-emerald-800 hover:to-emerald-700 transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 -ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                            </svg>
+                            Tampilkan Semua
+                        </button>
+                    </div>
+                </div>
+            `;
+        return;
+      }
+
+      cardsContainer.innerHTML = cards.map(card => `
+            <article tabindex="0" data-aos="fade-up"
+                class="bg-white rounded-xl shadow-lg hover:shadow-2xl hover:shadow-emerald-500/20 hover:-translate-y-2 hover:scale-[1.02] transition-all duration-300 ease-out flex flex-col overflow-hidden cursor-pointer group">
+                <div class="w-full overflow-hidden">
+                   <img src="${card.image_url || '/images/placeholder.jpg'}" 
+     alt="Logo ${card.title}" 
+     class="w-full max-h-40 object-cover bg-gray-100 transition-transform duration-300 group-hover:scale-110" 
+     onerror="this.src='/images/placeholder.jpg'" />
+
+                </div>
+                <div class="p-3 flex flex-col flex-grow">
+                    <h2 class="text-sm font-semibold text-emerald-900 mb-1 group-hover:text-emerald-700 transition-colors">${card.title}</h2>
+                    <p class="text-emerald-700 text-xs mb-3 line-clamp-3 group-hover:text-emerald-600 transition-colors">${card.description}</p>
+                    <a href="${card.external_link}" target="_blank" rel="noopener noreferrer"
+                        class="mt-auto inline-flex items-center gap-1 text-white font-medium px-3 py-1 rounded bg-gradient-to-r from-emerald-900 to-emerald-700 text-xs hover:from-emerald-700 hover:to-emerald-600 transition-all duration-300 group-hover:shadow-md">
+                        Baca selengkapnya...
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 1 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+                        </svg>
+                    </a>
+                </div>
+            </article>
+        `).join('');
+    }
+
+    // Function to load initial cards (optional)
+    function loadInitialCards() {
+      // This would reload the initial cards if needed
+      // For now, we'll keep the current behavior
+    }
+
+    // Function to clear search
+    function clearSearch() {
+      searchInput.value = '';
+      window.location.reload();
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
+      const query = e.target.value.trim();
+
+      if (query.length === 0) {
+        window.location.reload();
+        return;
+      }
+
+      searchTimeout = setTimeout(() => {
+        performSearch(query);
+      }, 300); // Debounce search
+    });
+
+    searchBtn.addEventListener('click', () => {
+      const query = searchInput.value.trim();
+      if (query) {
+        performSearch(query);
+      }
+    });
+
+    // Handle Enter key
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const query = searchInput.value.trim();
+        if (query) {
+          performSearch(query);
+        }
+      }
+    });
   </script>
 </body>
 
 </html>
+</create_file>

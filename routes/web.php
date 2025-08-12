@@ -7,14 +7,23 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SearchController;
 
 /**
  * Routing utama aplikasi
  * Mengatur route frontend dan admin dengan middleware dan prefix yang sesuai
  */
 
+// Route untuk splash screen
+Route::get('/', function () {
+    return view('frontend.splash');
+})->name('splash');
+
 // Route untuk halaman utama frontend
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+// Route untuk pencarian AJAX
+Route::get('/search', [SearchController::class, 'search'])->name('search');
 
 // Route untuk halaman kebijakan privasi dan syarat ketentuan frontend
 Route::view('/kebijakan-privasi', 'frontend.privacy')->name('privacy');

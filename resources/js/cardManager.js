@@ -148,9 +148,8 @@ export function cardManager(initialPagination = {from: 0, to: 0, total: 0}) {
                 if (!response.ok)
                     throw new Error("Gagal mengambil data kartu.");
                 const data = await response.json();
-                if (data.image_url && !data.image_url.startsWith("http")) {
-                    data.image_url = `${window.location.origin}/storage/${data.image_url}`;
-                }
+                // Use the full URL directly without adding prefix
+                // Backend already returns full URL via Storage::url()
                 this.cardData = data;
                 this.openEditModalId = id;
                 this.previewEdit = null;
