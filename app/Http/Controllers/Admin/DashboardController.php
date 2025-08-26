@@ -2,70 +2,128 @@
 
 namespace App\Http\Controllers\Admin;
 
-// Controller untuk halaman dashboard admin
-
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
+use App\Models\ActivityLog;
 use App\Models\Card;
 use App\Models\Admin;
-use App\Models\User;
 use App\Models\Visitor;
-use Illuminate\Support\Collection;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    // Fungsi untuk menampilkan halaman dashboard dengan data statistik dan aktivitas terbaru
     public function index(): View
     {
-        // Hitung jumlah kartu
         $cardsCount = Card::count();
-        // Hitung jumlah admin
         $adminsCount = Admin::count();
-        // Hitung jumlah pengunjung
         $visitorsCount = Visitor::count();
 
-        // Ambil 5 kartu terbaru yang diupdate
-        $recentCards = Card::orderBy('updated_at', 'desc')->take(5)->get()->map(function ($card) {
-            return [
-                'type' => 'card', // tipe aktivitas
-                'action' => 'updated', // aksi yang dilakukan
-                'title' => $card->title, // judul kartu
-                'timestamp' => $card->updated_at, // waktu update
-            ];
-        });
+        $timeLimit = now()->subWeek();
 
-        // Ambil 5 admin terbaru yang diupdate
-        $recentAdmins = Admin::orderBy('updated_at', 'desc')->take(5)->get()->map(function ($admin) {
-            return [
-                'type' => 'admin',
-                'action' => 'updated',
-                'title' => $admin->name,
-                'timestamp' => $admin->updated_at,
-            ];
-        });
+        // Aktivitas Ditambahkan - data baru yang dibuat
+        $recentAdded = ActivityLog::active()
+            ->byAction('created')
+            ->where('timestamp', '>=', $timeLimit)
+            ->orderBy('timestamp', 'desc')
+            ->take(5)
+            ->get();
 
-        // Ambil 5 pengguna terbaru yang diupdate
-        $recentUsers = User::orderBy('updated_at', 'desc')->take(5)->get()->map(function ($user) {
-            return [
-                'type' => 'user',
-                'action' => 'updated',
-                'title' => $user->name,
-                'timestamp' => $user->updated_at,
-            ];
-        });
+        // Aktivitas Diubah - data yang diperbarui
+        $recentUpdated = ActivityLog::active()
+            ->byAction('updated')
+            ->where('timestamp', '>=', $timeLimit)
+            ->orderBy('timestamp', 'desc')
+            ->take(5)
+            ->get();
 
-        // Gabungkan semua aktivitas terbaru
-        $recentActivities = $recentCards->concat($recentAdmins)->concat($recentUsers);
+        // Aktivitas Dihapus - data yang dihapus (bukan soft deleted)
+        $recentDeleted = ActivityLog::active()
+            ->byAction('deleted')
+            ->where('timestamp', '>=', $timeLimit)
+            ->orderBy('timestamp', 'desc')
+            ->take(5)
+            ->get();
 
-        // Urutkan aktivitas berdasarkan waktu terbaru dan ambil 5 teratas
-        $recentActivities = $recentActivities->sortByDesc('timestamp')->take(5);
+        // Aktivitas terbaru untuk timeline - diurutkan berdasarkan waktu aktual
+        $recentActivities = $recentAdded->concat($recentUpdated)->concat($recentDeleted)
+            ->sortByDesc(function ($activity) {
+                return $activity->timestamp;
+            })
+            ->take(10);
 
-        // Kirim data ke view dashboard admin
+        // Hitung total untuk setiap kategori
+        $totalAdded = ActivityLog::active()
+            ->byAction('created')
+            ->where('timestamp', '>=', $timeLimit)
+            ->count();
+
+        $totalUpdated = ActivityLog::active()
+            ->byAction('updated')
+            ->where('timestamp', '>=', $timeLimit)
+            ->count();
+
+        $totalDeleted = ActivityLog::active()
+            ->byAction('deleted')
+            ->where('timestamp', '>=', $timeLimit)
+            ->count();
+
+        // Data untuk perbandingan kartu harian dan mingguan
+        $dailyCardCounts = $this->getDailyCardCounts();
+        $weeklyCardCounts = $this->getWeeklyCardCounts();
+
         return view('admin.dashboard', compact(
             'cardsCount',
             'adminsCount',
             'visitorsCount',
-            'recentActivities'
+            'recentAdded',
+            'recentDeleted',
+            'recentUpdated',
+            'recentActivities',
+            'totalAdded',
+            'totalUpdated',
+            'totalDeleted',
+            'dailyCardCounts',
+            'weeklyCardCounts'
         ));
+    }
+
+    /**
+     * Get daily card addition counts for the last 30 days
+     */
+    private function getDailyCardCounts(): array
+    {
+        $dailyCounts = Card::selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->where('created_at', '>=', Carbon::now()->subDays(30))
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->get();
+
+        return $dailyCounts->map(function ($item) {
+            return [
+                'date' => Carbon::parse($item->date)->format('d M'),
+                'count' => $item->count
+            ];
+        })->toArray();
+    }
+
+    /**
+     * Get weekly card addition counts for the last 12 weeks
+     */
+    private function getWeeklyCardCounts(): array
+    {
+        $weeklyCounts = Card::selectRaw('YEAR(created_at) as year, WEEK(created_at) as week, COUNT(*) as count')
+            ->where('created_at', '>=', Carbon::now()->subWeeks(12))
+            ->groupBy('year', 'week')
+            ->orderBy('year', 'asc')
+            ->orderBy('week', 'asc')
+            ->get();
+
+        return $weeklyCounts->map(function ($item) {
+            $startOfWeek = Carbon::now()->setISODate($item->year, $item->week)->startOfWeek();
+            return [
+                'date' => 'Minggu ' . $item->week . ' (' . $startOfWeek->format('d M') . ')',
+                'count' => $item->count
+            ];
+        })->toArray();
     }
 }

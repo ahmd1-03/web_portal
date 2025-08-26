@@ -1,11 +1,17 @@
 // Import library dan modul yang diperlukan
 import "./bootstrap"; // Import file bootstrap.js untuk inisialisasi framework
+import Swal from 'sweetalert2'; // Import SweetAlert2
 import { userManager } from "./userManager"; // Import modul manajemen user
 import { cardManager } from "./cardManager"; // Import modul manajemen card
+import { TimeUpdater } from "./timeUpdater"; // Import modul untuk update waktu real-time
+
+// Ekspos SweetAlert ke global window
+window.Swal = Swal;
 
 // Ekspos modul ke global window agar bisa diakses dari mana saja
 window.userManager = userManager; // Membuat userManager tersedia di global scope
 window.cardManager = cardManager; // Membuat cardManager tersedia di global scope
+window.TimeUpdater = TimeUpdater; // Membuat TimeUpdater tersedia di global scope
 
 /**
  * Wrapper terpusat untuk SweetAlert dengan animasi dan style yang konsisten
@@ -14,7 +20,7 @@ window.cardManager = cardManager; // Membuat cardManager tersedia di global scop
  * @param {string} options.title - Judul notifikasi
  * @param {string} options.text - Isi pesan notifikasi
  * @param {number} [options.timer] - Timer auto close dalam milidetik (opsional)
- * @param {boolean} [options.showProgressBar] - Tampilkan progress bar (default false)
+ * @param {boolean} [options.timerProgressBar] - Tampilkan progress bar timer (default false)
  * @param {string} [options.redirectUrl] - URL untuk redirect setelah timer habis (opsional)
  * @param {boolean} [options.showConfirmButton] - Tampilkan tombol konfirmasi (default true)
  * @returns {Promise} - Promise yang resolve ketika SweetAlert ditutup
@@ -24,7 +30,7 @@ export function showSweetAlert({
     title, // Judul notifikasi
     text, // Isi pesan notifikasi
     timer, // Waktu auto close (ms)
-    showProgressBar = false, // Tampilkan progress bar
+    timerProgressBar = false, // Tampilkan progress bar timer
     redirectUrl, // URL untuk redirect
     showConfirmButton = true, // Tampilkan tombol konfirmasi
 }) {
@@ -34,6 +40,7 @@ export function showSweetAlert({
         title,
         text,
         timer,
+        timerProgressBar,
         showConfirmButton,
         // Warna tombol sesuai jenis ikon
         confirmButtonColor: icon === "success" ? "#10b981" : "#dc2626", // Hijau untuk sukses, merah untuk error
@@ -44,23 +51,6 @@ export function showSweetAlert({
         // Animasi saat menghilang
         hideClass: {
             popup: "animate__animated animate__fadeOutUp", // Animasi fade out ke atas
-        },
-        // Callback ketika notifikasi terbuka
-        didOpen: () => {
-            // Jika perlu menampilkan progress bar
-            if (showProgressBar) {
-                const popup = Swal.getPopup(); // Dapatkan element popup
-                const progressBar = document.createElement("div"); // Buat element progress bar
-                progressBar.className = "progress-bar"; // Tambahkan class
-                popup.appendChild(progressBar); // Tambahkan ke popup
-                setTimeout(() => {
-                    progressBar.style.width = "100%"; // Animasikan progress bar
-                }, 100);
-            }
-        },
-        // Callback sebelum notifikasi ditutup
-        willClose: () => {
-            // Tidak ada aksi khusus yang diperlukan
         },
         // Pengaturan interaksi
         allowOutsideClick: !timer, // Izinkan klik di luar jika tidak ada timer

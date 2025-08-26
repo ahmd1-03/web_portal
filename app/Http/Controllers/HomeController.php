@@ -11,16 +11,15 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        // $query = Card::query();
-
-         $query = Card::where('is_active', true); // hanya ambil yang aktif
+        $query = Card::where('is_active', true); // hanya ambil yang aktif
 
         if ($search) {
             $query->where('title', 'like', '%' . $search . '%')
                   ->orWhere('description', 'like', '%' . $search . '%');
         }
 
-        $cards = $query->get();
+        // Implement pagination with 10 items per page
+        $cards = $query->paginate(10);
 
         return view('frontend.home', compact('cards', 'search'));
     }

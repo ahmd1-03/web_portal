@@ -1,623 +1,487 @@
-<!DOCTYPE html>
-<html lang="id">
+  <!DOCTYPE html>
+  <html lang="id">
 
-<head>
-  <!-- Meta Tag Dasar -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Portal Resmi Kabupaten Karawang</title>
-  <meta name="description" content="Portal resmi informasi dan layanan publik Kabupaten Karawang">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portal Resmi Kabupaten Karawang</title>
+    <meta name="description" content="Jelajahi informasi dan layanan publik resmi dari Pemerintah Kabupaten Karawang.">
 
-  <!-- CSS Eksternal -->
-  <!-- AOS CSS untuk animasi scroll -->
-  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
-  <!-- Tailwind CSS via CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts - Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
-
-  <!-- CSS Internal -->
-  <style>
-    /* Gaya dasar untuk body */
-    body {
-      font-family: 'Poppins', sans-serif;
-      scroll-behavior: smooth;
-      /* Scroll halus */
-    }
-
-    /* Gaya scrollbar kustom */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background-color: #065f46;
-      /* Warna emerald */
-      border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #f0fdf4;
-      /* Warna background */
-    }
-
-    /* Efek focus untuk input pencarian */
-    .search-input:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.3);
-      /* Shadow hijau */
-      border-color: #059669;
-      /* Border hijau */
-    }
-
-    /* CSS Khusus untuk Mobile - Teks Karawang */
-    @media (max-width: 768px) {
-
-      /* Navbar container adjustments */
-      nav {
-        padding: 0.5rem 0.75rem !important;
-      }
-
-      /* Logo adjustments */
-      nav img {
-        height: 2.5rem !important;
-        /* 40px */
-        width: 2.5rem !important;
-        /* 40px */
-        margin-right: 0.5rem !important;
-      }
-
-      /* Text container adjustments */
-      nav .flex.items-center>div {
-        margin-left: 0.25rem !important;
-      }
-
-      /* Main title adjustments */
-      nav h1 {
-        font-size: 1.25rem !important;
-        /* 20px */
-        line-height: 1.2 !important;
-        margin-bottom: 0 !important;
-      }
-
-      /* Subtitle adjustments - Portal Informasi Karawang */
-      nav p {
-        font-size: 0.625rem !important;
-        /* 10px */
-        line-height: 1.1 !important;
-        margin-top: 0 !important;
-        letter-spacing: -0.025em !important;
-      }
-
-      /* Reduce spacing between logo and text */
-      nav .flex.items-center {
-        gap: 0.375rem !important;
-      }
-
-      /* Admin button adjustments for mobile */
-      nav a[href*="admin"] {
-        padding: 0.375rem 0.75rem !important;
-        font-size: 0.75rem !important;
-      }
-    }
-
-    /* Extra small mobile adjustments */
-    @media (max-width: 375px) {
-
-      /* Atur flex agar logo & teks sejajar vertikal */
-      .flex.items-center {
-        align-items: center;
-      }
-
-      /* Perbesar logo */
-      .flex.items-center img {
-        height: 10rem !important;
-        /* 64px */
-        width: 10rem !important;
-        /* 64px */
-        margin-right: 0.27rem;
-        /* Dekatkan teks ke logo */
-      }
-
-      /* Atur container teks (div setelah img) */
-      .flex.items-center>div {
-        display: flex;
-        flex-direction: column;
-        /* Susun h1 & p vertikal */
-        justify-content: center;
-        /* Tengah vertikal */
-        align-items: flex-start;
-        /* Rapat ke kiri */
-      }
-
-      /* Judul */
-      .flex.items-center h1 {
-        font-size: 1.125rem !important;
-        /* 18px */
-        margin: 0;
-        line-height: 1.2;
-      }
-
-      /* Subjudul */
-      .flex.items-center p {
-        font-size: 0.55rem !important;
-        /* ~8.8px */
-        margin: 0;
-        line-height: 1.1;
-      }
-    }
-
-
-
-    /* Container untuk wave SVG
-    .wave-container {
-      height: 120px;
-      overflow: hidden;
-    }
-
-    .wave-container svg {
-      width: 100%;
-      height: 100%;
-    } */
-
-    /* Animasi untuk empty state */
-    
-    @keyframes float {
-
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-10px);
-      }
-    }
-
-    .float-animation {
-      animation: float 3s ease-in-out infinite;
-    }
-  </style>
-</head>
-
-<body class="bg-emerald-50 text-gray-800">
-
-  <!-- Navbar -->
-  <nav
-    class="fixed top-0 left-0 right-0 bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-700 shadow-md px-5 py-3 z-50 flex items-center justify-between">
-    <!-- Logo dan Nama Website -->
-    <div class="flex items-center">
-      <img src="{{ asset('images/logoKrw.png') }}" alt="Logo Kabupaten Karawang" class="h-14 mr-3" width="56"
-        height="56">
-      <div>
-        <h1 class="text-white text-2xl sm:text-3xl font-bold tracking-wide">Karawang</h1>
-        <p class="text-emerald-200 text-xs leading-tight">Portal Informasi Karawang</p>
-      </div>
-    </div>
-
-    <!-- Tombol Dashboard Admin (hanya muncul jika admin login) -->
-    @auth('admin')
-    <a href="{{ route('admin.dashboard') }}"
-      class="bg-white text-emerald-900 px-4 py-2 rounded-lg shadow hover:bg-emerald-100 transition flex items-center gap-2"
-      aria-label="Kembali ke Dashboard Admin">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-      stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
-      <path stroke-linecap="round" stroke-linejoin="round" d="M16 17l5-5-5-5" />
-      <path stroke-linecap="round" stroke-linejoin="round" d="M21 12H9" />
-      </svg>
-      {{-- <span class="hidden sm:inline">Dashboard</span> --}}
-    </a>
-  @endauth
-  </nav>
-
-  {{-- <!-- Hero Section -->
-  <section
-    class="relative pt-40 pb-28 px-4 text-center overflow-hidden bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-700">
-    <div class="max-w-4xl mx-auto">
-      <!-- Judul Hero -->
-      <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-4" data-aos="fade-down">
-        Website Portal Karawang
-      </h1>
-      <!-- Subjudul Hero -->
-      <p class="text-emerald-100 text-lg md:text-xl max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
-        Temukan informasi dan layanan publik Kabupaten Karawang
-      </p>
-    </div>
-
-    <!-- Wave Animation dengan Gradien dan Efek Halus -->
-    <div class="wave-container absolute bottom-0 left-0 w-full h-32 overflow-hidden">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none" class="h-full w-full">
-        <defs>
-          <!-- Gradien untuk wave -->
-          <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#064e3b" /> <!-- Warna hijau tua -->
-            <stop offset="50%" stop-color="#047857" /> <!-- Warna hijau medium -->
-            <stop offset="100%" stop-color="#059669" /> <!-- Warna hijau muda -->
-          </linearGradient>
-        </defs>
-        <!-- Path wave dengan animasi -->
-        <path fill="url(#waveGradient)"
-          d="M0,46L48,53C96,60,192,74,288,69C384,64,480,40,576,40C672,40,768,64,864,74C960,85,1056,83,1152,74C1248,64,1344,48,1392,40L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z">
-          <!-- Animasi morphing untuk efek alami -->
-          <animate attributeName="d" dur="18s" repeatCount="indefinite"
-            values="M0,46L48,53C96,60,192,74,288,69C384,64,480,40,576,40C672,40,768,64,864,74C960,85,1056,83,1152,74C1248,64,1344,48,1392,40L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z;
-                          M0,60L48,53C96,46,192,32,288,32C384,32,480,46,576,53C672,60,768,60,864,53C960,46,1056,32,1152,32C1248,32,1344,46,1392,53L1440,60L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z;
-                          M0,32L48,40C96,48,192,64,288,69C384,74,480,69,576,60C672,51,768,37,864,32C960,27,1056,32,1152,40C1248,48,1344,60,1392,64L1440,69L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z;
-                          M0,46L48,53C96,60,192,74,288,69C384,64,480,40,576,40C672,40,768,64,864,74C960,85,1056,83,1152,74C1248,64,1344,48,1392,40L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z" />
-        </path>
-      </svg>
-    </div>
-  </section> --}}
-
-
-  <section
-    class="relative pt-28 pb-9 px-4 sm:px-6 text-center overflow-hidden bg-gradient-to-br from-emerald-950 via-teal-900 to-emerald-800 min-h-[30vh] sm:min-h-[40vh] flex flex-col items-center justify-center">
-    <div class="max-w-3xl mx-auto relative z-10">
-      <!-- Hero Title -->
-      <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 leading-tight tracking-tight"
-        data-aos="fade-down" data-aos-duration="600">
-        Web Portal Karawang
-      </h1>
-      <!-- Hero Subtitle -->
-      <p class="text-teal-100 text-sm sm:text-base md:text-lg max-w-xl mx-auto mb-6 font-light" data-aos="fade-up"
-        data-aos-delay="150" data-aos-duration="600">
-        Jelajahi informasi dan layanan publik Kabupaten Karawang
-      </p>
-
-      <!-- Search Form -->
-      <div class="mx-auto max-w-lg" data-aos="zoom-in" data-aos-delay="300" data-aos-duration="600">
-        <div class="relative w-full">
-          <label for="search" class="sr-only">Cari konten</label>
-          <input type="text" id="search" name="query" placeholder="Cari konten..."
-            class="search-input w-full rounded-full px-4 py-2.5 pr-12 border-2 border-teal-500 shadow-md text-gray-900 bg-white/95 backdrop-blur-sm focus:ring-2 focus:ring-teal-400 focus:border-teal-400 transition-all duration-300 ease-in-out">
-          <button type="button" id="search-btn"
-            class="absolute top-1/2 right-2 -translate-y-1/2 bg-gradient-to-r from-teal-600 to-emerald-500 text-white rounded-full p-2 hover:from-teal-500 hover:to-emerald-400 transition-all duration-300">
-            <!-- Search Icon -->
-            <svg id="search-icon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="7"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <!-- Loading Spinner -->
-            <svg id="search-spinner" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 hidden animate-spin" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-          </button>
-        </div>
-        <div id="search-loading" class="hidden text-center mt-2">
-          <div class="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-teal-500"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Static Subtle Gradient Background -->
-    <div class="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none" class="w-full h-full">
-        <defs>
-          <linearGradient id="staticGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#064e3b" stop-opacity="0.5" />
-            <stop offset="50%" stop-color="#047857" stop-opacity="0.4" />
-            <stop offset="100%" stop-color="#059669" stop-opacity="0.5" />
-          </linearGradient>
-          <pattern id="subtlePattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-            <circle cx="50" cy="50" r="20" fill="rgba(255, 255, 255, 0.1)" />
-            <circle cx="25" cy="25" r="10" fill="rgba(255, 255, 255, 0.05)" />
-            <circle cx="75" cy="75" r="15" fill="rgba(255, 255, 255, 0.08)" />
-          </pattern>
-        </defs>
-        <rect width="1440" height="320" fill="url(#staticGradient)" />
-        <rect width="1440" height="320" fill="url(#subtlePattern)" opacity="0.3" />
-      </svg>
-    </div>
-
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-      /* Smooth Search Input Transition */
-      .search-input:focus {
-        transform: scale(1.02);
-        box-shadow: 0 0 10px rgba(20, 184, 166, 0.3);
+      :root {
+        --primary: #0e7490;
+        --primary-light: #06b6d4;
+        --primary-dark: #155e75;
+        --secondary: #10b981;
+        --accent: #8b5cf6;
+        --text: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --glass: rgba(255, 255, 255, 0.1);
+        --glass-dark: rgba(0, 0, 0, 0.2);
       }
 
-      /* Responsive Adjustments */
-      @media (max-width: 640px) {
-        .min-h-\[40vh\] {
-          min-height: 40vh;
-        }
+      body {
+        font-family: 'Poppins', sans-serif;
+        scroll-behavior: smooth;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        color: var(--text);
+        min-height: 100vh;
+      }
 
-        h1 {
-          font-size: 2rem;
-        }
+      /* Glassmorphism effect */
+      .glass {
+        background: var(--glass);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+      }
 
-        p {
-          font-size: 0.875rem;
-          margin-bottom: 1rem;
-        }
+      .glass-dark {
+        background: var(--glass-dark);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
 
-        .search-input {
-          padding: 0.5rem 2.5rem 0.5rem 1rem;
-          font-size: 0.875rem;
-        }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
 
-        #search-btn {
-          padding: 0.5rem;
-        }
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom, var(--primary-light), var(--primary-dark));
+        border-radius: 4px;
+      }
 
-        #search-btn svg {
-          width: 1rem;
-          height: 1rem;
-        }
+      ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.2);
+      }
 
-        section {
-          padding-top: 4rem;
+      /* Improved focus states */
+      .focus-accent:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.4);
+      }
+
+      /* Animation keyframes */
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0);
         }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      .float-animation {
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .pulse-animation {
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      /* Improved card design */
+      .card-hover-effect {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card-hover-effect::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.7s ease;
+      }
+
+      .card-hover-effect:hover::before {
+        left: 100%;
+      }
+
+      .card-hover-effect:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Search improvements */
+      .search-input {
+        transition: all 0.3s ease;
+      }
+
+      .search-input:focus {
+        box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+      }
+
+      /* Gradient text */
+      .gradient-text {
+        background: linear-gradient(to right, #06b6d4, #10b981);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .hero-title {
+          font-size: 2.5rem !important;
+        }
+        
+        .hero-subtitle {
+          font-size: 1.1rem !important;
+        }
+        
+        nav img {
+          height: 2.5rem !important;
+          width: 2.5rem !important;
+        }
+        
+        nav h1 {
+          font-size: 1.25rem !important;
+        }
+        
+        nav p {
+          font-size: 0.7rem !important;
+        }
+      }
+
+      /* Loading animation */
+      .loading-dots {
+        display: inline-flex;
+      }
+      
+      .loading-dots span {
+        width: 8px;
+        height: 8px;
+        margin: 0 3px;
+        border-radius: 50%;
+        background-color: var(--primary-light);
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+      
+      .loading-dots span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      
+      .loading-dots span:nth-child(3) {
+        animation-delay: 0.4s;
       }
     </style>
-  </section>
+  </head>
 
-  <!-- Include AOS for animations -->
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script>
-    AOS.init();
-  </script>
+  <body class="antialiased">
 
-
-
-
-  <!-- Main Content -->
-  <main class="px-4 max-w-7xl mx-auto relative z-10 mt-0 sm:mt-8">
-    {{-- <!-- Search Form -->
-    <div class="mx-auto my-12 md:my-16 max-w-xl" data-aos="zoom-in">
-      <div class="relative w-full">
-        <label for="search" class="sr-only">Cari konten</label>
-        <input type="text" id="search" name="search" placeholder="Cari konten..."
-          class="search-input w-full rounded-full px-5 py-3 pr-14 border-2 border-emerald-600 shadow-sm text-gray-800 transition">
-        <button type="button" id="search-btn"
-          class="absolute top-1/2 right-2 -translate-y-1/2 bg-gradient-to-r from-emerald-700 to-emerald-600 text-white rounded-full p-2 hover:from-emerald-600 hover:to-emerald-500 transition">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-            stroke-width="2">
-            <circle cx="11" cy="11" r="7"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </button>
-      </div>
-      <div id="search-loading" class="hidden text-center mt-4">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
-      </div>
-    </div> --}}
-
-    <!-- Cards Grid -->
-    <section id="cards-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 pb-24"
-      aria-live="polite">
-      @forelse ($cards as $card)
-      <!-- Card Item dengan Efek Hover Animasi -->
-      <article tabindex="0" data-aos="fade-up"
-      class="bg-white rounded-xl shadow-lg hover:shadow-2xl hover:shadow-emerald-500/20 hover:-translate-y-2 hover:scale-[1.02] transition-all duration-300 ease-out flex flex-col overflow-hidden cursor-pointer group">
-      <div class="w-full overflow-hidden">
-        <img src="{{ Storage::url($card->image_url) }}" alt="Logo {{ $card->title }}"
-        class="w-full max-h-40 object-cover bg-gray-100 transition-transform duration-300 group-hover:scale-110" />
-      </div>
-      <div class="p-3 flex flex-col flex-grow">
-        <h2 class="text-sm font-semibold text-emerald-900 mb-1 group-hover:text-emerald-700 transition-colors">
-        {{ $card->title }}
-        </h2>
-        <p class="text-emerald-700 text-xs mb-3 line-clamp-3 group-hover:text-emerald-600 transition-colors">
-        {{ $card->description }}
-        </p>
-        <a href="{{ $card->external_link }}" target="_blank" rel="noopener noreferrer"
-        class="mt-auto inline-flex items-center gap-1 text-white font-medium px-3 py-1 rounded bg-gradient-to-r from-emerald-900 to-emerald-700 text-xs hover:from-emerald-700 hover:to-emerald-600 transition-all duration-300 group-hover:shadow-md">
-        Lihat selengkapnya...
-        <svg xmlns="http://www.w3.org/2000/svg"
-          class="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" fill="currentColor"
-          viewBox="0 0 16 16">
-          <path fill-rule="evenodd"
-          d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 1 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
-        </svg>
-        </a>
-      </div>
-      </article>
-    @empty
-      <!-- Empty State -->
-      <div class="col-span-full text-center py-16" data-aos="zoom-in" data-aos-duration="800">
-      <div class="relative inline-block mb-6">
-        <!-- Icon dengan animasi mengambang -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 float-animation" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <!-- Efek ping subtle -->
-        <div class="absolute inset-0 rounded-full bg-emerald-100 opacity-0 animate-ping -z-10"
-        style="animation-delay: 1s;"></div>
+    <!-- ===================== BAGIAN NAVBAR ===================== -->
+    <nav class="fixed top-0 left-0 right-0 glass-dark py-3 px-4 z-50 flex items-center justify-between">
+      <div class="flex items-center">
+        <img src="{{ asset('images/logoKrw.png') }}" alt="Logo Kabupaten Karawang" class="h-14 w-14 mr-3 rounded-xl object-cover">
+        <div>
+          <h1 class="text-white text-2xl font-bold">Karawang</h1>
+          <p class="text-cyan-200 text-xs">Portal Informasi Karawang</p>
+        </div>
       </div>
 
-      <h3 class="text-xl font-medium text-gray-600 mb-2" data-aos="fade-up" data-aos-delay="200">
-        Oops! Tidak ada konten ditemukan
-      </h3>
-      <p class="text-gray-400 max-w-md mx-auto" data-aos="fade-up" data-aos-delay="300">
-        Kami tidak dapat menemukan apa yang Anda cari. Coba kata kunci lain atau lihat rekomendasi kami.
-      </p>
-
-      @if(request()->has('search'))
-      <div class="mt-6" data-aos="fade-up" data-aos-delay="400">
-      <a href="{{ url('/') }}"
-      class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-emerald-700 to-emerald-600 hover:from-emerald-800 hover:to-emerald-700 transition-all duration-300 transform hover:-translate-y-1">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 -ml-1" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-      </svg>
-      Kembali ke halaman utama
+      @auth('admin')
+      <a href="{{ route('admin.dashboard') }}"
+        class="glass px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-300 flex items-center gap-2 font-medium text-cyan-100 hover:text-white"
+        aria-label="Kembali ke Dashboard Admin">
+        <i class="fas fa-tachometer-alt"></i>
+        <span class="hidden sm:inline">Dashboard</span>
       </a>
-      </div>
-    @endif
+      @endauth
+    </nav>
 
-      <!-- Dekorasi bouncing dots -->
-      <div class="mt-12 flex justify-center space-x-4 opacity-50">
-        <div class="w-3 h-3 rounded-full bg-emerald-700 animate-bounce" style="animation-delay: 0.1s"></div>
-        <div class="w-3 h-3 rounded-full bg-emerald-600 animate-bounce" style="animation-delay: 0.2s"></div>
-        <div class="w-3 h-3 rounded-full bg-emerald-500 animate-bounce" style="animation-delay: 0.3s"></div>
+    <!-- ===================== BAGIAN UTAMA (HERO & KONTEN) ===================== -->
+    <section class="relative pt-28 pb-16 px-4 min-h-screen overflow-hidden">
+      <!-- Background elements -->
+      <div class="absolute inset-0 z-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-cyan-500 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-emerald-500 rounded-full filter blur-3xl opacity-20 animate-pulse" style="animation-delay: 1s"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-violet-500 rounded-full filter blur-3xl opacity-10 animate-pulse" style="animation-delay: 2s"></div>
       </div>
+
+      <div class="max-w-4xl mx-auto relative z-10 text-center">
+        <h1 class="hero-title text-4xl md:text-5xl font-bold text-white mb-4 leading-tight" data-aos="fade-down">
+          Web Portal <span class="gradient-text">Karawang</span>
+        </h1>
+        <p class="hero-subtitle text-cyan-100 text-lg md:text-xl max-w-2xl mx-auto mb-8 font-light" data-aos="fade-up" data-aos-delay="150">
+          Jelajahi informasi dan layanan publik Kabupaten Karawang
+        </p>
+
+        <div class="mx-auto max-w-lg mt-8 mb-12" data-aos="zoom-in" data-aos-delay="300">
+          <div class="relative w-full">
+            <label for="search" class="sr-only">Cari konten</label>
+            <input type="text" id="search" name="query" placeholder="Cari informasi atau layanan..."
+              class="search-input glass w-full rounded-2xl px-5 py-4 pr-14 text-white placeholder-cyan-100 focus:ring-2 focus:ring-cyan-500 focus-accent">
+            <button type="button" id="search-btn"
+              class="absolute top-1/2 right-3 -translate-y-1/2 bg-gradient-to-r from-cyan-500 to-emerald-500 text-white rounded-xl p-2.5 hover:from-cyan-400 hover:to-emerald-400 transition-all duration-300 transform hover:scale-110 shadow-lg">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+          <div id="search-loading" class="hidden text-center mt-4">
+            <div class="loading-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <p class="text-cyan-200 text-sm mt-2">Mencari...</p>
+          </div>
+        </div>
       </div>
-    @endforelse
+
+      <main id="cards-container" class="max-w-4xl mx-auto relative z-10 grid gap-5 mt-8" aria-live="polite">
+        @forelse ($cards as $card)
+        <a href="{{ $card->external_link }}" target="_blank" rel="noopener noreferrer" tabindex="0" data-aos="fade-up"
+          class="card-hover-effect glass rounded-2xl p-5 group flex items-center justify-between transition-all duration-300">
+          <div class="flex items-center space-x-4 flex-1 min-w-0">
+            <div class="w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-white/10 border border-white/10 shadow-lg">
+              <img src="{{ Storage::url($card->image_url) }}" alt="Logo {{ $card->title }}"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+            </div>
+            <div class="flex-grow text-left min-w-0">
+              <h2 class="text-lg font-semibold text-white mb-1 group-hover:text-cyan-300 transition-colors truncate">
+                {{ $card->title }}
+              </h2>
+              <p class="text-cyan-100 text-sm line-clamp-2 group-hover:text-cyan-50 transition-colors">
+                {{ $card->description }}
+              </p>
+            </div>
+          </div>
+          <div class="ml-4 flex-shrink-0">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 flex items-center justify-center text-white group-hover:from-cyan-400 group-hover:to-emerald-400 transition-all duration-300 transform group-hover:translate-x-1">
+              <i class="fas fa-arrow-right"></i>
+            </div>
+          </div>
+        </a>
+        @empty
+        <div class="col-span-full text-center py-16 text-white" data-aos="zoom-in">
+          <div class="relative inline-block mb-6">
+            <i class="fas fa-search fa-3x text-cyan-400 float-animation"></i>
+          </div>
+          <h3 class="text-2xl font-medium text-white mb-3">Belum ada konten tersedia</h3>
+          <p class="text-cyan-200 max-w-md mx-auto">
+            Silakan kembali lagi nanti atau hubungi administrator untuk informasi lebih lanjut.
+          </p>
+        </div>
+        @endforelse
+
+        {{-- Pagination Controls --}}
+        @if($cards->hasPages())
+        <div class="col-span-full mt-12">
+          {{-- Results information --}}
+          <div class="text-center mb-6">
+            <p class="text-cyan-200 text-sm">
+              Menampilkan {{ $cards->firstItem() }} sampai {{ $cards->lastItem() }} dari {{ $cards->total() }} hasil
+            </p>
+          </div>
+
+          {{-- Pagination buttons --}}
+          <div class="flex items-center justify-center space-x-2">
+            {{-- Previous Button --}}
+            @if($cards->onFirstPage())
+            <span class="glass px-4 py-2 rounded-lg text-cyan-200 opacity-50 cursor-not-allowed">
+              <i class="fas fa-chevron-left mr-2"></i>Sebelumnya
+            </span>
+            @else
+            <a href="{{ $cards->previousPageUrl() }}" class="glass px-4 py-2 rounded-lg text-cyan-100 hover:text-white transition-colors duration-300 hover:shadow-lg">
+              <i class="fas fa-chevron-left mr-2"></i>Sebelumnya
+            </a>
+            @endif
+
+            {{-- Page Numbers --}}
+            <div class="flex items-center space-x-1">
+              @foreach ($cards->getUrlRange(1, $cards->lastPage()) as $page => $url)
+                @if ($page == $cards->currentPage())
+                <span class="glass px-3 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-medium">
+                  {{ $page }}
+                </span>
+                @else
+                <a href="{{ $url }}" class="glass px-3 py-2 rounded-lg text-cyan-100 hover:text-white transition-colors duration-300">
+                  {{ $page }}
+                </a>
+                @endif
+              @endforeach
+            </div>
+
+            {{-- Next Button --}}
+            @if($cards->hasMorePages())
+            <a href="{{ $cards->nextPageUrl() }}" class="glass px-4 py-2 rounded-lg text-cyan-100 hover:text-white transition-colors duration-300 hover:shadow-lg">
+              Selanjutnya<i class="fas fa-chevron-right ml-2"></i>
+            </a>
+            @else
+            <span class="glass px-4 py-2 rounded-lg text-cyan-200 opacity-50 cursor-not-allowed">
+              Selanjutnya<i class="fas fa-chevron-right ml-2"></i>
+            </span>
+            @endif
+          </div>
+        </div>
+        @endif
+      </main>
     </section>
-  </main>
 
-  <!-- Footer -->
-  <footer class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-700 text-emerald-100 py-8">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="mb-4 md:mb-0">
-          <p class="text-sm">&copy; {{ date('Y') }} Pemerintah Kabupaten Karawang. Semua Hak Dilindungi.</p>
-        </div>
-        <div class="flex gap-6">
-          <a href="{{ route('privacy') }}" class="text-sm hover:text-white transition">Kebijakan Privasi</a>
-          <a href="{{ route('terms') }}" class="text-sm hover:text-white transition">Syarat & Ketentuan</a>
+    <!-- ===================== BAGIAN FOOTER ===================== -->
+    <footer class="glass-dark py-8 mt-12">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div class="mb-4 md:mb-0 text-center md:text-left">
+            <p class="text-sm text-cyan-100">&copy; {{ date('Y') }} Pemerintah Kabupaten Karawang. Semua Hak Dilindungi.</p>
+          </div>
+          {{-- <div class="flex space-x-6 text-cyan-200">
+            <a href="#" class="hover:text-white transition-colors duration-300">
+              <i class="fab fa-facebook fa-lg"></i>
+            </a>
+            <a href="#" class="hover:text-white transition-colors duration-300">
+              <i class="fab fa-twitter fa-lg"></i>
+            </a>
+            <a href="#" class="hover:text-white transition-colors duration-300">
+              <i class="fab fa-instagram fa-lg"></i>
+            </a>
+            <a href="#" class="hover:text-white transition-colors duration-300">
+              <i class="fab fa-youtube fa-lg"></i>
+            </a>
+          </div> --}}
         </div>
       </div>
-    </div>
-  </footer>
+    </footer>
 
-  <!-- Inisialisasi AOS -->
-  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-  <script>
-    // Inisialisasi library AOS untuk animasi scroll
-    AOS.init({
-      duration: 600, // Durasi animasi
-      easing: 'ease-out-quad', // Efek easing
-      once: true, // Animasi hanya sekali
-      offset: 100 // Offset trigger
-    });
+    <!-- ===================== BAGIAN SCRIPT ===================== -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+      // Inisialisasi library AOS untuk animasi scroll
+      AOS.init({
+        duration: 800,
+        easing: 'ease-out-quart',
+        once: true,
+        offset: 100
+      });
 
-    // Dynamic Search Functionality
-    const searchInput = document.getElementById('search');
-    const searchBtn = document.getElementById('search-btn');
-    const cardsContainer = document.getElementById('cards-container');
-    const searchLoading = document.getElementById('search-loading');
+      // Dynamic Search Functionality
+      const searchInput = document.getElementById('search');
+      const searchBtn = document.getElementById('search-btn');
+      const cardsContainer = document.querySelector('#cards-container');
+      const searchLoading = document.getElementById('search-loading');
 
-    let searchTimeout;
+      let searchTimeout;
 
-    // Function to perform search
-    async function performSearch(query) {
-      if (query.length < 1) {
-        loadInitialCards();
-        return;
+      // Function to perform search
+      async function performSearch(query) {
+        if (query.length < 1) {
+          window.location.reload();
+          return;
+        }
+
+        searchLoading.classList.remove('hidden');
+        searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+        try {
+          const response = await fetch(`/search?query=${encodeURIComponent(query)}`);
+          const data = await response.json();
+
+          displaySearchResults(data.cards, data.message);
+        } catch (error) {
+          console.error('Error searching:', error);
+          displaySearchResults([], 'Terjadi kesalahan saat mencari');
+        } finally {
+          searchLoading.classList.add('hidden');
+          searchBtn.innerHTML = '<i class="fas fa-search"></i>';
+        }
       }
 
-      searchLoading.classList.remove('hidden');
+      // Function to display search results
+      function displaySearchResults(cards, message) {
+        if (cards.length === 0) {
+          cardsContainer.innerHTML = `
+            <div class="col-span-full text-center py-16">
+              <div class="relative inline-block mb-6">
+                <i class="fas fa-search fa-3x text-cyan-400 float-animation"></i>
+              </div>
+              <h3 class="text-2xl font-medium text-white mb-3">Hasil pencarian tidak ditemukan</h3>
+              <p class="text-cyan-200 max-w-md mx-auto mb-6">${message || 'Kami tidak dapat menemukan apa yang Anda cari.'}</p>
+              <button onclick="clearSearch()" class="glass px-5 py-2 rounded-xl text-cyan-100 hover:text-white transition-colors duration-300">
+                Tampilkan Semua Konten
+              </button>
+            </div>
+          `;
+          return;
+        }
 
-      try {
-        const response = await fetch(`/search?query=${encodeURIComponent(query)}`);
-        const data = await response.json();
-
-        displaySearchResults(data.cards, data.message);
-      } catch (error) {
-        console.error('Error searching:', error);
-        displaySearchResults([], 'Terjadi kesalahan saat mencari');
-      } finally {
-        searchLoading.classList.add('hidden');
-      }
-    }
-
-    // Function to display search results
-    function displaySearchResults(cards, message) {
-      if (cards.length === 0) {
-        cardsContainer.innerHTML = `
-                <div class="col-span-full text-center py-16">
-                    <div class="relative inline-block mb-6">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 float-animation" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-medium text-gray-600 mb-2">Oops! Tidak ada konten ditemukan</h3>
-                    <p class="text-gray-400 max-w-md mx-auto">${message || 'Kami tidak dapat menemukan apa yang Anda cari.'}</p>
-                    <div class="mt-6">
-                        <button onclick="clearSearch()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-emerald-700 to-emerald-600 hover:from-emerald-800 hover:to-emerald-700 transition-all duration-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 -ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                            </svg>
-                            Tampilkan Semua
-                        </button>
-                    </div>
-                </div>
-            `;
-        return;
-      }
-
-      cardsContainer.innerHTML = cards.map(card => `
-            <article tabindex="0" data-aos="fade-up"
-                class="bg-white rounded-xl shadow-lg hover:shadow-2xl hover:shadow-emerald-500/20 hover:-translate-y-2 hover:scale-[1.02] transition-all duration-300 ease-out flex flex-col overflow-hidden cursor-pointer group">
-                <div class="w-full overflow-hidden">
-                   <img src="${card.image_url || '/images/placeholder.jpg'}" 
-     alt="Logo ${card.title}" 
-     class="w-full max-h-40 object-cover bg-gray-100 transition-transform duration-300 group-hover:scale-110" 
-     onerror="this.src='/images/placeholder.jpg'" />
-
-                </div>
-                <div class="p-3 flex flex-col flex-grow">
-                    <h2 class="text-sm font-semibold text-emerald-900 mb-1 group-hover:text-emerald-700 transition-colors">${card.title}</h2>
-                    <p class="text-emerald-700 text-xs mb-3 line-clamp-3 group-hover:text-emerald-600 transition-colors">${card.description}</p>
-                    <a href="${card.external_link}" target="_blank" rel="noopener noreferrer"
-                        class="mt-auto inline-flex items-center gap-1 text-white font-medium px-3 py-1 rounded bg-gradient-to-r from-emerald-900 to-emerald-700 text-xs hover:from-emerald-700 hover:to-emerald-600 transition-all duration-300 group-hover:shadow-md">
-                        Baca selengkapnya...
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" fill="currentColor" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 1 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
-                        </svg>
-                    </a>
-                </div>
-            </article>
+        cardsContainer.innerHTML = cards.map(card => `
+          <a href="${card.external_link}" target="_blank" rel="noopener noreferrer" tabindex="0"
+            class="card-hover-effect glass rounded-2xl p-5 group flex items-center justify-between transition-all duration-300">
+            <div class="flex items-center space-x-4 flex-1 min-w-0">
+              <div class="w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-white/10 border border-white/10 shadow-lg">
+                <img src="${card.image_url || '/images/placeholder.jpg'}" alt="Logo ${card.title}"
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              </div>
+              <div class="flex-grow text-left min-w-0">
+                <h2 class="text-lg font-semibold text-white mb-1 group-hover:text-cyan-300 transition-colors truncate">
+                  ${card.title}
+                </h2>
+                <p class="text-cyan-100 text-sm line-clamp-2 group-hover:text-cyan-50 transition-colors">
+                  ${card.description}
+                </p>
+              </div>
+            </div>
+            <div class="ml-4 flex-shrink-0">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 flex items-center justify-center text-white group-hover:from-cyan-400 group-hover:to-emerald-400 transition-all duration-300 transform group-hover:translate-x-1">
+                <i class="fas fa-arrow-right"></i>
+              </div>
+            </div>
+          </a>
         `).join('');
-    }
+      }
 
-    // Function to load initial cards (optional)
-    function loadInitialCards() {
-      // This would reload the initial cards if needed
-      // For now, we'll keep the current behavior
-    }
-
-    // Function to clear search
-    function clearSearch() {
-      searchInput.value = '';
-      window.location.reload();
-    }
-
-    // Event listeners
-    searchInput.addEventListener('input', (e) => {
-      clearTimeout(searchTimeout);
-      const query = e.target.value.trim();
-
-      if (query.length === 0) {
+      // Function to clear search
+      function clearSearch() {
+        searchInput.value = '';
         window.location.reload();
-        return;
       }
 
-      searchTimeout = setTimeout(() => {
-        performSearch(query);
-      }, 300); // Debounce search
-    });
+      // Event listeners
+      searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        const query = e.target.value.trim();
 
-    searchBtn.addEventListener('click', () => {
-      const query = searchInput.value.trim();
-      if (query) {
-        performSearch(query);
-      }
-    });
+        searchTimeout = setTimeout(() => {
+          performSearch(query);
+        }, 500);
+      });
 
-    // Handle Enter key
-    searchInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
+      searchBtn.addEventListener('click', () => {
         const query = searchInput.value.trim();
         if (query) {
           performSearch(query);
         }
-      }
-    });
-  </script>
-</body>
+      });
 
-</html>
-</create_file>
+      // Handle Enter key
+      searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const query = searchInput.value.trim();
+          if (query) {
+            performSearch(query);
+          }
+        }
+      });
+    </script>
+  </body>
+
+  </html>

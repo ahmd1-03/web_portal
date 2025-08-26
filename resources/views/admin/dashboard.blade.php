@@ -1,22 +1,25 @@
+@php use Illuminate\Support\Str; @endphp
 @extends('admin.layouts.app')
 
 @section('content')
-    {{-- Konten utama dashboard admin --}}
-    <main class="p-4 md:p-6 transition-margin duration-300" :>
-
-
-        {{-- Bagian header dengan judul dan sambutan --}}
+    {{-- Kontainer utama untuk dashboard admin dengan padding, margin disesuaikan untuk posisi lebih ke atas, dan latar belakang hijau emerald tipis --}}
+    <div class="p-4 md:p-6 transition-margin duration-300 ml-4 md:ml-6 -mt-8 md:-mt-10">
+        {{-- Bagian header dengan judul dan pesan sambutan --}}
         <section class="mb-6 md:mb-8">
+            {{-- Kontainer flex untuk judul header dan tombol, responsif untuk tampilan mobile dan desktop --}}
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-6 mb-4 md:mb-6">
                 <div class="order-2 md:order-1">
+                    {{-- Judul utama dashboard --}}
                     <h1 class="text-xl md:text-2xl font-extrabold text-gray-900">KARAWANG</h1>
+                    {{-- Pesan sambutan untuk admin --}}
                     <h2 class="text-2xl md:text-3xl font-semibold text-green-700 mt-1">Selamat Datang Admin!</h2>
+                    {{-- Deskripsi tujuan dashboard --}}
                     <p class="text-gray-700 mt-2 md:mt-3 text-sm md:text-base max-w-md leading-relaxed">
                         Dashboard management portal Karawang - Pantau dan kelola sistem dengan mudah
                     </p>
                 </div>
                 <div class="order-1 md:order-2">
-                    {{-- Tombol untuk melihat website frontend --}}
+                    {{-- Tombol untuk mengakses website frontend --}}
                     <a href="/"
                         class="inline-flex items-center px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r from-emerald-700 to-emerald-600 text-white rounded-lg hover:from-emerald-800 hover:to-emerald-700 transition duration-300 shadow-md text-sm md:text-base">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6 mr-2" fill="none"
@@ -29,9 +32,9 @@
                 </div>
             </div>
 
-            {{-- Link cepat ke manajemen kartu dan pengguna --}}
+            {{-- Bagian tautan cepat dan statistik dengan tata letak grid responsif --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
-                {{-- Link ke halaman manajemen kartu --}}
+                {{-- Tautan ke halaman manajemen kartu --}}
                 <a href="{{ route('admin.cards.index') }}"
                     class="flex items-center p-4 md:p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-md border border-green-200 hover:border-green-400 hover:shadow-lg transition gap-3 md:gap-5">
                     <div class="bg-green-200 text-green-800 p-2 md:p-3 rounded-lg">
@@ -47,7 +50,7 @@
                     </div>
                 </a>
 
-                {{-- Link ke halaman manajemen pengguna --}}
+                {{-- Tautan ke halaman manajemen pengguna --}}
                 <a href="{{ route('admin.users.index') }}"
                     class="flex items-center p-4 md:p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-md border border-purple-200 hover:border-purple-400 hover:shadow-lg transition gap-3 md:gap-5">
                     <div class="bg-purple-200 text-purple-800 p-2 md:p-3 rounded-lg">
@@ -63,7 +66,7 @@
                     </div>
                 </a>
 
-                {{-- Statistik jumlah kartu --}}
+                {{-- Tampilan statistik jumlah kartu --}}
                 <div
                     class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 md:p-6 rounded-xl shadow-md border border-blue-200 flex items-center gap-3 md:gap-4 hover:shadow-lg transition">
                     <div class="bg-blue-200 text-blue-800 p-2 md:p-4 rounded-lg">
@@ -79,7 +82,7 @@
                     </div>
                 </div>
 
-                {{-- Statistik jumlah admin --}}
+                {{-- Tampilan statistik jumlah admin --}}
                 <div
                     class="bg-gradient-to-br from-green-50 to-green-100 p-4 md:p-6 rounded-xl shadow-md border border-green-200 flex items-center gap-3 md:gap-4 hover:shadow-lg transition">
                     <div class="bg-green-200 text-green-800 p-2 md:p-4 rounded-lg">
@@ -97,94 +100,122 @@
             </div>
         </section>
 
-        {{-- Bagian aktivitas terakhir --}}
+        {{-- Bagian ringkasan aktivitas terakhir dengan tata letak responsif --}}
         <section class="bg-white p-4 md:p-6 rounded-xl shadow-lg border border-gray-200">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 md:mb-6">
-                <h3 class="text-lg md:text-xl font-bold text-gray-900">Aktivitas Terakhir</h3>
-                <a href="#"
-                    class="text-blue-600 hover:text-blue-800 text-sm md:text-base font-semibold transition hover:underline">Lihat
-                    Semua</a>
+            {{-- Header untuk ringkasan aktivitas dengan filter dan tautan detail --}}
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                <h3 class="text-lg md:text-xl font-bold text-gray-900">Ringkasan Aktivitas Terakhir</h3>
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <label for="timeRange" class="text-sm font-medium text-gray-700 whitespace-nowrap">Filter
+                            Waktu:</label>
+                        <select id="timeRange"
+                            class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto">
+                            <option value="1_minute">1 Menit</option>
+                            <option value="1_hour">1 Jam</option>
+                            <option value="1_day">1 Hari</option>
+                            <option value="1_week" selected>1 Minggu</option>
+                            <option value="1_month">1 Bulan</option>
+                            <option value="1_year">1 Tahun</option>
+                        </select>
+                    </div>
+                    {{-- Tautan untuk melihat log aktivitas secara detail --}}
+                    <a href="{{ route('admin.detail') }}"
+                        class="text-blue-600 hover:text-blue-800 text-sm md:text-base font-semibold transition hover:underline whitespace-nowrap">
+                        Lihat Detail
+                    </a>
+                </div>
             </div>
 
-            {{-- Daftar aktivitas terbaru dengan scroll --}}
-            <div class="max-h-[300px] md:max-h-[460px] overflow-y-auto pr-2">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-                    @forelse($recentActivities as $activity)
-                        @php $act = (array) $activity; @endphp
+            {{-- Grid untuk ringkasan aktivitas (Ditambahkan, Dihapus, Diubah) --}}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                {{-- Bagian aktivitas yang ditambahkan --}}
+                <div
+                    class="bg-green-50 border border-green-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-300">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-semibold text-gray-900">Ditambahkan</h4>
+                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
+                            {{ $totalAdded ?? 0 }}
+                        </span>
+                    </div>
+                    @if($recentAdded->isEmpty())
+                        <p class="text-gray-500 text-sm text-center py-4">Belum ada aktivitas yang ditambahkan.</p>
+                    @else
                         <div
-                            class="flex items-start gap-4 p-4 rounded-xl transition cursor-default border {{ isset($act['type']) && $act['type'] === 'card' ? 'border-blue-300 bg-blue-50 hover:bg-blue-100 shadow-md hover:shadow-lg' : 'border-green-300 bg-green-50 hover:bg-green-100 shadow-md hover:shadow-lg' }}">
-                            <div class="mt-1 flex-shrink-0">
-                                @if(isset($act['type']) && $act['type'] === 'card')
-                                    <div class="bg-blue-500 text-white p-3 rounded-full">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                                        </svg>
-                                    </div>
-                                @elseif(isset($act['type']) && $act['type'] === 'admin')
-                                    <div class="bg-green-500 text-white p-3 rounded-full">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                        </svg>
-                                    </div>
-                                @endif
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p
-                                    class="text-gray焦点
-                                                                                                            font-semibold text-gray-900 text-sm md:text-base truncate">
-                                    @if(isset($act['action']) && $act['action'] === 'updated')
-                                        {{ isset($act['type']) ? ucfirst($act['type']) : 'Tipe tidak diketahui' }} diperbarui:
-                                        <span class="font-bold">{{ $act['title'] ?? 'Judul tidak diketahui' }}</span>
-                                        @if(!empty($act['details']))
-                                            <ul class="text-xs text-gray-600 mt-2 list-disc list-inside max-h-20 overflow-y-auto">
-                                                @foreach(json_decode($act['details'], true) as $field => $change)
-                                                    <li>
-                                                        <strong>{{ ucfirst($field) }}:</strong>
-                                                        @if(is_array($change))
-                                                            <span>Diubah dari "{{ $change['old'] }}" menjadi "{{ $change['new'] }}"</span>
-                                                        @else
-                                                            <span>{{ $change }}</span>
-                                                        @endif
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        @endif
-                                    @elseif(isset($act['action']) && $act['action'] === 'created')
-                                    {{ isset($act['type']) ? ucfirst($act['type']) : 'Tipe tidak diketahui' }} baru ditambahkan:
-                                    <span class="font-bold">{{ $act['title'] ?? 'Judul tidak diketahui' }}</span>
-                                    @if(!empty($act['details']))
-                                        <ul class="text-xs text-gray-600 mt-2 list-disc list-inside max-h-20 overflow-y-auto">
-                                            @foreach(json_decode($act['details'], true) as $field => $value)
-                                                <li>
-                                                    <strong>{{ ucfirst($field) }}:</strong> {{ $value }}
-                                                </li>
-                                            @endforeach
-                                        </ul>
+                            class="space-y-3 max-h-48 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                            @foreach($recentAdded as $activity)
+                                <div class="border-l-4 border-green-400 pl-3 py-2 hover:bg-green-100 transition-colors rounded-md">
+                                    <p class="text-sm font-medium text-gray-900 truncate" title="{{ $activity->title }}">
+                                        {{ $activity->title }}
+                                    </p>
+                                    @if($activity->details)
+                                        <p class="text-xs text-gray-600 mt-1">{{ Str::limit($activity->details, 50) }}</p>
                                     @endif
-                                @elseif(isset($act['action']) && $act['action'] === 'deleted')
-                                    {{ isset($act['type']) ? ucfirst($act['type']) : 'Tipe tidak diketahui' }} dihapus:
-                                    <span class="font-bold">{{ $act['title'] ?? 'Judul tidak diketahui' }}</span>
-                                @else
-                                    {{ isset($act['type']) ? ucfirst($act['type']) : 'Tipe tidak diketahui' }}
-                                    {{ $act['action'] ?? 'aksi tidak diketahui' }}: <span
-                                        class="font-bold">{{ $act['title'] ?? 'Judul tidak diketahui' }}</span>
-                                @endif
-                                </p>
-                                <p class="text-gray-500 text-xs mt-1 whitespace-nowrap">
-                                    {{ isset($act['timestamp']) ? \Carbon\Carbon::parse($act['timestamp'])->diffForHumans() : 'Waktu tidak diketahui' }}
-                                </p>
-                            </div>
+                                    <p class="text-xs text-gray-500 mt-1">{{ $activity->timestamp->diffForHumans() }}</p>
+                                </div>
+                            @endforeach
                         </div>
-                    @empty
-                        <p class="text-center text-gray-500 py-4 md:py-6 col-span-2">Tidak ada aktivitas terbaru</p>
-                    @endforelse
+                    @endif
+                </div>
+
+                {{-- Bagian aktivitas yang dihapus --}}
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-300">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-semibold text-gray-900">Dihapus</h4>
+                        <span class="bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded-full">
+                            {{ $totalDeleted ?? 0 }}
+                        </span>
+                    </div>
+                    @if($recentDeleted->isEmpty())
+                        <p class="text-gray-500 text-sm text-center py-4">Tidak ada kartu yang dihapus.</p>
+                    @else
+                        <div
+                            class="space-y-3 max-h-48 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                            @foreach($recentDeleted as $activity)
+                                <div class="border-l-4 border-red-400 pl-3 py-2 hover:bg-red-100 transition-colors rounded-md">
+                                    <p class="text-sm font-medium text-gray-900 truncate" title="{{ $activity->title }}">
+                                        {{ $activity->title }}
+                                    </p>
+                                    @if($activity->details)
+                                        <p class="text-xs text-gray-600 mt-1">{{ Str::limit($activity->details, 50) }}</p>
+                                    @endif
+                                    <p class="text-xs text-gray-500 mt-1">{{ $activity->timestamp->diffForHumans() }}</p>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+
+                {{-- Bagian aktivitas yang diubah --}}
+                <div
+                    class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-300">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-semibold text-gray-900">Diubah</h4>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-1 rounded-full">
+                            {{ $totalUpdated ?? 0 }}
+                        </span>
+                    </div>
+                    @if($recentUpdated->isEmpty())
+                        <p class="text-gray-500 text-sm text-center py-4">Tidak ada kartu yang diubah.</p>
+                    @else
+                        <div
+                            class="space-y-3 max-h-48 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                            @foreach($recentUpdated as $activity)
+                                <div
+                                    class="border-l-4 border-yellow-400 pl-3 py-2 hover:bg-yellow-100 transition-colors rounded-md">
+                                    <p class="text-sm font-medium text-gray-900 truncate" title="{{ $activity->title }}">
+                                        {{ $activity->title }}
+                                    </p>
+                                    @if($activity->details)
+                                        <p class="text-xs text-gray-600 mt-1">{{ Str::limit($activity->details, 50) }}</p>
+                                    @endif
+                                    <p class="text-xs text-gray-500 mt-1">{{ $activity->timestamp->diffForHumans() }}</p>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             </div>
         </section>
-
-    </main>
+    </div>
 @endsection

@@ -14,7 +14,7 @@
   <script>
     document.addEventListener('alpine:init', () => {
       Alpine.store('sidebar', {
-        open: true // Status sidebar terbuka secara default
+        open: true // Sidebar terbuka default
       });
     });
   </script>
@@ -46,10 +46,7 @@
       width: 60px;
       aspect-ratio: 2;
       --_g: no-repeat radial-gradient(circle closest-side, #10b981 90%, #0000);
-      background:
-        var(--_g) 0% 50%,
-        var(--_g) 50% 50%,
-        var(--_g) 100% 50%;
+      background: var(--_g) 0% 50%, var(--_g) 50% 50%, var(--_g) 100% 50%;
       background-size: calc(100% / 3) 50%;
       animation: l3 1.2s infinite linear;
     }
@@ -75,15 +72,11 @@
 </head>
 
 <body class="bg-white text-gray-800 flex min-h-screen">
-
+  <!-- Splash screen -->
   <div id="splash-screen" x-data x-init="
-      setTimeout(() => {
-        document.getElementById('splash-screen').classList.add('fade-out');
-      }, 2000);
-      setTimeout(() => {
-        document.getElementById('splash-screen').style.display = 'none';
-      }, 2800);
-    ">
+    setTimeout(() => $el.classList.add('fade-out'), 2000);
+    setTimeout(() => $el.style.display = 'none', 2800);
+  ">
     <div class="loader"></div>
   </div>
 
@@ -97,6 +90,18 @@
     </main>
   </div>
 
+  <!-- tempat untuk script tambahan -->
+  @stack('scripts')
+
+  <!-- Activity Monitor untuk logout otomatis -->
+  @if(auth()->guard('admin')->check())
+    @vite(['resources/js/activityMonitor.js'])
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      window.activityMonitor = new ActivityMonitor();
+    });
+    </script>
+  @endif
 </body>
 
 </html>

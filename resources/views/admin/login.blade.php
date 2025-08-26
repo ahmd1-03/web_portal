@@ -21,6 +21,9 @@
 
     <!-- Mengimpor Animate.css untuk animasi SweetAlert -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
+    <!-- Google reCAPTCHA v2 -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
     <style>
         /* Mengatur font default untuk seluruh halaman */
@@ -94,7 +97,7 @@
             </div>
 
             <div class="relative z-10 h-full flex flex-col items-center justify-center text-center">
-                <img src="{{ asset('images/logoKrw.png') }}" alt="Logo" class="h-24 mb-6">
+                <img src="{{ asset('images/logoKrw.png') }}" alt="Logo" class="h-48 mb-6">
                 <h2 class="text-2xl font-bold">Portal Karawang</h2>
                 <p class="mt-2 text-emerald-100">Sistem Administrasi Resmi</p>
             </div>
@@ -109,7 +112,7 @@
                             <stop offset="100%" stop-color="#047857" />
                         </linearGradient>
                     </defs>
-                    <path fill="url(#waveGradient)" fill-opacity="1"
+                    {{-- <path fill="url(#waveGradient)" fill-opacity="1"
                         d="M0,96L48,85.3C96,75,192,53,288,48C384,43,480,53,576,64C672,75,768,85,864,80C960,75,1056,53,1152,48C1248,43,1344,53,1392,58.7L1440,64L1440,120L0,120Z">
                         <animate attributeName="d"
                             values="M0,96L48,85.3C96,75,192,53,288,48C384,43,480,53,576,64C672,75,768,85,864,80C960,75,1056,53,1152,48C1248,43,1344,53,1392,58.7L1440,64L1440,120L0,120Z;
@@ -117,7 +120,7 @@
                                     M0,32L48,42.7C96,53,192,75,288,80C384,85,480,75,576,64C672,53,768,43,864,48C960,53,1056,75,1152,80C1248,85,1344,75,1392,69.3L1440,64L1440,120L0,120Z;
                                     M0,96L48,85.3C96,75,192,53,288,48C384,43,480,53,576,64C672,75,768,85,864,80C960,75,1056,53,1152,48C1248,43,1344,53,1392,58.7L1440,64L1440,120L0,120Z"
                             dur="15s" repeatCount="indefinite" />
-                    </path>
+                    </path> --}}
                 </svg>
             </div>
         </div>
@@ -224,6 +227,11 @@
                         password?</a>
                 </div>
 
+                <!-- Google reCAPTCHA v2 Image Challenge -->
+                <div class="flex justify-center">
+                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}" data-size="normal"></div>
+                </div>
+
                 <!-- Tombol submit -->
                 <button type="submit" id="submitBtn"
                     class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 px-4 rounded-lg font-medium transition duration-200 flex justify-center items-center">
@@ -277,6 +285,19 @@
             const submitBtn = document.getElementById('submitBtn');
             const btnText = document.getElementById('btnText');
             const loadingIcon = document.getElementById('loadingIcon');
+
+            // Validasi reCAPTCHA
+            const recaptchaResponse = grecaptcha.getResponse();
+            if (!recaptchaResponse) {
+                Swal.fire({
+                    title: 'Perhatian!',
+                    text: 'Silakan verifikasi bahwa Anda bukan robot',
+                    icon: 'warning',
+                    confirmButtonColor: '#f59e0b',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
 
             // Mengatur tombol ke state loading
             submitBtn.disabled = true;

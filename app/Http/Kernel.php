@@ -25,8 +25,10 @@ use Illuminate\Auth\Middleware\RequirePassword;
 use Illuminate\Routing\Middleware\ValidateSignature;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
+
 use App\Http\Middleware\AdminAuthenticate;
-use App\Http\Middleware\CountVisitor; // ← Tambahan penting
+use App\Http\Middleware\CountVisitor;
+use App\Http\Middleware\CheckActivity;
 
 class Kernel extends HttpKernel
 {
@@ -55,7 +57,7 @@ class Kernel extends HttpKernel
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             SubstituteBindings::class,
-            CountVisitor::class, // ← Tambahkan di sini untuk lacak pengunjung
+            CountVisitor::class, // lacak pengunjung
         ],
 
         'api' => [
@@ -65,7 +67,7 @@ class Kernel extends HttpKernel
     ];
 
     /**
-     * Route middleware (khusus untuk route tertentu).
+     * Route middleware (untuk route tertentu).
      */
     protected $routeMiddleware = [
         'auth' => Authenticate::class,
@@ -77,6 +79,9 @@ class Kernel extends HttpKernel
         'signed' => ValidateSignature::class,
         'throttle' => ThrottleRequests::class,
         'verified' => EnsureEmailIsVerified::class,
-        // 'admin.auth' => AdminAuthenticate::class, // aktifkan kalau perlu
+
+        // ✅ middleware custom
+        'check.activity' => CheckActivity::class,
+        'admin.auth' => AdminAuthenticate::class,
     ];
 }

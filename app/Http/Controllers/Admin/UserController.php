@@ -2,153 +2,130 @@
 
 namespace App\Http\Controllers\Admin;
 
-// Controller untuk manajemen data admin (CRUD)
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Admin;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 
 class UserController extends Controller
 {
-    // Menampilkan daftar admin dengan fitur pencarian
-    public function index(Request $request)
+    public function index()
     {
-        $query = Admin::query();
+        $users = User::paginate(10); // ambil semua user dengan pagination
+        $usersCount = User::count(); // optional, kalau masih mau ditampilkan
 
-        // Jika ada parameter pencarian, filter berdasarkan nama atau email
+        return view('admin.users.index', compact('users', 'usersCount'));
+    }
+
+    public function getUsers(Request $request)
+    {
+        $query = User::query();
+
+        // Search functionality
         if ($request->has('search') && $request->search != '') {
-            $search = trim(preg_replace('/\s+/', ' ', $request->search)); // Normalize spaces
-            $words = explode(' ', $search);
-            $query->where(function ($q) use ($search, $words) {
-                // Search for the whole phrase
-                $q->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('email', 'like', '%' . $search . '%');
-                // Also search for each individual word
-                foreach ($words as $word) {
-                    $q->orWhere('name', 'like', '%' . $word . '%')
-                      ->orWhere('email', 'like', '%' . $word . '%');
-                }
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
-        // Ambil data admin dengan urutan terbaru dan paginasi 10 per halaman
-        $users = $query->orderBy('created_at', 'desc')->paginate(10)->appends($request->only('search'));
-        return View::make('admin.users.index', compact('users'));
+        $users = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        return response()->json([
+            'data' => $users->items(),
+            'total' => $users->total(),
+            'per_page' => $users->perPage(),
+            'current_page' => $users->currentPage(),
+            'last_page' => $users->lastPage()
+        ]);
     }
 
-    // (Opsional) Form buat manual (tidak dipakai karena pakai modal)
-    public function create()
-    {
-        //
-    }
-
-    // Menyimpan admin baru dengan validasi
     public function store(Request $request)
     {
-        $messages = [
-            'name.required' => 'Nama wajib diisi.',
-            'email.required' => 'Email wajib diisi.',
-            'email.email' => 'Format email tidak valid.',
-            'email.unique' => 'Email sudah digunakan.',
-            'password.required' => 'Password wajib diisi.',
-            'password.min' => 'Password minimal 8 karakter.',
-            'password.confirmed' => 'Konfirmasi password tidak cocok.',
-            'password.regex' => 'Password harus mengandung huruf kapital, huruf kecil, angka, dan simbol khusus (!@#$%^&*).',
-        ];
-
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:admins,email',
+            'email' => 'required|email|max:255|unique:users,email',
             'password' => [
                 'required',
                 'string',
                 'min:8',
-                'confirmed',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).+$/'
-            ], // validasi dengan konfirmasi dan regex kompleksitas
-        ], $messages);
+                'confirmed'
+            ],
+            'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
-        // Enkripsi password sebelum disimpan
-        $validated['password'] = bcrypt($validated['password']);
+        $validated['password'] = Hash::make($validated['password']);
 
-        // Simpan data admin baru
-        Admin::create($validated);
-
-        // Jika request ingin JSON, kembalikan response JSON
-        if ($request->wantsJson()) {
-            return response()->json(['message' => 'Pengguna berhasil ditambahkan.']);
+        // Handle profile photo upload
+        if ($request->hasFile('profile')) {
+            $path = $request->file('profile')->store('profiles', 'public');
+            $validated['profile'] = $path;
         }
 
-        // Redirect ke halaman daftar admin dengan pesan sukses
-        return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil ditambahkan.');
+        $user = User::create($validated);
+
+        return response()->json(['message' => 'User created successfully']);
     }
 
-    // Mengambil data pengguna untuk modal edit (JSON)
     public function edit($id)
     {
-        $user = Admin::findOrFail($id);
+        $user = User::findOrFail($id);
         return response()->json($user);
     }
 
-    // Menyimpan perubahan data pengguna dengan validasi
     public function update(Request $request, $id)
     {
-        $user = Admin::findOrFail($id);
-
-        $messages = [
-            'name.required' => 'Nama wajib diisi.',
-            'email.required' => 'Email wajib diisi.',
-            'email.email' => 'Format email tidak valid.',
-            'email.unique' => 'Email sudah digunakan.',
-            'password.min' => 'Password minimal 8 karakter.',
-            'password.confirmed' => 'Konfirmasi password tidak cocok.',
-            'password.regex' => 'Password harus mengandung huruf kapital, huruf kecil, angka, dan simbol khusus (!@#$%^&*).',
-        ];
+        $user = User::findOrFail($id);
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:admins,email,' . $user->id,
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
             'password' => [
                 'nullable',
                 'string',
                 'min:8',
-                'confirmed',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).+$/'
-            ], // validasi jika password diisi
-        ], $messages);
+                'confirmed'
+            ],
+            'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
-        // Jika password diisi, enkripsi, jika tidak hapus dari data validasi
-        if (!empty($validated['password'])) {
-            $validated['password'] = bcrypt($validated['password']);
+        if ($request->filled('password')) {
+            $validated['password'] = Hash::make($validated['password']);
         } else {
             unset($validated['password']);
         }
 
-        // Update data pengguna
+        // Handle profile photo upload
+        if ($request->hasFile('profile')) {
+            // Delete old profile photo if exists
+            if ($user->profile) {
+                Storage::disk('public')->delete($user->profile);
+            }
+            
+            $path = $request->file('profile')->store('profiles', 'public');
+            $validated['profile'] = $path;
+        }
+
         $user->update($validated);
 
-        // Jika request ingin JSON, kembalikan response JSON
-        if ($request->wantsJson()) {
-            return response()->json(['message' => 'Pengguna berhasil diperbarui.']);
-        }
-
-        // Redirect ke halaman daftar admin dengan pesan sukses
-        return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil diperbarui.');
+        return response()->json(['message' => 'User updated successfully']);
     }
 
-    // Menghapus data pengguna
     public function destroy($id)
     {
-        $user = Admin::findOrFail($id);
+        $user = User::findOrFail($id);
+        
+        // Delete profile photo if exists
+        if ($user->profile) {
+            Storage::disk('public')->delete($user->profile);
+        }
+        
         $user->delete();
 
-        // Jika request ingin JSON, kembalikan response JSON
-        if (request()->wantsJson()) {
-            return response()->json(['message' => 'Pengguna berhasil dihapus.']);
-        }
-
-        // Redirect ke halaman daftar admin dengan pesan sukses
-        return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil dihapus.');
+        return response()->json(['message' => 'User deleted successfully']);
     }
 }

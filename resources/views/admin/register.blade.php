@@ -26,8 +26,7 @@
                 <div class="relative z-10 w-full flex flex-col items-center justify-center h-full py-3 md:py-0">
                     <div class="flex flex-col items-center text-center">
                         <!-- Logo Karawang -->
-                        <img src="{{ asset('images/logoKrw.png') }}" alt="Logo Karawang"
-                            class="h-16 md:h-20 lg:h-24 drop-shadow-md">
+                        <img src="{{ asset('images/logoKrw.png') }}" alt="Logo Karawang" class="h-48 mb-6">
 
                         <!-- Teks branding -->
                         <div class="mt-3 md:mt-4 space-y-1">
@@ -51,7 +50,7 @@
                             </linearGradient>
                         </defs>
                         <!-- Path wave dengan animasi -->
-                        <path fill="url(#waveGradient)" fill-opacity="1"
+                        {{-- <path fill="url(#waveGradient)" fill-opacity="1"
                             d="M0,96L48,85.3C96,75,192,53,288,48C384,43,480,53,576,64C672,75,768,85,864,80C960,75,1056,53,1152,48C1248,43,1344,53,1392,58.7L1440,64L1440,120L0,120Z">
                             <animate attributeName="d"
                                 values="M0,96L48,85.3C96,75,192,53,288,48C384,43,480,53,576,64C672,75,768,85,864,80C960,75,1056,53,1152,48C1248,43,1344,53,1392,58.7L1440,64L1440,120L0,120Z;
@@ -59,7 +58,7 @@
                                     M0,32L48,42.7C96,53,192,75,288,80C384,85,480,75,576,64C672,53,768,43,864,48C960,53,1056,75,1152,80C1248,85,1344,75,1392,69.3L1440,64L1440,120L0,120Z;
                                     M0,96L48,85.3C96,75,192,53,288,48C384,43,480,53,576,64C672,75,768,85,864,80C960,75,1056,53,1152,48C1248,43,1344,53,1392,58.7L1440,64L1440,120L0,120Z"
                                 dur="15s" repeatCount="indefinite" />
-                        </path>
+                        </path> --}}
                     </svg>
                 </div>
             </div>

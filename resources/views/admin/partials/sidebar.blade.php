@@ -72,6 +72,18 @@
             </svg>
             <span x-show="$store.sidebar.open" x-transition.opacity.duration.300ms>Manajemen Pengguna</span>
         </a>
+
+        <!-- Pengaturan Profil -->
+        <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-3 px-3 py-2 rounded transition hover:bg-emerald-700
+           {{ request()->routeIs('admin.profile.edit') ? 'bg-emerald-900 text-emerald-100' : 'text-white' }}"
+            :class="$store.sidebar.open ? 'justify-start' : 'justify-center'">
+            <svg class="w-5 h-5 {{ request()->routeIs('admin.profile.edit') ? 'fill-emerald-300' : 'fill-white' }}"
+                viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+            </svg>
+            <span x-show="$store.sidebar.open" x-transition.opacity.duration.300ms>Pengaturan Profil</span>
+        </a>
     </nav>
 </div>
 

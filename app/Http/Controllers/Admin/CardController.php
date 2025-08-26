@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Card;
+use App\Models\ActivityLog;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class CardController extends Controller
 {
@@ -70,6 +72,20 @@ class CardController extends Controller
             'is_active' => true,
         ]);
 
+        // Log activity for card creation
+        ActivityLog::create([
+            'type' => 'card',
+            'action' => 'created',
+            'title' => $card->title,
+            'details' => 'Kartu baru telah ditambahkan',
+            'user_id' => null,
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+            'old_values' => null,
+            'new_values' => $card->toArray(),
+            'timestamp' => now(),
+        ]);
+
         return response()->json([
             'success' => true,
             'message' => 'Kartu berhasil ditambahkan.',
@@ -80,6 +96,7 @@ class CardController extends Controller
     public function update(Request $request, $id)
     {
         $card = Card::findOrFail($id);
+        $oldValues = $card->toArray();
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -105,6 +122,20 @@ class CardController extends Controller
             'external_link' => $validated['external_link'],
         ]);
 
+        // Log activity for card update
+        ActivityLog::create([
+            'type' => 'card',
+            'action' => 'updated',
+            'title' => $card->title,
+            'details' => 'Kartu telah diperbarui',
+            'user_id' => null,
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+            'old_values' => $oldValues,
+            'new_values' => $card->toArray(),
+            'timestamp' => now(),
+        ]);
+
         return response()->json([
             'success' => true,
             'message' => 'Data berhasil disimpan.',
@@ -115,12 +146,27 @@ class CardController extends Controller
     public function destroy($id)
     {
         $card = Card::findOrFail($id);
-        
+        $oldValues = $card->toArray();
+
         if ($card->image_url && Storage::disk('public')->exists($card->image_url)) {
             Storage::disk('public')->delete($card->image_url);
         }
         
         $card->delete();
+
+        // Log activity for card deletion
+        ActivityLog::create([
+            'type' => 'card',
+            'action' => 'deleted',
+            'title' => $card->title,
+            'details' => 'Kartu telah dihapus',
+            'user_id' => null,
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+            'old_values' => $oldValues,
+            'new_values' => null,
+            'timestamp' => now(),
+        ]);
 
         return response()->json([
             'success' => true,
