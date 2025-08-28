@@ -2,8 +2,9 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    {{-- Kontainer utama untuk dashboard admin dengan padding, margin disesuaikan untuk posisi lebih ke atas, dan latar belakang hijau emerald tipis --}}
-    <div class="p-4 md:p-6 transition-margin duration-300 ml-4 md:ml-6 -mt-8 md:-mt-10">
+    {{-- Kontainer utama untuk dashboard admin dengan padding, margin disesuaikan untuk posisi lebih ke atas, dan latar
+    belakang hijau emerald tipis --}}
+    <div class="p-4 md:p-6 transition-margin duration-300 ml-4 md:ml-6 -mt-8 md:-mt-12">
         {{-- Bagian header dengan judul dan pesan sambutan --}}
         <section class="mb-6 md:mb-8">
             {{-- Kontainer flex untuk judul header dan tombol, responsif untuk tampilan mobile dan desktop --}}

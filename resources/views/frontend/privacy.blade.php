@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Kebijakan Privasi</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    @vite(['resources/css/app.css'])
 </head>
 
 <body class="bg-gray-100 text-gray-800 font-sans leading-relaxed antialiased px-4 md:px-8">

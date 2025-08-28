@@ -10,9 +10,6 @@
     <!-- CSRF token untuk keamanan form Laravel -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- Mengimpor Tailwind CSS untuk styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
     <!-- Mengimpor font Poppins dari Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -24,6 +21,9 @@
     
     <!-- Google reCAPTCHA v2 -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <!-- Vite CSS (Tailwind CSS compiled) -->
+    @vite(['resources/css/app.css'])
 
     <style>
         /* Mengatur font default untuk seluruh halaman */

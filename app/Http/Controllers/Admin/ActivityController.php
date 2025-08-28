@@ -68,6 +68,30 @@ class ActivityController extends Controller
             ->limit(10)
             ->get();
 
+        // Transformasi untuk menambahkan URL gambar pada aktivitas yang dihapus
+        $recentDeleted->transform(function ($activity) {
+            if ($activity->type === 'card' && $activity->action === 'deleted' && is_array($activity->old_values)) {
+                $activity->card_image_url = $activity->old_values['image_url'] ?? null;
+            }
+            return $activity;
+        });
+
+        // Transformasi untuk menambahkan URL gambar pada aktivitas yang diperbarui
+        $recentUpdated->transform(function ($activity) {
+            if ($activity->type === 'card' && $activity->action === 'updated' && is_array($activity->new_values)) {
+                $activity->card_image_url = $activity->new_values['image_url'] ?? $activity->old_values['image_url'] ?? null;
+            }
+            return $activity;
+        });
+
+        // Transformasi untuk menambahkan URL gambar pada aktivitas yang ditambahkan
+        $recentAdded->transform(function ($activity) {
+            if ($activity->type === 'card' && $activity->action === 'created' && is_array($activity->new_values)) {
+                $activity->card_image_url = $activity->new_values['image_url'] ?? null;
+            }
+            return $activity;
+        });
+
         return view('admin.activities.detail', compact('activities', 'recentUpdated', 'recentDeleted', 'recentAdded'));
     }
 

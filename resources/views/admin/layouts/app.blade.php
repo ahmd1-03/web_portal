@@ -97,9 +97,9 @@
   @if(auth()->guard('admin')->check())
     @vite(['resources/js/activityMonitor.js'])
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      window.activityMonitor = new ActivityMonitor();
-    });
+      document.addEventListener('DOMContentLoaded', function () {
+        window.activityMonitor = new ActivityMonitor();
+      });
     </script>
   @endif
 </body>

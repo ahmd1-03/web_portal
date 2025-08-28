@@ -6,6 +6,6 @@
 /* Removed .test-bg class to avoid build errors */
 
 /* Tambahkan di file CSS Anda */
-.group-hover\/toggle:hover .group-hover\/toggle\:scale-110 {
+/* .group-hover\/toggle:hover .group-hover\/toggle\:scale-110 {
     transform: scale(1.1);
-}
+} */

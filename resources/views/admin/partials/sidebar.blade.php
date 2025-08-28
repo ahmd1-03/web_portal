@@ -4,7 +4,7 @@
 
     <!-- Header -->
     <div class="flex items-center justify-between px-4 py-4 border-b border-emerald-600">
-        <div class="flex items-center gap-3" x-show="$store.sidebar.open" x-transition.opacity.duration.300ms>
+        <div class="flex items-center gap-1" x-show="$store.sidebar.open" x-transition.opacity.duration.300ms>
             <img src="{{ asset('images/logoKrw.png') }}" alt="Logo Karawang" class="h-10 w-10 rounded" />
             <div>
                 <h2 class="font-bold text-lg select-none">KARAWANG</h2>

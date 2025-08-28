@@ -1,389 +1,266 @@
-<!DOCTYPE html>
-<html lang="id">
+  <!DOCTYPE html>
+  <html lang="id">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Portal Resmi Kabupaten Karawang</title>
-  <meta name="description" content="Jelajahi informasi dan layanan publik resmi dari Pemerintah Kabupaten Karawang.">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portal Resmi Kabupaten Karawang</title>
+    <meta name="description" content="Jelajahi informasi dan layanan publik resmi dari Pemerintah Kabupaten Karawang.">
 
-  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --primary: #0e7490;
-      --primary-light: #06b6d4;
-      --primary-dark: #155e75;
-      --secondary: #10b981;
-      --accent: #8b5cf6;
-      --text: #f8fafc;
-      --text-secondary: #cbd5e1;
-      --glass: rgba(255, 255, 255, 0.1);
-      --glass-dark: rgba(0, 0, 0, 0.2);
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      scroll-behavior: smooth;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* Glassmorphism effect */
-    .glass {
-      background: var(--glass);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
-    }
-
-    .glass-dark {
-      background: var(--glass-dark);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(to bottom, var(--primary-light), var(--primary-dark));
-      border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.2);
-    }
-
-    /* Improved focus states */
-    .focus-accent:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.4);
-    }
-
-    /* Animation keyframes */
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0);
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      :root {
+        --primary: #0e7490;
+        --primary-light: #06b6d4;
+        --primary-dark: #155e75;
+        --secondary: #10b981;
+        --accent: #8b5cf6;
+        --text: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --glass: rgba(255, 255, 255, 0.1);
+        --glass-dark: rgba(0, 0, 0, 0.2);
       }
-      50% {
-        transform: translateY(-10px);
+
+      body {
+        font-family: 'Poppins', sans-serif;
+        scroll-behavior: smooth;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        color: var(--text);
+        min-height: 100vh;
       }
-    }
 
-    @keyframes pulse {
-      0%, 100% {
-        opacity: 1;
+      /* Glassmorphism effect */
+      .glass {
+        background: var(--glass);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
       }
-      50% {
-        opacity: 0.7;
+
+      .glass-dark {
+        background: var(--glass-dark);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
       }
-    }
 
-    .float-animation {
-      animation: float 3s ease-in-out infinite;
-    }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
 
-    .pulse-animation {
-      animation: pulse 2s ease-in-out infinite;
-    }
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom, var(--primary-light), var(--primary-dark));
+        border-radius: 4px;
+      }
 
-    /* Improved card design */
-    .card-hover-effect {
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
+      ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.2);
+      }
 
-    .card-hover-effect::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-      transition: left 0.7s ease;
-    }
+      /* Improved focus states */
+      .focus-accent:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.4);
+      }
 
-    .card-hover-effect:hover::before {
-      left: 100%;
-    }
+      /* Animation keyframes */
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
 
-    .card-hover-effect:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-    }
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
 
-    /* Search improvements */
-    .search-input {
-      transition: all 0.3s ease;
-    }
+      .float-animation {
+        animation: float 3s ease-in-out infinite;
+      }
 
-    .search-input:focus {
-      box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
-    }
+      .pulse-animation {
+        animation: pulse 2s ease-in-out infinite;
+      }
 
-    /* Gradient text */
-    .gradient-text {
-      background: linear-gradient(to right, #06b6d4, #10b981);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+      /* Improved card design */
+      .card-hover-effect {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
 
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .hero-title {
-        font-size: 2.5rem !important;
+      .card-hover-effect::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.7s ease;
+      }
+
+      .card-hover-effect:hover::before {
+        left: 100%;
+      }
+
+      .card-hover-effect:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Search improvements */
+      .search-input {
+        transition: all 0.3s ease;
+      }
+
+      .search-input:focus {
+        box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+      }
+
+      /* Gradient text */
+      .gradient-text {
+        background: linear-gradient(to right, #06b6d4, #10b981);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .hero-title {
+          font-size: 2.5rem !important;
+        }
+        
+        .hero-subtitle {
+          font-size: 1.1rem !important;
+        }
+        
+        nav img {
+          height: 2.5rem !important;
+          width: 2.5rem !important;
+        }
+        
+        nav h1 {
+          font-size: 1.25rem !important;
+        }
+        
+        nav p {
+          font-size: 0.7rem !important;
+        }
+      }
+
+      /* Loading animation */
+      .loading-dots {
+        display: inline-flex;
       }
       
-      .hero-subtitle {
-        font-size: 1.1rem !important;
+      .loading-dots span {
+        width: 8px;
+        height: 8px;
+        margin: 0 3px;
+        border-radius: 50%;
+        background-color: var(--primary-light);
+        animation: pulse 1.5s ease-in-out infinite;
       }
       
-      nav img {
-        height: 2.5rem !important;
-        width: 2.5rem !important;
+      .loading-dots span:nth-child(2) {
+        animation-delay: 0.2s;
       }
       
-      nav h1 {
-        font-size: 1.25rem !important;
+      .loading-dots span:nth-child(3) {
+        animation-delay: 0.4s;
       }
-      
-      nav p {
-        font-size: 0.7rem !important;
-      }
-    }
+    </style>
+  </head>
 
-    /* Loading animation */
-    .loading-dots {
-      display: inline-flex;
-    }
-    
-    .loading-dots span {
-      width: 8px;
-      height: 8px;
-      margin: 0 3px;
-      border-radius: 50%;
-      background-color: var(--primary-light);
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-    
-    .loading-dots span:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-    
-    .loading-dots span:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-  </style>
-</head>
+  <body class="antialiased">
 
-<body class="antialiased">
-
-  <!-- ===================== BAGIAN NAVBAR ===================== -->
-  <nav class="fixed top-0 left-0 right-0 glass-dark py-3 px-4 z-50 flex items-center justify-between">
-    <div class="flex items-center">
-      <img src="{{ asset('images/logoKrw.png') }}" alt="Logo Kabupaten Karawang" class="h-14 w-14 mr-3 rounded-xl object-cover">
-      <div>
-        <h1 class="text-white text-2xl font-bold">Karawang</h1>
-        <p class="text-cyan-200 text-xs">Portal Informasi Karawang</p>
-      </div>
-    </div>
-
-    @auth('admin')
-    <a href="{{ route('admin.dashboard') }}"
-      class="glass px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-300 flex items-center gap-2 font-medium text-cyan-100 hover:text-white"
-      aria-label="Kembali ke Dashboard Admin">
-      <i class="fas fa-tachometer-alt"></i>
-      <span class="hidden sm:inline">Dashboard</span>
-    </a>
-    @endauth
-  </nav>
-
-  <!-- ===================== BAGIAN UTAMA (HERO & KONTEN) ===================== -->
-  <section class="relative pt-28 pb-16 px-4 min-h-screen overflow-hidden">
-    <!-- Background elements -->
-    <div class="absolute inset-0 z-0 overflow-hidden">
-      <div class="absolute -top-40 -right-40 w-80 h-80 bg-cyan-500 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
-      <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-emerald-500 rounded-full filter blur-3xl opacity-20 animate-pulse" style="animation-delay: 1s"></div>
-      <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-violet-500 rounded-full filter blur-3xl opacity-10 animate-pulse" style="animation-delay: 2s"></div>
-    </div>
-
-    <div class="max-w-4xl mx-auto relative z-10 text-center">
-      <h1 class="hero-title text-4xl md:text-5xl font-bold text-white mb-4 leading-tight" data-aos="fade-down">
-        Web Portal <span class="gradient-text">Karawang</span>
-      </h1>
-      <p class="hero-subtitle text-cyan-100 text-lg md:text-xl max-w-2xl mx-auto mb-8 font-light" data-aos="fade-up" data-aos-delay="150">
-        Jelajahi informasi dan layanan publik Kabupaten Karawang
-      </p>
-
-      <div class="mx-auto max-w-lg mt-8 mb-12" data-aos="zoom-in" data-aos-delay="300">
-        <div class="relative w-full">
-          <label for="search" class="sr-only">Cari konten</label>
-          <input type="text" id="search" name="query" placeholder="Cari informasi atau layanan..."
-            class="search-input glass w-full rounded-2xl px-5 py-4 pr-14 text-white placeholder-cyan-100 focus:ring-2 focus:ring-cyan-500 focus-accent">
-          <button type="button" id="search-btn"
-            class="absolute top-1/2 right-3 -translate-y-1/2 bg-gradient-to-r from-cyan-500 to-emerald-500 text-white rounded-xl p-2.5 hover:from-cyan-400 hover:to-emerald-400 transition-all duration-300 transform hover:scale-110 shadow-lg">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
-        <div id="search-loading" class="hidden text-center mt-4">
-          <div class="loading-dots">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <p class="text-cyan-200 text-sm mt-2">Mencari...</p>
+    <!-- ===================== BAGIAN NAVBAR ===================== -->
+    <nav class="fixed top-0 left-0 right-0 glass-dark py-3 px-4 z-50 flex items-center justify-between">
+      <div class="flex items-center">
+        <img src="{{ asset('images/logoKrw.png') }}" alt="Logo Kabupaten Karawang" class="h-14 w-14 mr-1 rounded-xl object-cover">
+        <div>
+          <h1 class="text-white text-2xl font-bold">Karawang</h1>
+          <p class="text-cyan-200 text-xs">Portal Informasi Karawang</p>
         </div>
       </div>
-    </div>
 
-    <main id="cards-container" class="max-w-4xl mx-auto relative z-10 grid gap-5 mt-8" aria-live="polite">
-      @forelse ($cards as $card)
-      <a href="{{ $card->external_link }}" target="_blank" rel="noopener noreferrer" tabindex="0" data-aos="fade-up"
-        class="card-hover-effect glass rounded-2xl p-5 group flex items-center justify-between transition-all duration-300">
-        <div class="flex items-center space-x-4 flex-1 min-w-0">
-          <div class="w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-white/10 border border-white/10 shadow-lg">
-            <img src="{{ Storage::url($card->image_url) }}" alt="Logo {{ $card->title }}"
-              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-          </div>
-          <div class="flex-grow text-left min-w-0">
-            <h2 class="text-lg font-semibold text-white mb-1 group-hover:text-cyan-300 transition-colors truncate">
-              {{ $card->title }}
-            </h2>
-            <p class="text-cyan-100 text-sm line-clamp-2 group-hover:text-cyan-50 transition-colors">
-              {{ $card->description }}
-            </p>
-          </div>
-        </div>
-        <div class="ml-4 flex-shrink-0">
-          <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 flex items-center justify-center text-white group-hover:from-cyan-400 group-hover:to-emerald-400 transition-all duration-300 transform group-hover:translate-x-1">
-            <i class="fas fa-arrow-right"></i>
-          </div>
-        </div>
+      @auth('admin')
+      <a href="{{ route('admin.dashboard') }}"
+        class="glass px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-300 flex items-center gap-2 font-medium text-cyan-100 hover:text-white"
+        aria-label="Kembali ke Dashboard Admin">
+        <i class="fas fa-tachometer-alt"></i>
+        <span class="hidden sm:inline">Dashboard</span>
       </a>
-      @empty
-      <div class="col-span-full text-center py-16 text-white" data-aos="zoom-in">
-        <div class="relative inline-block mb-6">
-          <i class="fas fa-search fa-3x text-cyan-400 float-animation"></i>
-        </div>
-        <h3 class="text-2xl font-medium text-white mb-3">Belum ada konten tersedia</h3>
-        <p class="text-cyan-200 max-w-md mx-auto">
-          Silakan kembali lagi nanti atau hubungi administrator untuk informasi lebih lanjut.
+      @endauth
+    </nav>
+
+    <!-- ===================== BAGIAN UTAMA (HERO & KONTEN) ===================== -->
+    <section class="relative pt-28 pb-16 px-4 min-h-screen overflow-hidden">
+      <!-- Background elements -->
+      <div class="absolute inset-0 z-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-cyan-500 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-emerald-500 rounded-full filter blur-3xl opacity-20 animate-pulse" style="animation-delay: 1s"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-violet-500 rounded-full filter blur-3xl opacity-10 animate-pulse" style="animation-delay: 2s"></div>
+      </div>
+
+      <div class="max-w-4xl mx-auto relative z-10 text-center">
+        <h1 class="hero-title text-4xl md:text-5xl font-bold text-white mb-4 leading-tight" data-aos="fade-down">
+          Web Portal <span class="gradient-text">Karawang</span>
+        </h1>
+        <p class="hero-subtitle text-cyan-100 text-lg md:text-xl max-w-2xl mx-auto mb-8 font-light" data-aos="fade-up" data-aos-delay="150">
+          Jelajahi informasi dan layanan publik Kabupaten Karawang
         </p>
-      </div>
-      @endforelse
-    </main>
-  </section>
 
-  <!-- ===================== BAGIAN FOOTER ===================== -->
-  <footer class="glass-dark py-8 mt-12">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="mb-4 md:mb-0 text-center md:text-left">
-          <p class="text-sm text-cyan-100">&copy; {{ date('Y') }} Pemerintah Kabupaten Karawang. Semua Hak Dilindungi.</p>
-        </div>
-        <div class="flex space-x-6 text-cyan-200">
-          <a href="#" class="hover:text-white transition-colors duration-300">
-            <i class="fab fa-facebook fa-lg"></i>
-          </a>
-          <a href="#" class="hover:text-white transition-colors duration-300">
-            <i class="fab fa-twitter fa-lg"></i>
-          </a>
-          <a href="#" class="hover:text-white transition-colors duration-300">
-            <i class="fab fa-instagram fa-lg"></i>
-          </a>
-          <a href="#" class="hover:text-white transition-colors duration-300">
-            <i class="fab fa-youtube fa-lg"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- ===================== BAGIAN SCRIPT ===================== -->
-  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-  <script>
-    // Inisialisasi library AOS untuk animasi scroll
-    AOS.init({
-      duration: 800,
-      easing: 'ease-out-quart',
-      once: true,
-      offset: 100
-    });
-
-    // Dynamic Search Functionality
-    const searchInput = document.getElementById('search');
-    const searchBtn = document.getElementById('search-btn');
-    const cardsContainer = document.querySelector('#cards-container');
-    const searchLoading = document.getElementById('search-loading');
-
-    let searchTimeout;
-
-    // Function to perform search
-    async function performSearch(query) {
-      if (query.length < 1) {
-        window.location.reload();
-        return;
-      }
-
-      searchLoading.classList.remove('hidden');
-      searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-
-      try {
-        const response = await fetch(`/search?query=${encodeURIComponent(query)}`);
-        const data = await response.json();
-
-        displaySearchResults(data.cards, data.message);
-      } catch (error) {
-        console.error('Error searching:', error);
-        displaySearchResults([], 'Terjadi kesalahan saat mencari');
-      } finally {
-        searchLoading.classList.add('hidden');
-        searchBtn.innerHTML = '<i class="fas fa-search"></i>';
-      }
-    }
-
-    // Function to display search results
-    function displaySearchResults(cards, message) {
-      if (cards.length === 0) {
-        cardsContainer.innerHTML = `
-          <div class="col-span-full text-center py-16">
-            <div class="relative inline-block mb-6">
-              <i class="fas fa-search fa-3x text-cyan-400 float-animation"></i>
-            </div>
-            <h3 class="text-2xl font-medium text-white mb-3">Hasil pencarian tidak ditemukan</h3>
-            <p class="text-cyan-200 max-w-md mx-auto mb-6">${message || 'Kami tidak dapat menemukan apa yang Anda cari.'}</p>
-            <button onclick="clearSearch()" class="glass px-5 py-2 rounded-xl text-cyan-100 hover:text-white transition-colors duration-300">
-              Tampilkan Semua Konten
+        <div class="mx-auto max-w-lg mt-8 mb-12" data-aos="zoom-in" data-aos-delay="300">
+          <div class="relative w-full">
+            <label for="search" class="sr-only">Cari konten</label>
+            <input type="text" id="search" name="query" placeholder="Cari informasi atau layanan..."
+              class="search-input glass w-full rounded-2xl px-5 py-4 pr-14 text-white placeholder-cyan-100 focus:ring-2 focus:ring-cyan-500 focus-accent">
+            <button type="button" id="search-btn"
+              class="absolute top-1/2 right-3 -translate-y-1/2 bg-gradient-to-r from-cyan-500 to-emerald-500 text-white rounded-xl p-2.5 hover:from-cyan-400 hover:to-emerald-400 transition-all duration-300 transform hover:scale-110 shadow-lg">
+              <i class="fas fa-search"></i>
             </button>
           </div>
-        `;
-        return;
-      }
+          <div id="search-loading" class="hidden text-center mt-4">
+            <div class="loading-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <p class="text-cyan-200 text-sm mt-2">Mencari...</p>
+          </div>
+        </div>
+      </div>
 
-      cardsContainer.innerHTML = cards.map(card => `
-        <a href="${card.external_link}" target="_blank" rel="noopener noreferrer" tabindex="0"
+      <main id="cards-container" class="max-w-4xl mx-auto relative z-10 grid gap-5 mt-8" aria-live="polite">
+        @forelse ($cards as $card)
+        <a href="{{ $card->external_link }}" target="_blank" rel="noopener noreferrer" tabindex="0" data-aos="fade-up"
           class="card-hover-effect glass rounded-2xl p-5 group flex items-center justify-between transition-all duration-300">
           <div class="flex items-center space-x-4 flex-1 min-w-0">
             <div class="w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-white/10 border border-white/10 shadow-lg">
-              <img src="${card.image_url || '/images/placeholder.jpg'}" alt="Logo ${card.title}"
+              <img src="{{ Storage::url($card->image_url) }}" alt="Logo {{ $card->title }}"
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
             </div>
             <div class="flex-grow text-left min-w-0">
               <h2 class="text-lg font-semibold text-white mb-1 group-hover:text-cyan-300 transition-colors truncate">
-                ${card.title}
+                {{ $card->title }}
               </h2>
               <p class="text-cyan-100 text-sm line-clamp-2 group-hover:text-cyan-50 transition-colors">
-                ${card.description}
+                {{ $card->description }}
               </p>
             </div>
           </div>
@@ -393,43 +270,218 @@
             </div>
           </div>
         </a>
-      `).join('');
-    }
+        @empty
+        <div class="col-span-full text-center py-16 text-white" data-aos="zoom-in">
+          <div class="relative inline-block mb-6">
+            <i class="fas fa-search fa-3x text-cyan-400 float-animation"></i>
+          </div>
+          <h3 class="text-2xl font-medium text-white mb-3">Belum ada konten tersedia</h3>
+          <p class="text-cyan-200 max-w-md mx-auto">
+            Silakan kembali lagi nanti atau hubungi administrator untuk informasi lebih lanjut.
+          </p>
+        </div>
+        @endforelse
 
-    // Function to clear search
-    function clearSearch() {
-      searchInput.value = '';
-      window.location.reload();
-    }
+        {{-- Pagination Controls --}}
+        @if($cards->hasPages())
+        <div class="col-span-full mt-12">
+          {{-- Results information --}}
+          <div class="text-center mb-6">
+            <p class="text-cyan-200 text-sm">
+              Menampilkan {{ $cards->firstItem() }} sampai {{ $cards->lastItem() }} dari {{ $cards->total() }} hasil
+            </p>
+          </div>
 
-    // Event listeners
-    searchInput.addEventListener('input', (e) => {
-      clearTimeout(searchTimeout);
-      const query = e.target.value.trim();
+          {{-- Pagination buttons --}}
+          <div class="flex items-center justify-center space-x-2">
+            {{-- Previous Button --}}
+            @if($cards->onFirstPage())
+            <span class="glass px-4 py-2 rounded-lg text-cyan-200 opacity-50 cursor-not-allowed">
+              <i class="fas fa-chevron-left mr-2"></i>Sebelumnya
+            </span>
+            @else
+            <a href="{{ $cards->previousPageUrl() }}" class="glass px-4 py-2 rounded-lg text-cyan-100 hover:text-white transition-colors duration-300 hover:shadow-lg">
+              <i class="fas fa-chevron-left mr-2"></i>Sebelumnya
+            </a>
+            @endif
 
-      searchTimeout = setTimeout(() => {
-        performSearch(query);
-      }, 500);
-    });
+            {{-- Page Numbers --}}
+            <div class="flex items-center space-x-1">
+              @foreach ($cards->getUrlRange(1, $cards->lastPage()) as $page => $url)
+                @if ($page == $cards->currentPage())
+                <span class="glass px-3 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-medium">
+                  {{ $page }}
+                </span>
+                @else
+                <a href="{{ $url }}" class="glass px-3 py-2 rounded-lg text-cyan-100 hover:text-white transition-colors duration-300">
+                  {{ $page }}
+                </a>
+                @endif
+              @endforeach
+            </div>
 
-    searchBtn.addEventListener('click', () => {
-      const query = searchInput.value.trim();
-      if (query) {
-        performSearch(query);
+            {{-- Next Button --}}
+            @if($cards->hasMorePages())
+            <a href="{{ $cards->nextPageUrl() }}" class="glass px-4 py-2 rounded-lg text-cyan-100 hover:text-white transition-colors duration-300 hover:shadow-lg">
+              Selanjutnya<i class="fas fa-chevron-right ml-2"></i>
+            </a>
+            @else
+            <span class="glass px-4 py-2 rounded-lg text-cyan-200 opacity-50 cursor-not-allowed">
+              Selanjutnya<i class="fas fa-chevron-right ml-2"></i>
+            </span>
+            @endif
+          </div>
+        </div>
+        @endif
+      </main>
+    </section>
+
+    <!-- ===================== BAGIAN FOOTER ===================== -->
+    <footer class="glass-dark py-8 mt-12">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div class="mb-4 md:mb-0 text-center md:text-left">
+            <p class="text-sm text-cyan-100">&copy; {{ date('Y') }} Pemerintah Kabupaten Karawang. Semua Hak Dilindungi.</p>
+          </div>
+          {{-- <div class="flex space-x-6 text-cyan-200">
+            <a href="#" class="hover:text-white transition-colors duration-300">
+              <i class="fab fa-facebook fa-lg"></i>
+            </a>
+            <a href="#" class="hover:text-white transition-colors duration-300">
+              <i class="fab fa-twitter fa-lg"></i>
+            </a>
+            <a href="#" class="hover:text-white transition-colors duration-300">
+              <i class="fab fa-instagram fa-lg"></i>
+            </a>
+            <a href="#" class="hover:text-white transition-colors duration-300">
+              <i class="fab fa-youtube fa-lg"></i>
+            </a>
+          </div> --}}
+        </div>
+      </div>
+    </footer>
+
+    <!-- ===================== BAGIAN SCRIPT ===================== -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+      // Inisialisasi library AOS untuk animasi scroll
+      AOS.init({
+        duration: 800,
+        easing: 'ease-out-quart',
+        once: true,
+        offset: 100
+      });
+
+      // Dynamic Search Functionality
+      const searchInput = document.getElementById('search');
+      const searchBtn = document.getElementById('search-btn');
+      const cardsContainer = document.querySelector('#cards-container');
+      const searchLoading = document.getElementById('search-loading');
+
+      let searchTimeout;
+
+      // Function to perform search
+      async function performSearch(query) {
+        if (query.length < 1) {
+          window.location.reload();
+          return;
+        }
+
+        searchLoading.classList.remove('hidden');
+        searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+        try {
+          const response = await fetch(`/search?query=${encodeURIComponent(query)}`);
+          const data = await response.json();
+
+          displaySearchResults(data.cards, data.message);
+        } catch (error) {
+          console.error('Error searching:', error);
+          displaySearchResults([], 'Terjadi kesalahan saat mencari');
+        } finally {
+          searchLoading.classList.add('hidden');
+          searchBtn.innerHTML = '<i class="fas fa-search"></i>';
+        }
       }
-    });
 
-    // Handle Enter key
-    searchInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
+      // Function to display search results
+      function displaySearchResults(cards, message) {
+        if (cards.length === 0) {
+          cardsContainer.innerHTML = `
+            <div class="col-span-full text-center py-16">
+              <div class="relative inline-block mb-6">
+                <i class="fas fa-search fa-3x text-cyan-400 float-animation"></i>
+              </div>
+              <h3 class="text-2xl font-medium text-white mb-3">Hasil pencarian tidak ditemukan</h3>
+              <p class="text-cyan-200 max-w-md mx-auto mb-6">${message || 'Kami tidak dapat menemukan apa yang Anda cari.'}</p>
+              <button onclick="clearSearch()" class="glass px-5 py-2 rounded-xl text-cyan-100 hover:text-white transition-colors duration-300">
+                Tampilkan Semua Konten
+              </button>
+            </div>
+          `;
+          return;
+        }
+
+        cardsContainer.innerHTML = cards.map(card => `
+          <a href="${card.external_link}" target="_blank" rel="noopener noreferrer" tabindex="0"
+            class="card-hover-effect glass rounded-2xl p-5 group flex items-center justify-between transition-all duration-300">
+            <div class="flex items-center space-x-4 flex-1 min-w-0">
+              <div class="w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-white/10 border border-white/10 shadow-lg">
+                <img src="${card.image_url || '/images/placeholder.jpg'}" alt="Logo ${card.title}"
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              </div>
+              <div class="flex-grow text-left min-w-0">
+                <h2 class="text-lg font-semibold text-white mb-1 group-hover:text-cyan-300 transition-colors truncate">
+                  ${card.title}
+                </h2>
+                <p class="text-cyan-100 text-sm line-clamp-2 group-hover:text-cyan-50 transition-colors">
+                  ${card.description}
+                </p>
+              </div>
+            </div>
+            <div class="ml-4 flex-shrink-0">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 flex items-center justify-center text-white group-hover:from-cyan-400 group-hover:to-emerald-400 transition-all duration-300 transform group-hover:translate-x-1">
+                <i class="fas fa-arrow-right"></i>
+              </div>
+            </div>
+          </a>
+        `).join('');
+      }
+
+      // Function to clear search
+      function clearSearch() {
+        searchInput.value = '';
+        window.location.reload();
+      }
+
+      // Event listeners
+      searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        const query = e.target.value.trim();
+
+        searchTimeout = setTimeout(() => {
+          performSearch(query);
+        }, 500);
+      });
+
+      searchBtn.addEventListener('click', () => {
         const query = searchInput.value.trim();
         if (query) {
           performSearch(query);
         }
-      }
-    });
-  </script>
-</body>
+      });
 
-</html>
+      // Handle Enter key
+      searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const query = searchInput.value.trim();
+          if (query) {
+            performSearch(query);
+          }
+        }
+      });
+    </script>
+  </body>
+
+  </html>
