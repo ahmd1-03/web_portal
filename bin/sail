@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| Sail Command
+|--------------------------------------------------------------------------
+|
+| This file is the entry point for the Laravel Sail Docker development
+| environment. It provides a convenient way to interact with the Docker
+| containers without needing to remember complex Docker commands.
+|
+*/
+
+$application = require __DIR__.'/../vendor/laravel/sail/bin/sail.php';
+
+$application->setName('Sail');
+$application->setVersion('1.0.0');
+
+$application->run();

@@ -64,7 +64,7 @@
                                     $card = is_array($cardData) ? (object) $cardData : $cardData;
                                 @endphp
                                 <div
-                                    class="card-item bg-white border border-yellow-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden {{ $index >= 4 ? 'hidden' : '' }}">
+                                    class="card-item bg-white border border-yellow-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                                     @if(!empty($card->image_url))
                                         <div class="relative">
                                             <img src="{{ Storage::url($card->image_url) }}" alt="{{ $card->title ?? 'Card Image' }}"
@@ -150,7 +150,7 @@
                                     $card = is_array($cardData) ? (object) $cardData : $cardData;
                                 @endphp
                                 <div
-                                    class="card-item bg-white border border-red-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden {{ $index >= 4 ? 'hidden' : '' }}">
+                                    class="card-item bg-white border border-red-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                                     @if(!empty($card->image_url))
                                         <div class="relative">
                                             <img src="{{ Storage::url($card->image_url) }}" alt="{{ $card->title ?? 'Card Image' }}"
@@ -236,7 +236,7 @@
                                     $card = is_array($cardData) ? (object) $cardData : $cardData;
                                 @endphp
                                 <div
-                                    class="card-item bg-white border border-green-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden {{ $index >= 4 ? 'hidden' : '' }}">
+                                    class="card-item bg-white border border-green-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                                     @if(!empty($card->image_url))
                                         <div class="relative">
                                             <img src="{{ Storage::url($card->image_url) }}" alt="{{ $card->title ?? 'Card Image' }}"
@@ -311,9 +311,24 @@
 
                 button.addEventListener('click', function () {
                     const isExpanded = container.dataset.expanded === 'true';
-                    cards.forEach(card => card.classList.toggle('hidden', isExpanded));
-                    button.textContent = isExpanded ? 'Lihat Semua' : 'Ringkas';
-                    container.dataset.expanded = isExpanded ? 'false' : 'true';
+
+                    if (isExpanded) {
+                        // Ringkas: sembunyikan kartu setelah jumlah awal
+                        cards.forEach((card, index) => {
+                            if (index >= initialCount) {
+                                card.classList.add('hidden');
+                            }
+                        });
+                        button.textContent = 'Lihat Semua';
+                        container.dataset.expanded = 'false';
+                    } else {
+                        // Lihat Semua: tampilkan semua kartu
+                        cards.forEach(card => {
+                            card.classList.remove('hidden');
+                        });
+                        button.textContent = 'Ringkas';
+                        container.dataset.expanded = 'true';
+                    }
                 });
             }
 
