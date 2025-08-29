@@ -1,8 +1,11 @@
+<!-- ===================== BAGIAN SIDEBAR ADMIN ===================== -->
+<!-- Komponen sidebar dengan toggle state dan animasi transisi -->
 <div :class="$store.sidebar.open ? 'w-64' : 'w-16'"
     class="fixed top-0 left-0 h-full bg-gradient-to-b from-emerald-900 to-emerald-700 text-white shadow-lg transition-all duration-300 z-40 flex flex-col"
     :class="{'-translate-x-full md:translate-x-0': !$store.sidebar.open}">
 
-    <!-- Header -->
+    <!-- ===================== HEADER SIDEBAR ===================== -->
+    <!-- Bagian header sidebar dengan logo dan tombol toggle -->
     <div class="flex items-center justify-between px-4 py-4 border-b border-emerald-600">
         <div class="flex items-center gap-1" x-show="$store.sidebar.open" x-transition.opacity.duration.300ms>
             <img src="{{ asset('images/logoKrw.png') }}" alt="Logo Karawang" class="h-10 w-10 rounded" />
@@ -12,6 +15,7 @@
             </div>
         </div>
 
+        <!-- Tombol toggle sidebar -->
         <button @click="$store.sidebar.open = !$store.sidebar.open; saveSidebarState()"
             class="text-white focus:outline-none p-2 rounded hover:bg-emerald-800 transition">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2"
@@ -23,9 +27,11 @@
         </button>
     </div>
 
-    <!-- Menu -->
+    <!-- ===================== MENU NAVIGASI ===================== -->
+    <!-- Daftar menu navigasi untuk admin -->
     <nav class="flex flex-col mt-6 space-y-3 px-2">
-        <!-- Lihat Website -->
+        
+        <!-- ========== MENU LIHAT WEBSITE ========== -->
         <a href="{{ url('/') }}" class="flex items-center gap-3 px-3 py-2 rounded transition hover:bg-emerald-700
            {{ request()->is('/') ? 'bg-emerald-900 text-emerald-100' : 'text-white' }}"
             :class="$store.sidebar.open ? 'justify-start' : 'justify-center'">
@@ -38,7 +44,7 @@
             <span x-show="$store.sidebar.open" x-transition.opacity.duration.300ms>Lihat Website</span>
         </a>
 
-        <!-- Home -->
+        <!-- ========== MENU HOME/DASHBOARD ========== -->
         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 rounded transition hover:bg-emerald-700
            {{ request()->routeIs('admin.dashboard') ? 'bg-emerald-900 text-emerald-100' : 'text-white' }}"
             :class="$store.sidebar.open ? 'justify-start' : 'justify-center'">
@@ -50,7 +56,7 @@
             <span x-show="$store.sidebar.open" x-transition.opacity.duration.300ms>Home</span>
         </a>
 
-        <!-- Manajemen Kartu -->
+        <!-- ========== MENU MANAJEMEN KARTU ========== -->
         <a href="{{ route('admin.cards.index') }}" class="flex items-center gap-3 px-3 py-2 rounded transition hover:bg-emerald-700
            {{ request()->routeIs('admin.cards.index') ? 'bg-emerald-900 text-emerald-100' : 'text-white' }}"
             :class="$store.sidebar.open ? 'justify-start' : 'justify-center'">
@@ -61,7 +67,7 @@
             <span x-show="$store.sidebar.open" x-transition.opacity.duration.300ms>Manajemen Kartu</span>
         </a>
 
-        <!-- Manajemen Pengguna -->
+        <!-- ========== MENU MANAJEMEN PENGGUNA ========== -->
         <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-3 py-2 rounded transition hover:bg-emerald-700
            {{ request()->routeIs('admin.users.index') ? 'bg-emerald-900 text-emerald-100' : 'text-white' }}"
             :class="$store.sidebar.open ? 'justify-start' : 'justify-center'">
@@ -73,7 +79,7 @@
             <span x-show="$store.sidebar.open" x-transition.opacity.duration.300ms>Manajemen Pengguna</span>
         </a>
 
-        <!-- Pengaturan Profil -->
+        <!-- ========== MENU PENGATURAN PROFIL ========== -->
         <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-3 px-3 py-2 rounded transition hover:bg-emerald-700
            {{ request()->routeIs('admin.profile.edit') ? 'bg-emerald-900 text-emerald-100' : 'text-white' }}"
             :class="$store.sidebar.open ? 'justify-start' : 'justify-center'">
@@ -87,6 +93,8 @@
     </nav>
 </div>
 
+<!-- ===================== BAGIAN JAVASCRIPT ===================== -->
+<!-- Script untuk mengelola state sidebar dengan Alpine.js -->
 <script>
     // Inisialisasi Alpine.js store untuk sidebar
     document.addEventListener('alpine:init', () => {

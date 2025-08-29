@@ -108,7 +108,7 @@
                 <h3 class="text-lg md:text-xl font-bold text-gray-900">Ringkasan Aktivitas Terakhir</h3>
                 <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <div class="flex items-center gap-3 w-full sm:w-auto">
-                        <label for="timeRange" class="text-sm font-medium text-gray-700 whitespace-nowrap">Filter
+                        {{-- <label for="timeRange" class="text-sm font-medium text-gray-700 whitespace-nowrap">Filter
                             Waktu:</label>
                         <select id="timeRange"
                             class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto">
@@ -118,7 +118,7 @@
                             <option value="1_week" selected>1 Minggu</option>
                             <option value="1_month">1 Bulan</option>
                             <option value="1_year">1 Tahun</option>
-                        </select>
+                        </select> --}}
                     </div>
                     {{-- Tautan untuk melihat log aktivitas secara detail --}}
                     <a href="{{ route('admin.detail') }}"

@@ -18,13 +18,16 @@ use App\Http\Controllers\Admin\ProfileController;
 
 // ======================== FRONTEND ========================
 
-// Splash screen
-Route::get('/', function () {
-    return view('frontend.splash');
-})->name('splash');
+// Splash screen (dinonaktifkan - dikomentari agar tetap ada tapi tidak berjalan)
+// Route::get('/', function () {
+//     return view('frontend.splash');
+// })->name('splash');
 
-// Halaman utama frontend
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Route utama langsung ke home
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Halaman utama frontend (alternatif route)
+Route::get('/home', [HomeController::class, 'index'])->name('home.alternative');
 
 // Pencarian AJAX
 Route::get('/search', [SearchController::class, 'search'])->name('search');
