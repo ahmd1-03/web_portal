@@ -65,10 +65,10 @@
   < <!-- Navbar -->
     <nav
       class="fixed top-0 left-0 right-0 bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-700 shadow-md px-3 sm:px-5 py-2 sm:py-3 z-50 flex items-center justify-between">
-      <div class="flex items-center gap-2">
+      <div class="flex items-center">
         <img src="{{ asset('images/logoKrw.png') }}" alt="Logo Kabupaten Karawang" class="h-9 sm:h-14 w-auto">
-        <div>
-          <h1 class="text-white text-base sm:text-2xl font-bold tracking-wide">Karawang</h1>
+        <div class="ml-1">
+          <h1 class="text-white text-base sm:text-2xl font-bold">Karawang</h1>
           <p class="text-emerald-200 text-xs sm:text-sm leading-tight">Portal Informasi Karawang</p>
         </div>
       </div>
@@ -228,14 +228,8 @@
 
     <footer class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-700 text-emerald-100 py-8">
       <div class="max-w-7xl mx-auto px-4">
-        <div class="flex flex-col md:flex-row justify-between items-center">
-          <div class="mb-4 md:mb-0">
-            <p class="text-sm">&copy; {{ date('Y') }} Pemerintah Kabupaten Karawang. Semua Hak Dilindungi.</p>
-          </div>
-          <div class="flex gap-6">
-            <a href="{{ route('privacy') }}" class="text-sm hover:text-white transition">Kebijakan Privasi</a>
-            <a href="{{ route('terms') }}" class="text-sm hover:text-white transition">Syarat & Ketentuan</a>
-          </div>
+        <div class="text-center">
+          <p class="text-sm">&copy; 2025 Pemerintah Kabupaten Karawang. Semua Hak Dilindungi.</p>
         </div>
       </div>
     </footer>

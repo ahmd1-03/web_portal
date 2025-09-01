@@ -277,19 +277,19 @@
                                     <td class="px-3 py-1.5 whitespace-nowrap">
                                         <div x-data="{ showImageModal: false }">
                                             <!-- Gambar kartu -->
-                                            <img src="{{ Storage::url($card->image_url) }}" @click="showImageModal = true"
-                                                alt="Gambar Kartu {{ $card->title }}"
-                                                class="h-10 w-10 sm:h-12 sm:w-12 object-cover rounded-md cursor-pointer 
-                                                                    border-2 border-gray-200 hover:border-emerald-400 transition-all duration-300" />
+<img src="{{ $card->image_url }}" @click="showImageModal = true"
+    alt="Gambar Kartu {{ $card->title }}"
+    class="h-10 w-10 sm:h-12 sm:w-12 object-cover rounded-md cursor-pointer 
+                border-2 border-gray-200 hover:border-emerald-400 transition-all duration-300" />
                                             <!-- Modal pratinjau gambar -->
                                             <div x-show="showImageModal" x-cloak @click.away="showImageModal = false" class="fixed inset-0 z-50 flex items-center justify-center p-3 backdrop-blur-sm 
                                                                     bg-black/80" role="dialog"
                                                 aria-labelledby="imageModalTitle">
                                                 <div class="relative max-w-3xl max-h-[85vh]">
                                                     <!-- Gambar dalam modal -->
-                                                    <img :src="'{{ Storage::url($card->image_url) }}'"
-                                                        alt="Gambar Kartu {{ $card->title }}"
-                                                        class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl" />
+<img :src="cardData.image_url"
+    alt="Gambar Kartu {{ $card->title }}"
+    class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl" />
                                                     <!-- Tombol tutup modal -->
                                                     <button @click="showImageModal = false"
                                                         class="absolute top-3 right-3 p-1.5 rounded-full bg-white/80 
@@ -608,10 +608,10 @@
                             <div class="mb-3 border p-2 rounded-lg bg-gray-50">
                                 <p class="text-xs font-semibold text-gray-700 mb-1.5">Gambar Saat Ini</p>
                                 <img x-show="cardData && cardData.image_url"
-                                    :src="cardData.image_url ? '/storage/' + cardData.image_url : ''"
-                                    :alt="cardData && cardData.name ? cardData.name : ''" class="h-32 w-full object-contain rounded-lg border-2 border-gray-200 
+                                    :src="cardData.image_url ? cardData.image_url : ''"
+                                    :alt="cardData && cardData.name ? cardData.name : ''" class="h-32 w-full object-contain rounded-lg border-2 border-gray-200
                                                 hover:border-blue-300 transition-all duration-300 cursor-pointer"
-                                    @click="cardData && cardData.image_url && openImageModal('/storage/' + cardData.image_url)">
+                                    @click="cardData && cardData.image_url && openImageModal(cardData.image_url)">
                             </div>
                             <!-- Upload gambar baru -->
                             <div class="mt-3 border p-2 rounded-lg bg-gray-50">

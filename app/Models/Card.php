@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Card extends Model
 {
@@ -38,5 +39,23 @@ class Card extends Model
     public function scopeForUser($query, $userId)
     {
         return $query->where('user_id', $userId);
+    }
+
+    /**
+     * Get the full URL for the image
+     */
+    public function getImageUrlAttribute($value)
+    {
+        if (!$value) {
+            return null;
+        }
+
+        // If the value already starts with /storage/, return it as-is
+        if (str_starts_with($value, '/storage/')) {
+            return $value;
+        }
+
+        // Otherwise, generate the relative URL path
+        return '/storage/' . $value;
     }
 }

@@ -1,14 +1,14 @@
-  <!DOCTYPE html>
-  <html lang="id">
+<!DOCTYPE html>
+<html lang="id">
 
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Portal Resmi Kabupaten Karawang</title>
-    <meta name="description" content="Jelajahi informasi dan layanan publik resmi dari Pemerintah Kabupaten Karawang.">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portal Resmi Kabupaten Karawang</title>
+  <meta name="description" content="Jelajahi informasi dan layanan publik resmi dari Pemerintah Kabupaten Karawang.">
 
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite('resources/css/app.css')
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -27,7 +27,7 @@
       body {
         font-family: 'Poppins', sans-serif;
         scroll-behavior: smooth;
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        background: #0f172a;
         color: var(--text);
         min-height: 100vh;
       }
@@ -199,24 +199,17 @@
       </div>
 
       @auth('admin')
-      <a href="{{ route('admin.dashboard') }}"
-        class="glass px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-300 flex items-center gap-2 font-medium text-cyan-100 hover:text-white"
-        aria-label="Kembali ke Dashboard Admin">
-        <i class="fas fa-tachometer-alt"></i>
-        <span class="hidden sm:inline">Dashboard</span>
-      </a>
+        <a href="{{ route('admin.dashboard') }}"
+          class="glass px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-300 flex items-center gap-2 font-medium text-cyan-100 hover:text-white"
+          aria-label="Kembali ke Dashboard Admin">
+          <i class="fas fa-tachometer-alt"></i>
+          <span class="hidden sm:inline">Dashboard</span>
+        </a>
       @endauth
     </nav>
 
     <!-- ===================== BAGIAN UTAMA (HERO & KONTEN) ===================== -->
     <section class="relative pt-28 pb-16 px-4 min-h-screen overflow-hidden">
-      <!-- Background elements -->
-      <div class="absolute inset-0 z-0 overflow-hidden">
-        <div class="absolute -top-40 -right-40 w-80 h-80 bg-cyan-500 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
-        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-emerald-500 rounded-full filter blur-3xl opacity-20 animate-pulse" style="animation-delay: 1s"></div>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-violet-500 rounded-full filter blur-3xl opacity-10 animate-pulse" style="animation-delay: 2s"></div>
-      </div>
-
       <div class="max-w-4xl mx-auto relative z-10 text-center">
         <h1 class="hero-title text-4xl md:text-5xl font-bold text-white mb-4 leading-tight" data-aos="fade-down">
           Web Portal <span class="gradient-text">Karawang</span>
@@ -248,47 +241,46 @@
 
       <main id="cards-container" class="max-w-4xl mx-auto relative z-10 grid gap-5 mt-8" aria-live="polite">
         @forelse ($cards as $card)
-        <a href="{{ $card->external_link }}" target="_blank" rel="noopener noreferrer" tabindex="0" data-aos="fade-up"
-          class="card-hover-effect glass rounded-2xl p-5 group flex items-center justify-between transition-all duration-300">
-          <div class="flex items-center space-x-4 flex-1 min-w-0">
-            <div class="w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-white/10 border border-white/10 shadow-lg">
-              <img src="{{ Storage::url($card->image_url) }}" alt="Logo {{ $card->title }}"
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+          <a href="{{ $card->external_link }}" target="_blank" rel="noopener noreferrer" tabindex="0" data-aos="fade-up"
+            class="card-hover-effect glass rounded-2xl p-5 group flex items-center justify-between transition-all duration-300">
+            <div class="flex items-center space-x-4 flex-1 min-w-0">
+              <div class="w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-white/10 border border-white/10 shadow-lg">
+<img src="{{ $card->image_url }}" alt="Logo {{ $card->title }}"
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              </div>
+              <div class="flex-grow text-left min-w-0">
+                <h2 class="text-lg font-semibold text-white mb-1 group-hover:text-cyan-300 transition-colors truncate">
+                  {{ $card->title }}
+                </h2>
+                <p class="text-cyan-100 text-sm line-clamp-2 group-hover:text-cyan-50 transition-colors">
+                  {{ $card->description }}
+                </p>
+              </div>
             </div>
-            <div class="flex-grow text-left min-w-0">
-              <h2 class="text-lg font-semibold text-white mb-1 group-hover:text-cyan-300 transition-colors truncate">
-                {{ $card->title }}
-              </h2>
-              <p class="text-cyan-100 text-sm line-clamp-2 group-hover:text-cyan-50 transition-colors">
-                {{ $card->description }}
-              </p>
+            <div class="ml-4 flex-shrink-0">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 flex items-center justify-center text-white group-hover:from-cyan-400 group-hover:to-emerald-400 transition-all duration-300 transform group-hover:translate-x-1">
+                <i class="fas fa-arrow-right"></i>
+              </div>
             </div>
-          </div>
-          <div class="ml-4 flex-shrink-0">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 flex items-center justify-center text-white group-hover:from-cyan-400 group-hover:to-emerald-400 transition-all duration-300 transform group-hover:translate-x-1">
-              <i class="fas fa-arrow-right"></i>
-            </div>
-          </div>
-        </a>
+          </a>
         @empty
-        <div class="col-span-full text-center py-16 text-white" data-aos="zoom-in">
-          <div class="relative inline-block mb-6">
-            <i class="fas fa-search fa-3x text-cyan-400 float-animation"></i>
+          <div class="col-span-full text-center py-16 text-white" data-aos="zoom-in">
+            <div class="relative inline-block mb-6">
+              <i class="fas fa-search fa-3x text-cyan-400 float-animation"></i>
+            </div>
+            <h3 class="text-2xl font-medium text-white mb-3">Belum ada konten tersedia</h3>
+            <p class="text-cyan-200 max-w-md mx-auto">
+              Silakan kembali lagi nanti atau hubungi administrator untuk informasi lebih lanjut.
+            </p>
           </div>
-          <h3 class="text-2xl font-medium text-white mb-3">Belum ada konten tersedia</h3>
-          <p class="text-cyan-200 max-w-md mx-auto">
-            Silakan kembali lagi nanti atau hubungi administrator untuk informasi lebih lanjut.
-          </p>
-        </div>
         @endforelse
 
         {{-- Pagination Controls --}}
-        @if($cards->hasPages())
         <div class="col-span-full mt-12">
           {{-- Results information --}}
           <div class="text-center mb-6">
             <p class="text-cyan-200 text-sm">
-              Menampilkan {{ $cards->firstItem() }} sampai {{ $cards->lastItem() }} dari {{ $cards->total() }} hasil
+              Menampilkan {{ $cards->firstItem() ?? 0 }} sampai {{ $cards->lastItem() ?? 0 }} dari {{ $cards->total() ?? 0 }} hasil
             </p>
           </div>
 
@@ -296,52 +288,57 @@
           <div class="flex items-center justify-center space-x-2">
             {{-- Previous Button --}}
             @if($cards->onFirstPage())
-            <span class="glass px-4 py-2 rounded-lg text-cyan-200 opacity-50 cursor-not-allowed">
-              <i class="fas fa-chevron-left mr-2"></i>Sebelumnya
-            </span>
+              <span class="glass px-4 py-2 rounded-lg text-cyan-200 opacity-50 cursor-not-allowed">
+                <i class="fas fa-chevron-left mr-2"></i>Sebelumnya
+              </span>
             @else
-            <a href="{{ $cards->previousPageUrl() }}" class="glass px-4 py-2 rounded-lg text-cyan-100 hover:text-white transition-colors duration-300 hover:shadow-lg">
-              <i class="fas fa-chevron-left mr-2"></i>Sebelumnya
-            </a>
+              <a href="{{ $cards->previousPageUrl() }}" class="pagination-link glass px-4 py-2 rounded-lg text-cyan-100 hover:text-white transition-colors duration-300 hover:shadow-lg">
+                <i class="fas fa-chevron-left mr-2"></i>Sebelumnya
+              </a>
             @endif
 
             {{-- Page Numbers --}}
             <div class="flex items-center space-x-1">
-              @foreach ($cards->getUrlRange(1, $cards->lastPage()) as $page => $url)
-                @if ($page == $cards->currentPage())
+              @if($cards->lastPage() > 0)
+                @foreach ($cards->getUrlRange(1, $cards->lastPage()) as $page => $url)
+                  @if ($page == $cards->currentPage())
+                    <span class="glass px-3 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-medium">
+                      {{ $page }}
+                    </span>
+                  @else
+                    <a href="{{ $url }}" class="pagination-link glass px-3 py-2 rounded-lg text-cyan-100 hover:text-white transition-colors duration-300">
+                      {{ $page }}
+                    </a>
+                  @endif
+                @endforeach
+              @else
                 <span class="glass px-3 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-medium">
-                  {{ $page }}
+                  1
                 </span>
-                @else
-                <a href="{{ $url }}" class="glass px-3 py-2 rounded-lg text-cyan-100 hover:text-white transition-colors duration-300">
-                  {{ $page }}
-                </a>
-                @endif
-              @endforeach
+              @endif
             </div>
 
             {{-- Next Button --}}
             @if($cards->hasMorePages())
-            <a href="{{ $cards->nextPageUrl() }}" class="glass px-4 py-2 rounded-lg text-cyan-100 hover:text-white transition-colors duration-300 hover:shadow-lg">
-              Selanjutnya<i class="fas fa-chevron-right ml-2"></i>
-            </a>
+              <a href="{{ $cards->nextPageUrl() }}" class="pagination-link glass px-4 py-2 rounded-lg text-cyan-100 hover:text-white transition-colors duration-300 hover:shadow-lg">
+                Selanjutnya<i class="fas fa-chevron-right ml-2"></i>
+              </a>
             @else
-            <span class="glass px-4 py-2 rounded-lg text-cyan-200 opacity-50 cursor-not-allowed">
-              Selanjutnya<i class="fas fa-chevron-right ml-2"></i>
-            </span>
+              <span class="glass px-4 py-2 rounded-lg text-cyan-200 opacity-50 cursor-not-allowed">
+                Selanjutnya<i class="fas fa-chevron-right ml-2"></i>
+              </span>
             @endif
           </div>
         </div>
-        @endif
       </main>
     </section>
 
     <!-- ===================== BAGIAN FOOTER ===================== -->
     <footer class="glass-dark py-8 mt-12">
       <div class="max-w-7xl mx-auto px-4">
-        <div class="flex flex-col md:flex-row justify-between items-center">
-          <div class="mb-4 md:mb-0 text-center md:text-left">
-            <p class="text-sm text-cyan-100">&copy; {{ date('Y') }} Pemerintah Kabupaten Karawang. Semua Hak Dilindungi.</p>
+        <div class="flex flex-col md:flex-row justify-center items-center">
+          <div class="mb-4 md:mb-0 text-center">
+            <p class="text-sm text-cyan-100">&copy; 2025 Pemerintah Kabupaten Karawang. Semua Hak Dilindungi.</p>
           </div>
           {{-- <div class="flex space-x-6 text-cyan-200">
             <a href="#" class="hover:text-white transition-colors duration-300">
@@ -380,6 +377,108 @@
 
       let searchTimeout;
 
+      // Function to generate pagination HTML
+      function generatePaginationHTML(pagination) {
+        const { current_page, last_page, from, to, total, on_first, has_more, previous_url, next_url, url_range } = pagination;
+
+        let html = `
+          <div class="col-span-full mt-12">
+            <div class="text-center mb-6">
+              <p class="text-cyan-200 text-sm">
+                Menampilkan ${from || 0} sampai ${to || 0} dari ${total || 0} hasil
+              </p>
+            </div>
+            <div class="flex items-center justify-center space-x-2">
+        `;
+
+        // Previous Button
+        if (on_first) {
+          html += `<span class="glass px-4 py-2 rounded-lg text-cyan-200 opacity-50 cursor-not-allowed"><i class="fas fa-chevron-left mr-2"></i>Sebelumnya</span>`;
+        } else {
+          html += `<a href="${previous_url}" class="pagination-link glass px-4 py-2 rounded-lg text-cyan-100 hover:text-white transition-colors duration-300 hover:shadow-lg"><i class="fas fa-chevron-left mr-2"></i>Sebelumnya</a>`;
+        }
+
+        // Page Numbers
+        html += `<div class="flex items-center space-x-1">`;
+        if (last_page > 0) {
+          for (const [page, url] of Object.entries(url_range)) {
+            if (parseInt(page) === current_page) {
+              html += `<span class="glass px-3 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-medium">${page}</span>`;
+            } else {
+              html += `<a href="${url}" class="pagination-link glass px-3 py-2 rounded-lg text-cyan-100 hover:text-white transition-colors duration-300">${page}</a>`;
+            }
+          }
+        } else {
+          html += `<span class="glass px-3 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-medium">1</span>`;
+        }
+        html += `</div>`;
+
+        // Next Button
+        if (has_more) {
+          html += `<a href="${next_url}" class="pagination-link glass px-4 py-2 rounded-lg text-cyan-100 hover:text-white transition-colors duration-300 hover:shadow-lg">Selanjutnya<i class="fas fa-chevron-right ml-2"></i></a>`;
+        } else {
+          html += `<span class="glass px-4 py-2 rounded-lg text-cyan-200 opacity-50 cursor-not-allowed">Selanjutnya<i class="fas fa-chevron-right ml-2"></i></span>`;
+        }
+
+        html += `
+            </div>
+          </div>
+        `;
+
+        return html;
+      }
+
+      // Function to display results
+      function displayResults(cards, pagination, message) {
+        let html = '';
+
+        if (cards.length === 0) {
+          html = `
+            <div class="col-span-full text-center py-16">
+              <div class="relative inline-block mb-6">
+                <i class="fas fa-search fa-3x text-cyan-400 float-animation"></i>
+              </div>
+              <h3 class="text-2xl font-medium text-white mb-3">Hasil pencarian tidak ditemukan</h3>
+              <p class="text-cyan-200 max-w-md mx-auto mb-6">${message || 'Kami tidak dapat menemukan apa yang Anda cari.'}</p>
+              <button onclick="clearSearch()" class="glass px-5 py-2 rounded-xl text-cyan-100 hover:text-white transition-colors duration-300">
+                Tampilkan Semua Konten
+              </button>
+            </div>
+          `;
+        } else {
+          html = cards.map(card => `
+            <a href="${card.external_link}" target="_blank" rel="noopener noreferrer" tabindex="0"
+              class="card-hover-effect glass rounded-2xl p-5 group flex items-center justify-between transition-all duration-300">
+              <div class="flex items-center space-x-4 flex-1 min-w-0">
+                <div class="w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-white/10 border border-white/10 shadow-lg">
+                  <img src="${card.image_url || '/images/placeholder.jpg'}" alt="Logo ${card.title}"
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                </div>
+                <div class="flex-grow text-left min-w-0">
+                  <h2 class="text-lg font-semibold text-white mb-1 group-hover:text-cyan-300 transition-colors truncate">
+                    ${card.title}
+                  </h2>
+                  <p class="text-cyan-100 text-sm line-clamp-2 group-hover:text-cyan-50 transition-colors">
+                    ${card.description}
+                  </p>
+                </div>
+              </div>
+              <div class="ml-4 flex-shrink-0">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 flex items-center justify-center text-white group-hover:from-cyan-400 group-hover:to-emerald-400 transition-all duration-300 transform group-hover:translate-x-1">
+                  <i class="fas fa-arrow-right"></i>
+                </div>
+              </div>
+            </a>
+          `).join('');
+        }
+
+        if (pagination) {
+          html += generatePaginationHTML(pagination);
+        }
+
+        cardsContainer.innerHTML = html;
+      }
+
       // Function to perform search
       async function performSearch(query) {
         if (query.length < 1) {
@@ -394,10 +493,10 @@
           const response = await fetch(`/search?query=${encodeURIComponent(query)}`);
           const data = await response.json();
 
-          displaySearchResults(data.cards, data.message);
+          displayResults(data.cards, data.pagination, data.message);
         } catch (error) {
           console.error('Error searching:', error);
-          displaySearchResults([], 'Terjadi kesalahan saat mencari');
+          displayResults([], null, 'Terjadi kesalahan saat mencari');
         } finally {
           searchLoading.classList.add('hidden');
           searchBtn.innerHTML = '<i class="fas fa-search"></i>';
@@ -481,6 +580,39 @@
           }
         }
       });
+
+      // Pagination event listener
+      document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('pagination-link') || e.target.closest('.pagination-link')) {
+          e.preventDefault();
+          const link = e.target.closest('.pagination-link');
+          if (link) {
+            handlePagination(link.href);
+          }
+        }
+      });
+
+      // Function to handle pagination
+      async function handlePagination(url) {
+        searchLoading.classList.remove('hidden');
+
+        try {
+          const response = await fetch(url, {
+            headers: {
+              'Accept': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          });
+          const data = await response.json();
+
+          displayResults(data.cards, data.pagination, data.message);
+          history.pushState(null, '', url);
+        } catch (error) {
+          console.error('Error loading page:', error);
+        } finally {
+          searchLoading.classList.add('hidden');
+        }
+      }
     </script>
   </body>
 

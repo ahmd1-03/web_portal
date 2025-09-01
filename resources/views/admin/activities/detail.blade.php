@@ -67,7 +67,7 @@
                                     class="card-item bg-white border border-yellow-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                                     @if(!empty($card->image_url))
                                         <div class="relative">
-                                            <img src="{{ Storage::url($card->image_url) }}" alt="{{ $card->title ?? 'Card Image' }}"
+                                            <img src="{{ str_contains($card->image_url, '/storage/') ? $card->image_url : Storage::url($card->image_url) }}" alt="{{ $card->title ?? 'Card Image' }}"
                                                 class="w-full h-32 object-cover"
                                                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzljYTZhZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkdBTUJBUiBUVUxBSzwvdGV4dD48L3N2Zz4='; this.classList.add('opacity-75')">
                                         </div>
@@ -163,9 +163,9 @@
                                 @endphp
                                 <div
                                     class="card-item bg-white border border-red-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-                                    @if(!empty($card->image_url) && Storage::disk('public')->exists($card->image_url))
+                                    @if(!empty($card->image_url))
                                         <div class="relative">
-                                            <img src="{{ Storage::url($card->image_url) }}" alt="{{ $card->title ?? 'Card Image' }}"
+                                            <img src="{{ str_contains($card->image_url, '/storage/') ? $card->image_url : Storage::url($card->image_url) }}" alt="{{ $card->title ?? 'Card Image' }}"
                                                 class="w-full h-32 object-cover opacity-75"
                                                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzljYTZhZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkdBTUJBUiBESEFQVVM8L3RleHQ+PC9zdmc+'; this.classList.add('opacity-75')">
                                         </div>
@@ -262,7 +262,7 @@
                                     class="card-item bg-white border border-green-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                                     @if(!empty($card->image_url))
                                         <div class="relative">
-                                            <img src="{{ Storage::url($card->image_url) }}" alt="{{ $card->title ?? 'Card Image' }}"
+                                            <img src="{{ str_contains($card->image_url, '/storage/') ? $card->image_url : Storage::url($card->image_url) }}" alt="{{ $card->title ?? 'Card Image' }}"
                                                 class="w-full h-32 object-cover"
                                                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzljYTZhZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkdBTUJBUiBUVUxBSzwvdGV4dD48L3N2Zz4='; this.classList.add('opacity-75')">
                                         </div>
