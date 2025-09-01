@@ -5,70 +5,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Portal Resmi Kabupaten Karawang</title>
-  <meta name="description" content="Jelajahi informasi dan layanan publik resmi dari Pemerintah Kabupaten Karawang.">
+  <meta name="description" content="Portal resmi informasi dan layanan publik Kabupaten Karawang">
 
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
-  @vite('resources/css/app.css')
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --primary: #0e7490;
-      --primary-light: #06b6d4;
-      --primary-dark: #155e75;
-      --secondary: #10b981;
-      --accent: #8b5cf6;
-      --text: #f8fafc;
-      --text-secondary: #cbd5e1;
-      --glass: rgba(255, 255, 255, 0.1);
-      --glass-dark: rgba(0, 0, 0, 0.2);
-    }
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
 
+  @vite(['resources/css/app.css'])
+
+  <style>
+    /* Gaya dasar untuk body */
     body {
       font-family: 'Poppins', sans-serif;
       scroll-behavior: smooth;
-      background: #0f172a;
-      color: var(--text);
-      min-height: 100vh;
     }
 
-    /* Glassmorphism effect */
-    .glass {
-      background: var(--glass);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
-    }
-
-    .glass-dark {
-      background: var(--glass-dark);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-
-    /* Custom scrollbar */
+    /* Gaya scrollbar kustom */
     ::-webkit-scrollbar {
       width: 8px;
+      height: 8px;
     }
 
     ::-webkit-scrollbar-thumb {
-      background: linear-gradient(to bottom, var(--primary-light), var(--primary-dark));
+      background-color: #065f46;
       border-radius: 4px;
     }
 
     ::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.2);
+      background: #f0fdf4;
     }
 
-    /* Improved focus states */
-    .focus-accent:focus {
+    /* Efek focus untuk input pencarian */
+    .search-input:focus {
       outline: none;
-      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.4);
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.3);
+      border-color: #059669;
     }
 
-    /* Animation keyframes */
+    /* Animasi untuk empty state */
     @keyframes float {
 
       0%,
@@ -81,580 +54,399 @@
       }
     }
 
-    @keyframes pulse {
-
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0.7;
-      }
-    }
-
     .float-animation {
       animation: float 3s ease-in-out infinite;
-    }
-
-    .pulse-animation {
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    /* Improved card design */
-    .card-hover-effect {
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card-hover-effect::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-      transition: left 0.7s ease;
-    }
-
-    .card-hover-effect:hover::before {
-      left: 100%;
-    }
-
-    .card-hover-effect:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Search improvements */
-    .search-input {
-      transition: all 0.3s ease;
-    }
-
-    .search-input:focus {
-      box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
-    }
-
-    /* Gradient text */
-    .gradient-text {
-      background: linear-gradient(to right, #06b6d4, #10b981);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .hero-title {
-        font-size: 2.5rem !important;
-      }
-
-      .hero-subtitle {
-        font-size: 1.1rem !important;
-      }
-
-      nav img {
-        height: 2.5rem !important;
-        width: 2.5rem !important;
-      }
-
-      nav h1 {
-        font-size: 1.25rem !important;
-      }
-
-      nav p {
-        font-size: 0.7rem !important;
-      }
-    }
-
-    /* Logo hover effect */
-    .logo-container {
-      position: relative;
-    }
-
-    .logo-image {
-      transition: transform 0.3s ease-out;
-    }
-
-    .logo-container:hover .logo-image {
-      transform: translateY(-8px);
-    }
-
-    .logo-container::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 75%;
-      height: 3px;
-      background-color: var(--primary-light);
-      border-radius: 999px;
-      box-shadow: 0 0 8px var(--primary-light), 0 0 12px var(--primary-light);
-      opacity: 0;
-      transition: opacity 0.3s ease-out, bottom 0.3s ease-out;
-    }
-
-    .logo-container:hover::after {
-      opacity: 1;
-      bottom: -10px;
-    }
-
-    /* Loading animation */
-    .loading-dots {
-      display: inline-flex;
-    }
-
-    .loading-dots span {
-      width: 8px;
-      height: 8px;
-      margin: 0 3px;
-      border-radius: 50%;
-      background-color: var(--primary-light);
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-
-    .loading-dots span:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-
-    .loading-dots span:nth-child(3) {
-      animation-delay: 0.4s;
     }
   </style>
 </head>
 
-<body class="antialiased">
+<body class="bg-emerald-50 text-gray-800">
 
-
-
-
-
-  <!-- ===================== BAGIAN UTAMA (PROFILE & SEARCH) ===================== -->
-  <section class="relative pt-16 pb-16 px-4 min-h-screen overflow-hidden">
-    <div class="max-w-4xl mx-auto relative z-10 text-center">
-      <!-- Profile Section -->
-      <div class="mb-12" data-aos="fade-down">
-        <div class="logo-container h-28 w-28 md:h-32 md:w-32 mx-auto mb-6">
-          <img src="{{ asset('images/logoKrw.png') }}" alt="Logo Kabupaten Karawang"
-            class="logo-image h-full w-full rounded-xl object-cover shadow-lg">
+  < <!-- Navbar -->
+    <nav
+      class="fixed top-0 left-0 right-0 bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-700 shadow-md px-3 sm:px-5 py-2 sm:py-3 z-50 flex items-center justify-between">
+      <div class="flex items-center">
+        <img src="{{ asset('images/logoKrw.png') }}" alt="Logo Kabupaten Karawang" class="h-9 sm:h-14 w-auto">
+        <div class="ml-1">
+          <h1 class="text-white text-base sm:text-2xl font-bold">Karawang</h1>
+          <p class="text-emerald-200 text-xs sm:text-sm leading-tight">Portal Informasi Karawang</p>
         </div>
-        <h1 class="text-3xl md:text-4xl font-bold text-white mb-2 leading-tight">
-          Kabupaten Karawang
+      </div>
+
+      @auth('admin')
+        <a href="{{ route('admin.dashboard') }}"
+          class="bg-white text-emerald-900 text-xs sm:text-sm px-2.5 sm:px-4 py-1 sm:py-2 rounded-lg shadow hover:bg-emerald-100 transition flex items-center gap-2"
+          aria-label="Kembali ke Dashboard Admin">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 17l5-5-5-5" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12H9" />
+          </svg>
+        </a>
+      @endauth
+    </nav>
+
+    <section
+      class="relative pt-20 sm:pt-28 pb-8 sm:pb-9 px-4 sm:px-6 text-center overflow-hidden bg-gradient-to-br from-emerald-950 via-teal-900 to-emerald-800 min-h-[40vh] sm:min-h-[45vh] flex flex-col items-center justify-center">
+      <div class="max-w-3xl mx-auto relative z-10">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight tracking-tight"
+          data-aos="fade-down" data-aos-duration="600">
+          Web Portal Karawang
         </h1>
-        <p class="text-cyan-100 text-lg md:text-xl max-w-2xl mx-auto font-light">
-          Portal Informasi dan Layanan Publik Kabupaten Karawang
+        <p class="text-teal-100 text-sm sm:text-lg max-w-xl mx-auto mb-6 font-light" data-aos="fade-up"
+          data-aos-delay="150" data-aos-duration="600">
+          Jelajahi informasi dan layanan publik Kabupaten Karawang
         </p>
-      </div>
 
-      <!-- Search Bar -->
-      <div class="mx-auto max-w-lg mb-12" data-aos="zoom-in" data-aos-delay="200">
-        <div class="relative w-full">
-          <label for="search" class="sr-only">Cari konten</label>
-          <input type="text" id="search" name="query" placeholder="Cari informasi atau layanan..."
-            class="search-input glass w-full rounded-2xl px-5 py-4 pr-14 text-white placeholder-cyan-100 focus:ring-2 focus:ring-cyan-500 focus-accent">
-          <button type="button" id="search-btn"
-            class="absolute top-1/2 right-3 -translate-y-1/2 bg-gradient-to-r from-cyan-500 to-emerald-500 text-white rounded-xl p-2.5 hover:from-cyan-400 hover:to-emerald-400 transition-all duration-300 transform hover:scale-110 shadow-lg">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
-        <div id="search-loading" class="hidden text-center mt-4">
-          <div class="loading-dots">
-            <span></span>
-            <span></span>
-            <span></span>
+        <div class="mx-auto max-w-lg" data-aos="zoom-in" data-aos-delay="300" data-aos-duration="600">
+          <div class="relative w-full">
+            <label for="search" class="sr-only">Cari konten</label>
+            <input type="text" id="search" name="query" placeholder="Cari konten..."
+              class="search-input w-full rounded-full px-4 py-2 sm:py-2.5 pr-12 text-sm sm:text-base border-2 border-teal-500 shadow-md text-gray-900 bg-white/95 backdrop-blur-sm focus:ring-2 focus:ring-teal-400 focus:border-teal-400 transition-all duration-300 ease-in-out">
+            <button type="button" id="search-btn"
+              class="absolute top-1/2 right-2 -translate-y-1/2 bg-gradient-to-r from-teal-600 to-emerald-500 text-white rounded-full p-2 hover:from-teal-500 hover:to-emerald-400 transition-all duration-300 disabled:opacity-75 disabled:cursor-not-allowed">
+              <svg id="search-icon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="7"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <svg id="search-spinner" class="w-4 h-4 hidden animate-spin" xmlns="http://www.w3.org/2000/svg"
+                fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                </path>
+              </svg>
+            </button>
           </div>
-          <p class="text-cyan-200 text-sm mt-2">Mencari...</p>
+          <div id="search-loading" class="hidden text-center mt-2">
+            <div class="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-teal-500"></div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <main id="cards-container" class="max-w-2xl mx-auto relative z-10 flex flex-col gap-5 mt-8" aria-live="polite">
-      @forelse ($cards as $card)
-        <a href="{{ $card->external_link }}" target="_blank" rel="noopener noreferrer" tabindex="0" data-aos="fade-up"
-          class="card-hover-effect glass rounded-2xl p-5 group flex items-center justify-between transition-all duration-300">
-          <div class="flex items-center space-x-4 flex-1 min-w-0">
-            <div class="w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-white/10 border border-white/10 shadow-lg">
+      <div class="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none" class="w-full h-full">
+          <defs>
+            <linearGradient id="staticGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#064e3b" stop-opacity="0.5" />
+              <stop offset="50%" stop-color="#047857" stop-opacity="0.4" />
+              <stop offset="100%" stop-color="#059669" stop-opacity="0.5" />
+            </linearGradient>
+            <pattern id="subtlePattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+              <circle cx="50" cy="50" r="20" fill="rgba(255, 255, 255, 0.1)" />
+              <circle cx="25" cy="25" r="10" fill="rgba(255, 255, 255, 0.05)" />
+              <circle cx="75" cy="75" r="15" fill="rgba(255, 255, 255, 0.08)" />
+            </pattern>
+          </defs>
+          <rect width="1440" height="320" fill="url(#staticGradient)" />
+          <rect width="1440" height="320" fill="url(#subtlePattern)" opacity="0.3" />
+        </svg>
+      </div>
+    </section>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+
+    <main class="px-4 max-w-7xl mx-auto relative z-10 mt-8 sm:mt-12">
+      <section id="cards-container"
+        class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5 pb-24" aria-live="polite">
+        @forelse ($cards as $card)
+          <article tabindex="0" data-aos="fade-up"
+            class="bg-white rounded-xl shadow-lg border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 ease-out flex flex-col overflow-hidden cursor-pointer group">
+            <div class="w-full h-32 sm:h-40 overflow-hidden relative">
               <img src="{{ $card->image_url }}" alt="Logo {{ $card->title }}"
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              <div class="absolute inset-0 bg-gradient-to-t from-emerald-900/30 to-transparent"></div>
             </div>
-            <div class="flex-grow text-left min-w-0">
-              <h2 class="text-lg font-semibold text-white mb-1 group-hover:text-cyan-300 transition-colors truncate">
+            <div class="p-4 flex flex-col flex-grow">
+              <h2
+                class="text-base font-semibold text-emerald-900 mb-1 line-clamp-2 group-hover:text-emerald-700 transition-colors">
                 {{ $card->title }}
               </h2>
-              <p class="text-cyan-100 text-sm line-clamp-2 group-hover:text-cyan-50 transition-colors">
+              <p class="text-emerald-700 text-xs mb-3 line-clamp-3 group-hover:text-emerald-600 transition-colors">
                 {{ $card->description }}
               </p>
+              <a href="{{ $card->external_link }}" target="_blank" rel="noopener noreferrer"
+                class="mt-auto inline-flex items-center justify-center gap-2 text-white font-medium px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-900 to-emerald-700 text-sm hover:from-emerald-700 hover:to-emerald-600 transition-all duration-300 group-hover:shadow-lg">
+                Kunjungi
+                <svg xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="currentColor"
+                  viewBox="0 0 16 16">
+                  <path fill-rule="evenodd"
+                    d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 1 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+                </svg>
+              </a>
             </div>
-          </div>
-          <div class="ml-4 flex-shrink-0">
-            <div
-              class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 flex items-center justify-center text-white group-hover:from-cyan-400 group-hover:to-emerald-400 transition-all duration-300 transform group-hover:translate-x-1">
-              <i class="fas fa-arrow-right"></i>
+          </article>
+        @empty
+          <div class="col-span-full text-center py-16" data-aos="zoom-in" data-aos-duration="800">
+            <div class="relative inline-block mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 float-animation" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div class="absolute inset-0 rounded-full bg-emerald-100 opacity-0 animate-ping -z-10"
+                style="animation-delay: 1s;"></div>
             </div>
-          </div>
-        </a>
-      @empty
-        <div class="col-span-full text-center py-16 text-white" data-aos="zoom-in">
-          <div class="relative inline-block mb-6">
-            <i class="fas fa-search fa-3x text-cyan-400 float-animation"></i>
-          </div>
-          <h3 class="text-2xl font-medium text-white mb-3">Belum ada konten tersedia</h3>
-          <p class="text-cyan-200 max-w-md mx-auto">
-            Silakan kembali lagi nanti atau hubungi administrator untuk informasi lebih lanjut.
-          </p>
-        </div>
-      @endforelse
 
-      {{-- Pagination Controls --}}
-      <div class="col-span-full mt-12">
-        {{-- Results information --}}
-        <div class="text-center mb-6">
-          <p class="text-cyan-200 text-sm">
-            Menampilkan {{ $cards->firstItem() ?? 0 }} sampai {{ $cards->lastItem() ?? 0 }} dari
-            {{ $cards->total() ?? 0 }} hasil
-          </p>
-        </div>
+            <h3 class="text-xl font-medium text-gray-600 mb-2" data-aos="fade-up" data-aos-delay="200">
+              Oops! Tidak ada konten ditemukan
+            </h3>
+            <p class="text-gray-400 max-w-md mx-auto" data-aos="fade-up" data-aos-delay="300">
+              Kami tidak dapat menemukan apa yang Anda cari. Coba kata kunci lain atau lihat rekomendasi kami.
+            </p>
 
-        {{-- Pagination buttons --}}
-        <div class="flex items-center justify-center space-x-2">
-          {{-- Previous Button --}}
-          @if ($cards->onFirstPage())
-            <span
-              class="glass h-9 px-3 rounded-lg text-cyan-200 opacity-50 cursor-not-allowed flex items-center justify-center">
-              <i class="fas fa-chevron-left sm:mr-2"></i><span class="hidden sm:inline">Sebelumnya</span>
-            </span>
-          @else
-            <a href="{{ $cards->previousPageUrl() }}"
-              class="pagination-link glass h-9 px-3 rounded-lg text-cyan-100 hover:text-white hover:bg-white/10 transition-all duration-300 flex items-center justify-center">
-              <i class="fas fa-chevron-left sm:mr-2"></i><span class="hidden sm:inline">Sebelumnya</span>
-            </a>
-          @endif
-
-          {{-- Page Numbers --}}
-          <div class="flex items-center space-x-1">
-            @if ($cards->lastPage() > 0)
-              @foreach ($cards->getUrlRange(1, $cards->lastPage()) as $page => $url)
-                @if ($page == $cards->currentPage())
-                  <span
-                    class="glass w-9 h-9 flex items-center justify-center rounded-lg bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-medium">
-                    {{ $page }}
-                  </span>
-                @else
-                  <a href="{{ $url }}"
-                    class="pagination-link glass w-9 h-9 flex items-center justify-center rounded-lg text-cyan-100 hover:text-white hover:bg-white/10 transition-colors duration-300">
-                    {{ $page }}
-                  </a>
-                @endif
-              @endforeach
-            @else
-              <span
-                class="glass w-9 h-9 flex items-center justify-center rounded-lg bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-medium">
-                1
-              </span>
+            @if(request()->has('search'))
+              <div class="mt-6" data-aos="fade-up" data-aos-delay="400">
+                <a href="{{ url('/') }}"
+                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-emerald-700 to-emerald-600 hover:from-emerald-800 hover:to-emerald-700 transition-all duration-300 transform hover:-translate-y-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 -ml-1" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                  </svg>
+                  Kembali ke halaman utama
+                </a>
+              </div>
             @endif
-          </div>
 
-          {{-- Next Button --}}
-          @if ($cards->hasMorePages())
-            <a href="{{ $cards->nextPageUrl() }}"
-              class="pagination-link glass h-9 px-3 rounded-lg text-cyan-100 hover:text-white hover:bg-white/10 transition-all duration-300 flex items-center justify-center">
-              <span class="hidden sm:inline">Selanjutnya</span><i class="fas fa-chevron-right sm:ml-2"></i>
-            </a>
-          @else
-            <span
-              class="glass h-9 px-3 rounded-lg text-cyan-200 opacity-50 cursor-not-allowed flex items-center justify-center">
-              <span class="hidden sm:inline">Selanjutnya</span><i class="fas fa-chevron-right sm:ml-2"></i>
-            </span>
-          @endif
-        </div>
+            <div class="mt-12 flex justify-center space-x-4 opacity-50">
+              <div class="w-3 h-3 rounded-full bg-emerald-700 animate-bounce" style="animation-delay: 0.1s"></div>
+              <div class="w-3 h-3 rounded-full bg-emerald-600 animate-bounce" style="animation-delay: 0.2s"></div>
+              <div class="w-3 h-3 rounded-full bg-emerald-500 animate-bounce" style="animation-delay: 0.3s"></div>
+            </div>
+          </div>
+        @endforelse
+      </section>
+
+      <div id="pagination-container" class="mt-8 mb-16">
+        {{ $cards->appends(['search' => $search])->links() }}
       </div>
     </main>
-  </section>
 
-  <!-- ===================== BAGIAN FOOTER ===================== -->
-  <footer class="glass-dark py-8 mt-12">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="flex flex-col md:flex-row justify-center items-center">
-        <div class="mb-4 md:mb-0 text-center">
-          <p class="text-sm text-cyan-100">&copy; 2025 Pemerintah Kabupaten Karawang. Semua Hak Dilindungi.</p>
+    <footer class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-700 text-emerald-100 py-8">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center">
+          <p class="text-sm">&copy; 2025 Pemerintah Kabupaten Karawang. Semua Hak Dilindungi.</p>
         </div>
-        {{-- <div class="flex space-x-6 text-cyan-200">
-          <a href="#" class="hover:text-white transition-colors duration-300">
-            <i class="fab fa-facebook fa-lg"></i>
-          </a>
-          <a href="#" class="hover:text-white transition-colors duration-300">
-            <i class="fab fa-twitter fa-lg"></i>
-          </a>
-          <a href="#" class="hover:text-white transition-colors duration-300">
-            <i class="fab fa-instagram fa-lg"></i>
-          </a>
-          <a href="#" class="hover:text-white transition-colors duration-300">
-            <i class="fab fa-youtube fa-lg"></i>
-          </a>
-        </div> --}}
       </div>
-    </div>
-  </footer>
+    </footer>
 
-  <!-- ===================== BAGIAN SCRIPT ===================== -->
-  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-  <script>
-    // Inisialisasi library AOS untuk animasi scroll
-    AOS.init({
-      duration: 800,
-      easing: 'ease-out-quart',
-      once: true,
-      offset: 100
-    });
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 600,
+        easing: 'ease-out-quad',
+        once: true,
+        offset: 100
+      });
 
-    // Dynamic Search Functionality
-    const searchInput = document.getElementById('search');
-    const searchBtn = document.getElementById('search-btn');
-    const cardsContainer = document.querySelector('#cards-container');
-    const searchLoading = document.getElementById('search-loading');
+      const searchInput = document.getElementById('search');
+      const searchBtn = document.getElementById('search-btn');
+      const searchIcon = document.getElementById('search-icon');
+      const searchSpinner = document.getElementById('search-spinner');
+      const cardsContainer = document.getElementById('cards-container');
+      const searchLoading = document.getElementById('search-loading');
+      const paginationContainer = document.getElementById('pagination-container');
 
-    let searchTimeout;
+      let searchTimeout;
 
-    // Function to generate pagination HTML
-    function generatePaginationHTML(pagination) {
-      const { current_page, last_page, from, to, total, on_first, has_more, previous_url, next_url, url_range } = pagination;
+      async function performSearch(query, page = 1) {
+        searchLoading.classList.remove('hidden');
+        searchIcon.classList.add('hidden');
+        searchSpinner.classList.remove('hidden');
+        searchInput.disabled = true;
+        searchBtn.disabled = true;
 
-      let html = `
-          <div class="col-span-full mt-12">
-            <div class="text-center mb-6">
-              <p class="text-cyan-200 text-sm">
-                Menampilkan ${from || 0} sampai ${to || 0} dari ${total || 0} hasil
-              </p>
-            </div>
-            <div class="flex items-center justify-center space-x-2">
-        `;
+        try {
+          const response = await fetch(`/search?query=${encodeURIComponent(query)}&page=${page}`);
+          const data = await response.json();
 
-      // Previous Button
-      if (on_first) {
-        html += `<span class="glass h-9 px-3 rounded-lg text-cyan-200 opacity-50 cursor-not-allowed flex items-center justify-center"><i class="fas fa-chevron-left sm:mr-2"></i><span class="hidden sm:inline">Sebelumnya</span></span>`;
-      } else {
-        html += `<a href="${previous_url}" class="pagination-link glass h-9 px-3 rounded-lg text-cyan-100 hover:text-white hover:bg-white/10 transition-all duration-300 flex items-center justify-center"><i class="fas fa-chevron-left sm:mr-2"></i><span class="hidden sm:inline">Sebelumnya</span></a>`;
+          displaySearchResults(data);
+        } catch (error) {
+          console.error('Error searching:', error);
+          displaySearchResults({
+            cards: [],
+            message: 'Terjadi kesalahan saat mencari.'
+          });
+        } finally {
+          searchLoading.classList.add('hidden');
+          searchIcon.classList.remove('hidden');
+          searchSpinner.classList.add('hidden');
+          searchInput.disabled = false;
+          searchBtn.disabled = false;
+          AOS.refresh();
+        }
       }
 
-      // Page Numbers
-      html += `<div class="flex items-center space-x-1">`;
-      if (last_page > 0) {
-        for (const [page, url] of Object.entries(url_range)) {
-          if (parseInt(page) === current_page) {
-            html += `<span class="glass w-9 h-9 flex items-center justify-center rounded-lg bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-medium">${page}</span>`;
-          } else {
-            html += `<a href="${url}" class="pagination-link glass w-9 h-9 flex items-center justify-center rounded-lg text-cyan-100 hover:text-white hover:bg-white/10 transition-colors duration-300">${page}</a>`;
+      function displaySearchResults(data) {
+        const cards = data.cards;
+        const message = data.message;
+        if (cards.length === 0) {
+          cardsContainer.innerHTML = `
+                    <div class="col-span-full text-center py-16">
+                        <div class="relative inline-block mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 float-animation" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-medium text-gray-600 mb-2">Oops! Tidak ada konten ditemukan</h3>
+                        <p class="text-gray-400 max-w-md mx-auto">${message || 'Kami tidak dapat menemukan apa yang Anda cari.'}</p>
+                        <div class="mt-6">
+                            <button onclick="clearSearch()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-emerald-700 to-emerald-600 hover:from-emerald-800 hover:to-emerald-700 transition-all duration-300 transform hover:-translate-y-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 -ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                                </svg>
+                                Tampilkan Semua
+                            </button>
+                        </div>
+                    </div>
+                `;
+          paginationContainer.innerHTML = ''; // Clear pagination if no results
+          return;
+        }
+
+        cardsContainer.innerHTML = cards.map(card => `
+                <article tabindex="0" data-aos="fade-up"
+                    class="bg-white rounded-xl shadow-lg border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 ease-out flex flex-col overflow-hidden cursor-pointer group">
+                    <div class="w-full h-32 sm:h-40 overflow-hidden relative">
+                        <img src="${card.image_url ? card.image_url.replace('//storage', '/storage') : '/images/placeholder.jpg'}" 
+                             alt="Logo ${card.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                             onerror="this.onerror=null; this.src='/images/placeholder.jpg';" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-emerald-900/30 to-transparent"></div>
+                    </div>
+                    <div class="p-4 flex flex-col flex-grow">
+                        <h2 class="text-base font-semibold text-emerald-900 mb-1 line-clamp-2 group-hover:text-emerald-700 transition-colors">${card.title}</h2>
+                        <p class="text-emerald-700 text-xs mb-3 line-clamp-3 group-hover:text-emerald-600 transition-colors">${card.description}</p>
+                        <a href="${card.external_link}" target="_blank" rel="noopener noreferrer"
+                            class="mt-auto inline-flex items-center justify-center gap-2 text-white font-medium px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-900 to-emerald-700 text-sm hover:from-emerald-700 hover:to-emerald-600 transition-all duration-300 group-hover:shadow-lg">
+                            Kunjungi
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                                fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 1 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+            `).join('');
+
+        renderPagination(data.pagination);
+      }
+
+      function renderPagination(pagination) {
+        if (!pagination || pagination.last_page <= 1) {
+          paginationContainer.innerHTML = '';
+          return;
+        }
+
+        const currentPage = pagination.current_page;
+        const lastPage = pagination.last_page;
+        const windowSize = 1;
+
+        let pages = [];
+        for (let i = 1; i <= lastPage; i++) {
+          if (i === 1 || i === lastPage || (i >= currentPage - windowSize && i <= currentPage + windowSize)) {
+            pages.push(i);
           }
         }
-      } else {
-        html += `<span class="glass w-9 h-9 flex items-center justify-center rounded-lg bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-medium">1</span>`;
-      }
-      html += `</div>`;
 
-      // Next Button
-      if (has_more) {
-        html += `<a href="${next_url}" class="pagination-link glass h-9 px-3 rounded-lg text-cyan-100 hover:text-white hover:bg-white/10 transition-all duration-300 flex items-center justify-center"><span class="hidden sm:inline">Selanjutnya</span><i class="fas fa-chevron-right sm:ml-2"></i></a>`;
-      } else {
-        html += `<span class="glass h-9 px-3 rounded-lg text-cyan-200 opacity-50 cursor-not-allowed flex items-center justify-center"><span class="hidden sm:inline">Selanjutnya</span><i class="fas fa-chevron-right sm:ml-2"></i></span>`;
-      }
+        let linksHtml = '';
+        let lastp = 0;
+        for (const p of pages) {
+          if (lastp > 0 && p > lastp + 1) {
+            linksHtml += `<span aria-disabled="true"><span class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 cursor-default leading-5">...</span></span>`;
+          }
+          if (p === currentPage) {
+            linksHtml += `<span aria-current="page"><span class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5">${p}</span></span>`;
+          } else {
+            linksHtml += `<a href="?page=${p}" data-page="${p}" class="page-link relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500">${p}</a>`;
+          }
+          lastp = p;
+        }
 
-      html += `
-            </div>
-          </div>
+        const prevIcon = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>`;
+        const nextIcon = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>`;
+
+        const prevLink = pagination.on_first ?
+          `<span aria-disabled="true" aria-label="Previous"><span class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default rounded-l-md leading-5">${prevIcon}</span></span>` :
+          `<a href="?page=${currentPage - 1}" data-page="${currentPage - 1}" rel="prev" class="page-link relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-l-md leading-5 hover:text-gray-400">${prevIcon}</a>`;
+
+        const nextLink = !pagination.has_more ?
+          `<span aria-disabled="true" aria-label="Next"><span class="relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default rounded-r-md leading-5">${nextIcon}</span></span>` :
+          `<a href="?page=${currentPage + 1}" data-page="${currentPage + 1}" rel="next" class="page-link relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md leading-5 hover:text-gray-400">${nextIcon}</a>`;
+
+        const showingText = `<p class="text-sm text-gray-700 leading-5">Showing <span class="font-medium">${pagination.from || 0}</span> to <span class="font-medium">${pagination.to || 0}</span> of <span class="font-medium">${pagination.total}</span> results</p>`;
+
+        const paginationHtml = `
+            <nav role="navigation" aria-label="Pagination Navigation" class="flex items-center justify-between">
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>${showingText}</div>
+                    <div><span class="relative z-0 inline-flex shadow-sm rounded-md">${prevLink}${linksHtml}${nextLink}</span></div>
+                </div>
+                <div class="flex justify-between flex-1 sm:hidden">
+                    ${pagination.on_first ? `<span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5 rounded-md">Previous</span>` : `<a href="?page=${currentPage - 1}" data-page="${currentPage - 1}" class="page-link relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500">Previous</a>`}
+                    ${!pagination.has_more ? `<span class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5 rounded-md">Next</span>` : `<a href="?page=${currentPage + 1}" data-page="${currentPage + 1}" class="page-link relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500">Next</a>`}
+                </div>
+            </nav>
         `;
-
-      return html;
-    }
-
-    // Function to display results
-    function displayResults(cards, pagination, message) {
-      let html = '';
-
-      if (cards.length === 0) {
-        html = `
-            <div class="col-span-full text-center py-16">
-              <div class="relative inline-block mb-6">
-                <i class="fas fa-search fa-3x text-cyan-400 float-animation"></i>
-              </div>
-              <h3 class="text-2xl font-medium text-white mb-3">Hasil pencarian tidak ditemukan</h3>
-              <p class="text-cyan-200 max-w-md mx-auto mb-6">${message || 'Kami tidak dapat menemukan apa yang Anda cari.'}</p>
-              <button onclick="clearSearch()" class="glass px-5 py-2 rounded-xl text-cyan-100 hover:text-white transition-colors duration-300">
-                Tampilkan Semua Konten
-              </button>
-            </div>
-          `;
-      } else {
-        html = cards.map(card => `
-            <a href="${card.external_link}" target="_blank" rel="noopener noreferrer" tabindex="0"
-              class="card-hover-effect glass rounded-2xl p-5 group flex items-center justify-between transition-all duration-300">
-              <div class="flex items-center space-x-4 flex-1 min-w-0">
-                <div class="w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-white/10 border border-white/10 shadow-lg">
-                  <img src="${card.image_url || '/images/placeholder.jpg'}" alt="Logo ${card.title}"
-                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                </div>
-                <div class="flex-grow text-left min-w-0">
-                  <h2 class="text-lg font-semibold text-white mb-1 group-hover:text-cyan-300 transition-colors truncate">
-                    ${card.title}
-                  </h2>
-                  <p class="text-cyan-100 text-sm line-clamp-2 group-hover:text-cyan-50 transition-colors">
-                    ${card.description}
-                  </p>
-                </div>
-              </div>
-              <div class="ml-4 flex-shrink-0">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 flex items-center justify-center text-white group-hover:from-cyan-400 group-hover:to-emerald-400 transition-all duration-300 transform group-hover:translate-x-1">
-                  <i class="fas fa-arrow-right"></i>
-                </div>
-              </div>
-            </a>
-          `).join('');
+        paginationContainer.innerHTML = paginationHtml;
       }
 
-      if (pagination) {
-        html += generatePaginationHTML(pagination);
+      function clearSearch() {
+        searchInput.value = '';
+        performSearch('', 1);
       }
 
-      cardsContainer.innerHTML = html;
-    }
+      searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        const query = e.target.value.trim();
 
-    // Function to perform search
-    async function performSearch(query) {
-      if (query.length < 1) {
-        window.location.reload();
-        return;
-      }
+        searchTimeout = setTimeout(() => {
+          performSearch(query, 1);
+        }, 300);
+      });
 
-      searchLoading.classList.remove('hidden');
-      searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-
-      try {
-        const response = await fetch(`/search?query=${encodeURIComponent(query)}`);
-        const data = await response.json();
-
-        displayResults(data.cards, data.pagination, data.message);
-      } catch (error) {
-        console.error('Error searching:', error);
-        displayResults([], null, 'Terjadi kesalahan saat mencari');
-      } finally {
-        searchLoading.classList.add('hidden');
-        searchBtn.innerHTML = '<i class="fas fa-search"></i>';
-      }
-    }
-
-    // Function to display search results
-    function displaySearchResults(cards, message) {
-      if (cards.length === 0) {
-        cardsContainer.innerHTML = `
-            <div class="col-span-full text-center py-16">
-              <div class="relative inline-block mb-6">
-                <i class="fas fa-search fa-3x text-cyan-400 float-animation"></i>
-              </div>
-              <h3 class="text-2xl font-medium text-white mb-3">Hasil pencarian tidak ditemukan</h3>
-              <p class="text-cyan-200 max-w-md mx-auto mb-6">${message || 'Kami tidak dapat menemukan apa yang Anda cari.'}</p>
-              <button onclick="clearSearch()" class="glass px-5 py-2 rounded-xl text-cyan-100 hover:text-white transition-colors duration-300">
-                Tampilkan Semua Konten
-              </button>
-            </div>
-          `;
-        return;
-      }
-
-      cardsContainer.innerHTML = cards.map(card => `
-          <a href="${card.external_link}" target="_blank" rel="noopener noreferrer" tabindex="0"
-            class="card-hover-effect glass rounded-2xl p-5 group flex items-center justify-between transition-all duration-300">
-            <div class="flex items-center space-x-4 flex-1 min-w-0">
-              <div class="w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-white/10 border border-white/10 shadow-lg">
-                <img src="${card.image_url || '/images/placeholder.jpg'}" alt="Logo ${card.title}"
-                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-              </div>
-              <div class="flex-grow text-left min-w-0">
-                <h2 class="text-lg font-semibold text-white mb-1 group-hover:text-cyan-300 transition-colors truncate">
-                  ${card.title}
-                </h2>
-                <p class="text-cyan-100 text-sm line-clamp-2 group-hover:text-cyan-50 transition-colors">
-                  ${card.description}
-                </p>
-              </div>
-            </div>
-            <div class="ml-4 flex-shrink-0">
-              <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 flex items-center justify-center text-white group-hover:from-cyan-400 group-hover:to-emerald-400 transition-all duration-300 transform group-hover:translate-x-1">
-                <i class="fas fa-arrow-right"></i>
-              </div>
-            </div>
-          </a>
-        `).join('');
-    }
-
-    // Function to clear search
-    function clearSearch() {
-      searchInput.value = '';
-      window.location.reload();
-    }
-
-    // Event listeners
-    searchInput.addEventListener('input', (e) => {
-      clearTimeout(searchTimeout);
-      const query = e.target.value.trim();
-
-      searchTimeout = setTimeout(() => {
-        performSearch(query);
-      }, 500);
-    });
-
-    searchBtn.addEventListener('click', () => {
-      const query = searchInput.value.trim();
-      if (query) {
-        performSearch(query);
-      }
-    });
-
-    // Handle Enter key
-    searchInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
+      searchBtn.addEventListener('click', () => {
         const query = searchInput.value.trim();
         if (query) {
-          performSearch(query);
+          performSearch(query, 1);
         }
-      }
-    });
+      });
 
-    // Pagination event listener
-    document.addEventListener('click', (e) => {
-      if (e.target.classList.contains('pagination-link') || e.target.closest('.pagination-link')) {
-        e.preventDefault();
-        const link = e.target.closest('.pagination-link');
-        if (link) {
-          handlePagination(link.href);
-        }
-      }
-    });
-
-    // Function to handle pagination
-    async function handlePagination(url) {
-      searchLoading.classList.remove('hidden');
-
-      try {
-        const response = await fetch(url, {
-          headers: {
-            'Accept': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
+      searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const query = searchInput.value.trim();
+          if (query) {
+            performSearch(query, 1);
           }
-        });
-        const data = await response.json();
+        }
+      });
 
-        displayResults(data.cards, data.pagination, data.message);
-        history.pushState(null, '', url);
-      } catch (error) {
-        console.error('Error loading page:', error);
-      } finally {
-        searchLoading.classList.add('hidden');
-      }
-    }
-  </script>
+      paginationContainer.addEventListener('click', (e) => {
+        const link = e.target.closest('a.page-link');
+        if (!link) return;
+
+        e.preventDefault();
+
+        const page = link.dataset.page;
+        const query = searchInput.value.trim();
+
+        if (page) {
+          performSearch(query, page);
+          document.getElementById('cards-container').scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
+      });
+    </script>
 </body>
 
 </html>

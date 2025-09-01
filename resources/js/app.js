@@ -1,5 +1,7 @@
 // Import library dan modul yang diperlukan
 import "./bootstrap"; // Import file bootstrap.js untuk inisialisasi framework
+import "./consoleCleaner"; // Import console cleaner untuk membersihkan warning external
+import "./extensionDetector"; // Import extension detector untuk mendeteksi extension bermasalah
 import Swal from 'sweetalert2'; // Import SweetAlert2
 import { cardManager } from "./cardManager"; // Import modul manajemen card
 import { TimeUpdater } from "./timeUpdater"; // Import modul untuk update waktu real-time

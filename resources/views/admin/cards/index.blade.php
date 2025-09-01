@@ -495,18 +495,7 @@
                                     x-text="errors.external_link[0]"></p>
                             </template>
                         </div>
-                        <!-- Checkbox untuk status aktif -->
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1.5">Status</label>
-                            <div class="flex items-center">
-                                <input type="checkbox" name="is_active" id="create_is_active" checked
-                                    class="w-3 h-3 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
-                                    aria-label="Aktifkan kartu ini" />
-                                <label for="create_is_active" class="ml-1.5 block text-xs text-gray-700">
-                                    Aktifkan kartu ini
-                                </label>
-                            </div>
-                        </div>
+
                     </form>
                 </div>
                 <!-- Footer modal dengan tombol aksi -->
@@ -563,126 +552,116 @@
                 </div>
                 <!-- Form untuk mengedit kartu -->
                 <div class="p-4">
-                    <form x-ref="editForm" @submit.prevent="submitEditForm" enctype="multipart/form-data" class="space-y-4">
-                        @csrf
-                        @method('PUT')
-                        <!-- Input untuk judul kartu -->
-                        <div>
-                            <label for="edit_title" class="block text-xs font-medium text-gray-700 mb-1.5">
-                                Judul Kartu <span class="text-red-500">*</span>
-                            </label>
-                            <input type="text" name="title" id="edit_title" required x-model="cardData.title"
-                                :class="errors.title ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
-                                class="w-full px-3 py-1.5 text-xs border rounded-lg shadow-sm focus:outline-none 
-                                              focus:ring-2 focus:ring-opacity-50 transition-all duration-300 
-                                              hover:border-blue-300 hover:shadow-md" aria-required="true"
-                                aria-describedby="edit_title_error" />
-                            <!-- Pesan error untuk judul -->
-                            <template x-if="errors.title">
-                                <p id="edit_title_error" class="mt-1.5 text-xs text-red-600" x-text="errors.title[0]"></p>
-                            </template>
+<form x-ref="editForm" @submit.prevent="submitEditForm" enctype="multipart/form-data" class="space-y-4">
+    @csrf
+    @method('PUT')
+    <!-- Input untuk judul kartu -->
+    <div>
+        <label for="edit_title" class="block text-xs font-medium text-gray-700 mb-1.5">
+            Judul Kartu <span class="text-red-500">*</span>
+        </label>
+        <input type="text" name="title" id="edit_title" required x-model="cardData.title"
+            :class="errors.title ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
+            class="w-full px-3 py-1.5 text-xs border rounded-lg shadow-sm focus:outline-none 
+                          focus:ring-2 focus:ring-opacity-50 transition-all duration-300 
+                          hover:border-blue-300 hover:shadow-md" aria-required="true"
+            aria-describedby="edit_title_error" />
+        <!-- Pesan error untuk judul -->
+        <template x-if="errors.title">
+            <p id="edit_title_error" class="mt-1.5 text-xs text-red-600" x-text="errors.title[0]"></p>
+        </template>
+    </div>
+    <!-- Input untuk deskripsi kartu -->
+    <div>
+        <label for="edit_description" class="block text-xs font-medium text-gray-700 mb-1.5">
+            Deskripsi <span class="text-red-500">*</span>
+        </label>
+        <textarea name="description" id="edit_description" rows="3" required
+            x-model="cardData.description"
+            :class="errors.description ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
+            class="w-full px-3 py-1.5 text-xs border rounded-lg shadow-sm focus:outline-none 
+                             focus:ring-2 focus:ring-opacity-50 transition-all duration-300 resize-none 
+                             hover:border-blue-300 hover:shadow-md" aria-required="true"
+            aria-describedby="edit_description_error"></textarea>
+        <!-- Pesan error untuk deskripsi -->
+        <template x-if="errors.description">
+            <p id="edit_description_error" class="mt-1.5 text-xs text-red-600"
+                x-text="errors.description[0]"></p>
+        </template>
+    </div>
+    <!-- Input untuk gambar kartu -->
+    <div>
+        <label for="edit_image_url" class="block text-xs font-medium text-gray-700 mb-1.5">Gambar
+            Kartu</label>
+        <!-- Menampilkan gambar saat ini -->
+        <div class="mb-3 border p-2 rounded-lg bg-gray-50">
+            <p class="text-xs font-semibold text-gray-700 mb-1.5">Gambar Saat Ini</p>
+            <img x-show="cardData && cardData.image_url"
+                :src="cardData.image_url ? cardData.image_url : ''"
+                :alt="cardData && cardData.name ? cardData.name : ''" class="h-32 w-full object-contain rounded-lg border-2 border-gray-200
+                            hover:border-blue-300 transition-all duration-300 cursor-pointer"
+                @click="cardData && cardData.image_url && openImageModal(cardData.image_url)">
+        </div>
+        <!-- Upload gambar baru -->
+        <div class="mt-3 border p-2 rounded-lg bg-gray-50">
+            <p class="text-xs font-semibold text-gray-700 mb-1.5">Upload Gambar Baru</p>
+            <div class="flex items-center justify-center w-full">
+                <label for="edit_image_url"
+                    class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 
+                                  border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 
+                                  transition-colors duration-300 hover:border-blue-300 hover:shadow-inner relative">
+                    <!-- Teks placeholder jika belum ada gambar -->
+                    <template x-if="!previewEdit">
+                        <div class="flex flex-col items-center justify-center pt-4 pb-5">
+                            <svg class="w-8 h-8 mb-2 text-gray-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                            <p class="mb-1 text-xs text-gray-500">Klik untuk upload gambar baru</p>
+                            <p class="text-xs text-gray-500">PNG, JPG (Max. 2MB)</p>
                         </div>
-                        <!-- Input untuk deskripsi kartu -->
-                        <div>
-                            <label for="edit_description" class="block text-xs font-medium text-gray-700 mb-1.5">
-                                Deskripsi <span class="text-red-500">*</span>
-                            </label>
-                            <textarea name="description" id="edit_description" rows="3" required
-                                x-model="cardData.description"
-                                :class="errors.description ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
-                                class="w-full px-3 py-1.5 text-xs border rounded-lg shadow-sm focus:outline-none 
-                                                 focus:ring-2 focus:ring-opacity-50 transition-all duration-300 resize-none 
-                                                 hover:border-blue-300 hover:shadow-md" aria-required="true"
-                                aria-describedby="edit_description_error"></textarea>
-                            <!-- Pesan error untuk deskripsi -->
-                            <template x-if="errors.description">
-                                <p id="edit_description_error" class="mt-1.5 text-xs text-red-600"
-                                    x-text="errors.description[0]"></p>
-                            </template>
-                        </div>
-                        <!-- Input untuk gambar kartu -->
-                        <div>
-                            <label for="edit_image_url" class="block text-xs font-medium text-gray-700 mb-1.5">Gambar
-                                Kartu</label>
-                            <!-- Menampilkan gambar saat ini -->
-                            <div class="mb-3 border p-2 rounded-lg bg-gray-50">
-                                <p class="text-xs font-semibold text-gray-700 mb-1.5">Gambar Saat Ini</p>
-                                <img x-show="cardData && cardData.image_url"
-                                    :src="cardData.image_url ? cardData.image_url : ''"
-                                    :alt="cardData && cardData.name ? cardData.name : ''" class="h-32 w-full object-contain rounded-lg border-2 border-gray-200
-                                                hover:border-blue-300 transition-all duration-300 cursor-pointer"
-                                    @click="cardData && cardData.image_url && openImageModal(cardData.image_url)">
-                            </div>
-                            <!-- Upload gambar baru -->
-                            <div class="mt-3 border p-2 rounded-lg bg-gray-50">
-                                <p class="text-xs font-semibold text-gray-700 mb-1.5">Upload Gambar Baru</p>
-                                <div class="flex items-center justify-center w-full">
-                                    <label for="edit_image_url"
-                                        class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 
-                                                      border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 
-                                                      transition-colors duration-300 hover:border-blue-300 hover:shadow-inner relative">
-                                        <!-- Teks placeholder jika belum ada gambar -->
-                                        <template x-if="!previewEdit">
-                                            <div class="flex flex-col items-center justify-center pt-4 pb-5">
-                                                <svg class="w-8 h-8 mb-2 text-gray-400" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                                </svg>
-                                                <p class="mb-1 text-xs text-gray-500">Klik untuk upload gambar baru</p>
-                                                <p class="text-xs text-gray-500">PNG, JPG (Max. 2MB)</p>
-                                            </div>
-                                        </template>
-                                        <!-- Pratinjau gambar baru -->
-                                        <template x-if="previewEdit">
-                                            <img :src="previewEdit" alt="Pratinjau Gambar Baru"
-                                                class="h-full w-full object-contain p-1.5 rounded-lg">
-                                        </template>
-                                        <!-- Input file untuk upload gambar baru -->
-                                        <input id="edit_image_url" name="image_url" type="file"
-                                            accept="image/png,image/jpeg" class="hidden" x-ref="editImageInput"
-                                            @change="if ($event.target.files[0].size > 2 * 1024 * 1024) { errors.image_url = ['Ukuran file maksimum 2MB']; $event.target.value = null; previewEdit = null; } else { previewEdit = URL.createObjectURL($event.target.files[0]); }"
-                                            aria-describedby="edit_image_url_error" />
-                                    </label>
-                                </div>
-                            </div>
-                            <!-- Pesan error untuk gambar -->
-                            <template x-if="errors.image_url">
-                                <p id="edit_image_url_error" class="mt-1.5 text-xs text-red-600"
-                                    x-text="errors.image_url[0]"></p>
-                            </template>
-                        </div>
-                        <!-- Input untuk link eksternal -->
-                        <div>
-                            <label for="edit_external_link" class="block text-xs font-medium text-gray-700 mb-1.5">
-                                Link Eksternal <span class="text-red-500">*</span>
-                            </label>
-                            <input type="url" name="external_link" id="edit_external_link" required
-                                x-model="cardData.external_link"
-                                :class="errors.external_link ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
-                                class="w-full px-3 py-1.5 text-xs border rounded-lg shadow-sm focus:outline-none 
-                                              focus:ring-2 focus:ring-opacity-50 transition-all duration-300 
-                                              hover:border-blue-300 hover:shadow-md" aria-required="true"
-                                aria-describedby="edit_external_link_error" />
-                            <!-- Pesan error untuk link eksternal -->
-                            <template x-if="errors.external_link">
-                                <p id="edit_external_link_error" class="mt-1.5 text-xs text-red-600"
-                                    x-text="errors.external_link[0]"></p>
-                            </template>
-                        </div>
-                        <!-- Checkbox untuk status aktif -->
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1.5">Status</label>
-                            <div class="flex items-center">
-                                <input type="checkbox" name="is_active" id="edit_is_active" x-model="cardData.is_active"
-                                    class="w-3 h-3 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                    aria-label="Aktifkan kartu ini" />
-                                <label for="edit_is_active" class="ml-1.5 block text-xs text-gray-700">
-                                    Aktifkan kartu ini
-                                </label>
-                            </div>
-                        </div>
-                    </form>
+                    </template>
+                    <!-- Pratinjau gambar baru -->
+                    <template x-if="previewEdit">
+                        <img :src="previewEdit" alt="Pratinjau Gambar Baru"
+                            class="h-full w-full object-contain p-1.5 rounded-lg">
+                    </template>
+                    <!-- Input file untuk upload gambar baru -->
+                    <input id="edit_image_url" name="image_url" type="file"
+                        accept="image/png,image/jpeg" class="hidden" x-ref="editImageInput"
+                        @change="if ($event.target.files[0].size > 2 * 1024 * 1024) { errors.image_url = ['Ukuran file maksimum 2MB']; $event.target.value = null; previewEdit = null; } else { previewEdit = URL.createObjectURL($event.target.files[0]); }"
+                        aria-describedby="edit_image_url_error" />
+                </label>
+            </div>
+        </div>
+        <!-- Pesan error untuk gambar -->
+        <template x-if="errors.image_url">
+            <p id="edit_image_url_error" class="mt-1.5 text-xs text-red-600"
+                x-text="errors.image_url[0]"></p>
+        </template>
+    </div>
+    <!-- Input untuk link eksternal -->
+    <div>
+        <label for="edit_external_link" class="block text-xs font-medium text-gray-700 mb-1.5">
+            Link Eksternal <span class="text-red-500">*</span>
+        </label>
+        <input type="url" name="external_link" id="edit_external_link" required
+            x-model="cardData.external_link"
+            :class="errors.external_link ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
+            class="w-full px-3 py-1.5 text-xs border rounded-lg shadow-sm focus:outline-none 
+                          focus:ring-2 focus:ring-opacity-50 transition-all duration-300 
+                          hover:border-blue-300 hover:shadow-md" aria-required="true"
+            aria-describedby="edit_external_link_error" />
+        <!-- Pesan error untuk link eksternal -->
+        <template x-if="errors.external_link">
+            <p id="edit_external_link_error" class="mt-1.5 text-xs text-red-600"
+                x-text="errors.external_link[0]"></p>
+        </template>
+    </div>
+    <!-- Removed is_active checkbox input to prevent null reference error -->
+    <!-- Status is managed via toggle button outside the form -->
+</form>
                 </div>
                 <!-- Footer modal dengan tombol aksi -->
                 <div class="border-t border-gray-200 px-4 py-3 flex justify-end gap-2 

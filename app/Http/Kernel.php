@@ -29,6 +29,7 @@ use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 use App\Http\Middleware\AdminAuthenticate;
 use App\Http\Middleware\CountVisitor;
 use App\Http\Middleware\CheckActivity;
+use App\Http\Middleware\ContentSecurityPolicy;
 
 class Kernel extends HttpKernel
 {
@@ -58,6 +59,7 @@ class Kernel extends HttpKernel
             VerifyCsrfToken::class,
             SubstituteBindings::class,
             CountVisitor::class, // lacak pengunjung
+            ContentSecurityPolicy::class, // CSP untuk keamanan dan mengurangi warning
         ],
 
         'api' => [

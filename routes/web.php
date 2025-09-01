@@ -70,6 +70,9 @@ Route::prefix('admin')->group(function () {
         // AJAX - permanent delete card (PAKAI DELETE)
         Route::delete('/cards/{id}/permanent-delete', [DeletedCardController::class, 'permanentDelete'])->name('cards.permanentDelete');
 
+        // AJAX - toggle card status
+        Route::post('/cards/{id}/toggle-status', [CardController::class, 'toggleStatus'])->name('cards.toggle-status');
+
         // ---------- BACKWARD COMPATIBILITY ----------
         // Hanya fallback kalau masih ada request lama yang pakai GET
         Route::get('/activities/{id}/restore', [ActivityController::class, 'restoreFallback'])->name('activities.restore.fallback');
@@ -104,7 +107,5 @@ Route::prefix('admin')->group(function () {
     // Route for password.reset used by Laravel's default notification
     Route::get('password/reset/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
 
-    // ---------- TOGGLE CARD STATUS ----------
-    Route::post('cards/{card}/toggle-status', [CardController::class, 'toggleStatus'])
-        ->name('admin.cards.toggle-status');
+
 });

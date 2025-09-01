@@ -189,6 +189,7 @@ export function cardManager(initialPagination = {from: 0, to: 0, total: 0}) {
 
         /**
          * Mengirimkan form tambah kartu dengan validasi dan AJAX
+         * Status kartu default aktif saat create, dapat diubah via toggle button setelahnya
          * @returns {Promise<void>}
          */
         async submitCreateForm() {
@@ -198,9 +199,10 @@ export function cardManager(initialPagination = {from: 0, to: 0, total: 0}) {
             );
             const hasImage =
                 fileInput && fileInput.files && fileInput.files.length > 0;
-            const isActive = this.$refs.createForm.querySelector(
-                'input[name="is_active"]'
-            ).checked;
+
+            // Default status aktif untuk kartu baru
+            // Status dapat diubah melalui toggle button di tabel setelah dibuat
+            const isActive = true;
 
             // Validasi form
             if (!this.createForm.title || this.createForm.title.trim() === "") {
@@ -269,17 +271,14 @@ export function cardManager(initialPagination = {from: 0, to: 0, total: 0}) {
 
         /**
          * Mengirimkan form edit kartu dengan validasi dan AJAX
+         * Status kartu diatur melalui toggle button terpisah, bukan dari form edit
          * @returns {Promise<void>}
          */
         async submitEditForm() {
             this.errors = {};
             this.loading = true;
 
-            const isActive = this.$refs.editForm.querySelector(
-                'input[name="is_active"]'
-            ).checked;
-
-            // Validasi form
+            // Validasi form - hapus akses ke checkbox is_active karena sudah dihapus dari form
             if (!this.cardData.title || this.cardData.title.trim() === "") {
                 this.errors.title = ["Nama/Judul Kartu wajib diisi."];
             }
@@ -297,6 +296,9 @@ export function cardManager(initialPagination = {from: 0, to: 0, total: 0}) {
                 this.errors.image_url = ["Gambar harus diunggah."];
             } else if (
                 hasNewImage &&
+                this.$refs.editImageInput &&
+                this.$refs.editImageInput.files &&
+                this.$refs.editImageInput.files[0] &&
                 this.$refs.editImageInput.files[0].size > 2 * 1024 * 1024
             ) {
                 this.errors.image_url = ["Ukuran file maksimum 2MB."];
@@ -309,14 +311,16 @@ export function cardManager(initialPagination = {from: 0, to: 0, total: 0}) {
 
             try {
                 const formData = new FormData(this.$refs.editForm);
-                formData.append("is_active", isActive ? "1" : "0");
 
+                // Remove empty values from form data
                 formData.forEach((value, key) => {
                     if (value === "" || value === null || value === undefined) {
                         formData.delete(key);
                     }
                 });
                 formData.set("_method", "PUT");
+
+                // Status kartu diatur melalui toggle button terpisah di tabel
 
                 const response = await fetch(
                     `/admin/cards/${this.openEditModalId}`,
