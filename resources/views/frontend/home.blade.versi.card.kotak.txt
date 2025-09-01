@@ -62,7 +62,7 @@
 
 <body class="bg-emerald-50 text-gray-800">
 
-  < <!-- Navbar -->
+  <!-- Navbar -->
     <nav
       class="fixed top-0 left-0 right-0 bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-700 shadow-md px-3 sm:px-5 py-2 sm:py-3 z-50 flex items-center justify-between">
       <div class="flex items-center">
@@ -157,7 +157,7 @@
         class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5 pb-24" aria-live="polite">
         @forelse ($cards as $card)
           <article tabindex="0" data-aos="fade-up"
-            class="bg-white rounded-xl shadow-lg border border-gray-100 hover:shadow-2xl hover:shadow-emerald-500/20 hover:-translate-y-1 transition-all duration-300 ease-out flex flex-col overflow-hidden cursor-pointer group">
+            class="bg-white rounded-xl shadow-lg border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 ease-out flex flex-col overflow-hidden cursor-pointer group">
             <div class="w-full h-32 sm:h-40 overflow-hidden relative">
               <img src="{{ $card->image_url }}" alt="Logo {{ $card->title }}"
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
@@ -224,6 +224,10 @@
           </div>
         @endforelse
       </section>
+
+      <div id="pagination-container" class="mt-8 mb-16">
+        {{ $cards->appends(['search' => $search])->links() }}
+      </div>
     </main>
 
     <footer class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-700 text-emerald-100 py-8">
@@ -249,15 +253,11 @@
       const searchSpinner = document.getElementById('search-spinner');
       const cardsContainer = document.getElementById('cards-container');
       const searchLoading = document.getElementById('search-loading');
+      const paginationContainer = document.getElementById('pagination-container');
 
       let searchTimeout;
 
-      async function performSearch(query) {
-        if (query.length < 1) {
-          loadInitialCards();
-          return;
-        }
-
+      async function performSearch(query, page = 1) {
         searchLoading.classList.remove('hidden');
         searchIcon.classList.add('hidden');
         searchSpinner.classList.remove('hidden');
@@ -265,23 +265,29 @@
         searchBtn.disabled = true;
 
         try {
-          const response = await fetch(`/search?query=${encodeURIComponent(query)}`);
+          const response = await fetch(`/search?query=${encodeURIComponent(query)}&page=${page}`);
           const data = await response.json();
 
-          displaySearchResults(data.cards, data.message);
+          displaySearchResults(data);
         } catch (error) {
           console.error('Error searching:', error);
-          displaySearchResults([], 'Terjadi kesalahan saat mencari');
+          displaySearchResults({
+            cards: [],
+            message: 'Terjadi kesalahan saat mencari.'
+          });
         } finally {
           searchLoading.classList.add('hidden');
           searchIcon.classList.remove('hidden');
           searchSpinner.classList.add('hidden');
           searchInput.disabled = false;
           searchBtn.disabled = false;
+          AOS.refresh();
         }
       }
 
-      function displaySearchResults(cards, message) {
+      function displaySearchResults(data) {
+        const cards = data.cards;
+        const message = data.message;
         if (cards.length === 0) {
           cardsContainer.innerHTML = `
                     <div class="col-span-full text-center py-16">
@@ -293,7 +299,7 @@
                         <h3 class="text-xl font-medium text-gray-600 mb-2">Oops! Tidak ada konten ditemukan</h3>
                         <p class="text-gray-400 max-w-md mx-auto">${message || 'Kami tidak dapat menemukan apa yang Anda cari.'}</p>
                         <div class="mt-6">
-                            <button onclick="clearSearch()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-emerald-700 to-emerald-600 hover:from-emerald-800 hover:to-emerald-700 transition-all duration-300">
+                            <button onclick="clearSearch()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-emerald-700 to-emerald-600 hover:from-emerald-800 hover:to-emerald-700 transition-all duration-300 transform hover:-translate-y-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 -ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
                                 </svg>
@@ -302,17 +308,17 @@
                         </div>
                     </div>
                 `;
+          paginationContainer.innerHTML = ''; // Clear pagination if no results
           return;
         }
 
         cardsContainer.innerHTML = cards.map(card => `
                 <article tabindex="0" data-aos="fade-up"
-                    class="bg-white rounded-xl shadow-lg border border-gray-100 hover:shadow-2xl hover:shadow-emerald-500/20 hover:-translate-y-1 transition-all duration-300 ease-out flex flex-col overflow-hidden cursor-pointer group">
-                    <div class="w-full h-40 overflow-hidden relative">
-                        <img src="${card.image_url || '/images/placeholder.jpg'}" 
-                                alt="Logo ${card.title}" 
-                                class="w-full h-full object-cover bg-gray-100 transition-transform duration-300 group-hover:scale-110" 
-                                onerror="this.src='/images/placeholder.jpg'" />
+                    class="bg-white rounded-xl shadow-lg border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 ease-out flex flex-col overflow-hidden cursor-pointer group">
+                    <div class="w-full h-32 sm:h-40 overflow-hidden relative">
+                        <img src="${card.image_url ? card.image_url.replace('//storage', '/storage') : '/images/placeholder.jpg'}" 
+                             alt="Logo ${card.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                             onerror="this.onerror=null; this.src='/images/placeholder.jpg';" />
                         <div class="absolute inset-0 bg-gradient-to-t from-emerald-900/30 to-transparent"></div>
                     </div>
                     <div class="p-4 flex flex-col flex-grow">
@@ -330,35 +336,87 @@
                     </div>
                 </article>
             `).join('');
+
+        renderPagination(data.pagination);
       }
 
-      function loadInitialCards() {
-        // Logic to reload the initial cards can be added here
+      function renderPagination(pagination) {
+        if (!pagination || pagination.last_page <= 1) {
+          paginationContainer.innerHTML = '';
+          return;
+        }
+
+        const currentPage = pagination.current_page;
+        const lastPage = pagination.last_page;
+        const windowSize = 1;
+
+        let pages = [];
+        for (let i = 1; i <= lastPage; i++) {
+          if (i === 1 || i === lastPage || (i >= currentPage - windowSize && i <= currentPage + windowSize)) {
+            pages.push(i);
+          }
+        }
+
+        let linksHtml = '';
+        let lastp = 0;
+        for (const p of pages) {
+          if (lastp > 0 && p > lastp + 1) {
+            linksHtml += `<span aria-disabled="true"><span class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 cursor-default leading-5">...</span></span>`;
+          }
+          if (p === currentPage) {
+            linksHtml += `<span aria-current="page"><span class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5">${p}</span></span>`;
+          } else {
+            linksHtml += `<a href="?page=${p}" data-page="${p}" class="page-link relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500">${p}</a>`;
+          }
+          lastp = p;
+        }
+
+        const prevIcon = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>`;
+        const nextIcon = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>`;
+
+        const prevLink = pagination.on_first ?
+          `<span aria-disabled="true" aria-label="Previous"><span class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default rounded-l-md leading-5">${prevIcon}</span></span>` :
+          `<a href="?page=${currentPage - 1}" data-page="${currentPage - 1}" rel="prev" class="page-link relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-l-md leading-5 hover:text-gray-400">${prevIcon}</a>`;
+
+        const nextLink = !pagination.has_more ?
+          `<span aria-disabled="true" aria-label="Next"><span class="relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default rounded-r-md leading-5">${nextIcon}</span></span>` :
+          `<a href="?page=${currentPage + 1}" data-page="${currentPage + 1}" rel="next" class="page-link relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md leading-5 hover:text-gray-400">${nextIcon}</a>`;
+
+        const showingText = `<p class="text-sm text-gray-700 leading-5">Showing <span class="font-medium">${pagination.from || 0}</span> to <span class="font-medium">${pagination.to || 0}</span> of <span class="font-medium">${pagination.total}</span> results</p>`;
+
+        const paginationHtml = `
+            <nav role="navigation" aria-label="Pagination Navigation" class="flex items-center justify-between">
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>${showingText}</div>
+                    <div><span class="relative z-0 inline-flex shadow-sm rounded-md">${prevLink}${linksHtml}${nextLink}</span></div>
+                </div>
+                <div class="flex justify-between flex-1 sm:hidden">
+                    ${pagination.on_first ? `<span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5 rounded-md">Previous</span>` : `<a href="?page=${currentPage - 1}" data-page="${currentPage - 1}" class="page-link relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500">Previous</a>`}
+                    ${!pagination.has_more ? `<span class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5 rounded-md">Next</span>` : `<a href="?page=${currentPage + 1}" data-page="${currentPage + 1}" class="page-link relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500">Next</a>`}
+                </div>
+            </nav>
+        `;
+        paginationContainer.innerHTML = paginationHtml;
       }
 
       function clearSearch() {
         searchInput.value = '';
-        window.location.reload();
+        performSearch('', 1);
       }
 
       searchInput.addEventListener('input', (e) => {
         clearTimeout(searchTimeout);
         const query = e.target.value.trim();
 
-        if (query.length === 0) {
-          window.location.reload();
-          return;
-        }
-
         searchTimeout = setTimeout(() => {
-          performSearch(query);
+          performSearch(query, 1);
         }, 300);
       });
 
       searchBtn.addEventListener('click', () => {
         const query = searchInput.value.trim();
         if (query) {
-          performSearch(query);
+          performSearch(query, 1);
         }
       });
 
@@ -367,8 +425,25 @@
           e.preventDefault();
           const query = searchInput.value.trim();
           if (query) {
-            performSearch(query);
+            performSearch(query, 1);
           }
+        }
+      });
+
+      paginationContainer.addEventListener('click', (e) => {
+        const link = e.target.closest('a.page-link');
+        if (!link) return;
+
+        e.preventDefault();
+
+        const page = link.dataset.page;
+        const query = searchInput.value.trim();
+
+        if (page) {
+          performSearch(query, page);
+          document.getElementById('cards-container').scrollIntoView({
+            behavior: 'smooth'
+          });
         }
       });
     </script>
