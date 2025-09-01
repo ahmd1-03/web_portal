@@ -1,112 +1,114 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <div class="max-w-full mx-auto px-4 py-6 min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-white">
+    <div class="max-w-full mx-auto px-4 py-6 min-h-screen -mt-8 md:-mt-10 ml-10">
+
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">
+                <h1
+                    class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">
                     Detail Kartu
                 </h1>
-                <p class="text-sm text-gray-600 mt-1">Informasi detail kartu yang diperbarui, ditambahkan, atau dihapus</p>
+                <p class="text-sm text-gray-500 mt-1">
+                    Informasi detail kartu yang diperbarui, ditambahkan, atau dihapus.
+                </p>
             </div>
-            <a href="{{ route('admin.dashboard') }}" 
-               class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{{ route('admin.dashboard') }}"
+                class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-medium rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
                 Kembali ke Dashboard
             </a>
         </div>
 
-        <!-- Kartu yang Diperbarui -->
-        <div class="mb-8">
-            <div class="flex items-center mb-4">
-                <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mr-3 shadow-sm">
-                    <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                    </svg>
-                </div>
-                <h2 class="text-xl font-bold text-gray-900">Kartu yang Diperbarui</h2>
-            </div>
+        <hr class="my-6 border-gray-200">
 
-            <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-                <div class="p-4 md:p-6">
+        <div class="mb-12" id="updated-cards-section">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center mr-3 shadow-md">
+                        <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900">Kartu yang Diperbarui</h2>
+                </div>
+                <button id="toggle-updated-cards"
+                    class="px-6 py-2 bg-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-300 transition-colors duration-300 text-sm hidden">
+                    Lihat Semua
+                </button>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <div class="p-6">
                     @if($recentUpdated->isEmpty())
-                        <div class="text-center py-8">
-                            <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
-                                <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        <div class="text-center py-12">
+                            <div
+                                class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+                                <svg class="w-10 h-10 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                    </path>
                                 </svg>
                             </div>
-                            <p class="text-gray-500 text-lg">Belum ada kartu yang diperbarui.</p>
+                            <p class="text-gray-500 text-lg font-medium">Belum ada kartu yang diperbarui.</p>
                         </div>
                     @else
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            @foreach($recentUpdated as $activity)
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+                            id="updated-cards-container">
+                            @foreach($recentUpdated as $index => $activity)
                                 @php
                                     $cardData = $activity->new_values ?? $activity->old_values ?? [];
-                                    $card = is_array($cardData) ? (object)$cardData : $cardData;
+                                    $card = is_array($cardData) ? (object) $cardData : $cardData;
                                 @endphp
-                                <div class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-                                    <!-- Image -->
+                                <div
+                                    class="card-item bg-white border border-yellow-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                                     @if(!empty($card->image_url))
                                         <div class="relative">
-                                            @php
-                                                $imagePath = $card->image_url;
-                                                if (strpos($imagePath, 'storage/') === 0) {
-                                                    $imagePath = substr($imagePath, 8);
-                                                }
-                                                $imagePath = ltrim($imagePath, '/');
-                                            @endphp
-                                            <img src="{{ asset('storage/' . $imagePath) }}" 
-                                                 alt="{{ $card->title ?? 'Card Image' }}" 
-                                                 class="w-full h-48 object-cover"
-                                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                            <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400" style="display:none;">
-                                                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            <img src="{{ Storage::url($card->image_url) }}" alt="{{ $card->title ?? 'Card Image' }}"
+                                                class="w-full h-32 object-cover"
+                                                onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzljYTZhZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkdBTUJBUiBUVUxBSzwvdGV4dD48L3N2Zz4='; this.classList.add('opacity-75')">
+                                        </div>
+                                    @else
+                                        <div class="relative">
+                                            <div class="w-full h-32 bg-gray-100 flex items-center justify-center">
+                                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                    </path>
                                                 </svg>
                                             </div>
                                         </div>
                                     @endif
-                                    
-                                    <!-- Content -->
-                                    <div class="p-4">
-                                        <!-- Title -->
-                                        <h3 class="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
+                                    <div class="p-5">
+                                        <h3 class="font-bold text-base text-gray-900 mb-1 line-clamp-1">
                                             {{ $card->title ?? 'Untitled Card' }}
                                         </h3>
-                                        
-                                        <!-- Description -->
                                         @if(!empty($card->description))
-                                            <p class="text-sm text-gray-600 mb-3 line-clamp-3">
+                                            <p class="text-xs text-gray-600 mb-2 line-clamp-2">
                                                 {{ $card->description }}
                                             </p>
                                         @endif
-                                        
-                                        <!-- External Link -->
                                         @if(!empty($card->external_link))
-                                            <a href="{{ $card->external_link }}" 
-                                               target="_blank" 
-                                               rel="noopener noreferrer"
-                                               class="inline-flex items-center text-sm text-emerald-600 hover:text-emerald-800 font-medium">
-                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                            <a href="{{ $card->external_link }}" target="_blank" rel="noopener noreferrer"
+                                                class="inline-flex items-center text-xs text-yellow-600 hover:text-yellow-800 font-medium">
+                                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+                                                    </path>
                                                 </svg>
                                                 Kunjungi Link
                                             </a>
                                         @endif
-                                        
-                                        <!-- Activity Info -->
                                         <div class="mt-3 pt-3 border-t border-gray-100">
                                             <div class="flex items-center justify-between text-xs text-gray-500">
-                                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">
+                                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 font-semibold rounded-full">
                                                     Diperbarui
                                                 </span>
                                                 <span>{{ $activity->timestamp->diffForHumans() }}</span>
-                                            </div>
-                                            <div class="mt-1 text-xs text-gray-400">
-                                                User: {{ $activity->user_id ?? 'System' }}
                                             </div>
                                         </div>
                                     </div>
@@ -118,103 +120,96 @@
             </div>
         </div>
 
-        <!-- Kartu yang Dihapus -->
-        <div class="mb-8">
-            <div class="flex items-center mb-4">
-                <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-3 shadow-sm">
-                    <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                    </svg>
-                </div>
-                <h2 class="text-xl font-bold text-gray-900">Kartu yang Dihapus</h2>
-            </div>
+        <hr class="my-6 border-gray-200">
 
-            <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-                <div class="p-4 md:p-6">
+        <div class="mb-12" id="deleted-cards-section">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-3 shadow-md">
+                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                            </path>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900">Kartu yang Dihapus</h2>
+                </div>
+                <button id="toggle-deleted-cards"
+                    class="px-6 py-2 bg-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-300 transition-colors duration-300 text-sm hidden">
+                    Lihat Semua
+                </button>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <div class="p-6">
                     @if($recentDeleted->isEmpty())
-                        <div class="text-center py-8">
-                            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
-                                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        <div class="text-center py-12">
+                            <div
+                                class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+                                <svg class="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                    </path>
                                 </svg>
                             </div>
-                            <p class="text-gray-500 text-lg">Tidak ada kartu yang dihapus.</p>
+                            <p class="text-gray-500 text-lg font-medium">Tidak ada kartu yang dihapus.</p>
                         </div>
                     @else
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            @foreach($recentDeleted as $activity)
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+                            id="deleted-cards-container">
+                            @foreach($recentDeleted as $index => $activity)
                                 @php
                                     $cardData = $activity->old_values ?? [];
-                                    $card = is_array($cardData) ? (object)$cardData : $cardData;
+                                    $card = is_array($cardData) ? (object) $cardData : $cardData;
                                 @endphp
-                                <div class="bg-white border border-red-200 rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-                                    <!-- Image -->
-                                    @if(!empty($card->image_url))
+                                <div
+                                    class="card-item bg-white border border-red-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+                                    @if(!empty($card->image_url) && Storage::disk('public')->exists($card->image_url))
                                         <div class="relative">
-                                            @php
-                                                $imagePath = $card->image_url;
-                                                if (strpos($imagePath, 'storage/') === 0) {
-                                                    $imagePath = substr($imagePath, 8);
-                                                }
-                                                $imagePath = ltrim($imagePath, '/');
-                                            @endphp
-                                            <img src="{{ asset('storage/' . $imagePath) }}" 
-                                                 alt="{{ $card->title ?? 'Card Image' }}" 
-                                                 class="w-full h-48 object-cover opacity-75"
-                                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                            <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400" style="display:none;">
-                                                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            <img src="{{ Storage::url($card->image_url) }}" alt="{{ $card->title ?? 'Card Image' }}"
+                                                class="w-full h-32 object-cover opacity-75"
+                                                onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzljYTZhZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkdBTUJBUiBESEFQVVM8L3RleHQ+PC9zdmc+'; this.classList.add('opacity-75')">
+                                        </div>
+                                    @else
+                                        <div class="relative">
+                                            <div class="w-full h-32 bg-gray-100 flex items-center justify-center opacity-75">
+                                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
                                                 </svg>
                                             </div>
                                         </div>
                                     @endif
-                                    
-                                    <!-- Content -->
-                                    <div class="p-4">
-                                        <!-- Title -->
-                                        <h3 class="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
+                                    <div class="p-5">
+                                        <h3 class="font-bold text-base text-gray-900 mb-1 line-clamp-1">
                                             {{ $card->title ?? 'Untitled Card' }}
                                         </h3>
-                                        
-                                        <!-- Description -->
                                         @if(!empty($card->description))
-                                            <p class="text-sm text-gray-600 mb-3 line-clamp-3">
+                                            <p class="text-xs text-gray-600 mb-2 line-clamp-2">
                                                 {{ $card->description }}
                                             </p>
                                         @endif
-                                        
-                                        <!-- External Link -->
-                                        @if(!empty($card->external_link))
-                                            <a href="{{ $card->external_link }}" 
-                                               target="_blank" 
-                                               rel="noopener noreferrer"
-                                               class="inline-flex items-center text-sm text-red-600 hover:text-red-800 font-medium">
-                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                                                </svg>
-                                                Kunjungi Link
-                                            </a>
-                                        @endif
-                                        
-                                        <!-- Activity Info & Actions -->
                                         <div class="mt-3 pt-3 border-t border-gray-100">
                                             <div class="flex items-center justify-between text-xs text-gray-500 mb-2">
-                                                <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full">
+                                                <span class="px-2 py-1 bg-red-100 text-red-800 font-semibold rounded-full">
                                                     Dihapus
                                                 </span>
                                                 <span>{{ $activity->timestamp->diffForHumans() }}</span>
                                             </div>
                                             <div class="flex space-x-2">
-                                                <a href="{{ route('admin.activities.restore', $activity->id) }}" 
-                                                   class="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                                                <button type="button"
+                                                    class="flex-1 text-center px-3 py-2 bg-green-500 text-white text-xs rounded-lg hover:bg-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 restore-btn"
+                                                    data-activity-id="{{ $activity->id }}"
+                                                    data-card-title="{{ $card->title ?? 'Untitled Card' }}">
                                                     Pulihkan
-                                                </a>
-                                                <a href="{{ route('admin.activities.permanentDelete', $activity->id) }}" 
-                                                   class="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                                                   onclick="return confirm('Apakah Anda yakin ingin menghapus permanen?')">
+                                                </button>
+                                                <button type="button"
+                                                    class="flex-1 text-center px-3 py-2 bg-red-500 text-white text-xs rounded-lg hover:bg-red-600 transition focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 delete-btn"
+                                                    data-activity-id="{{ $activity->id }}"
+                                                    data-card-title="{{ $card->title ?? 'Untitled Card' }}">
                                                     Hapus Permanen
-                                                </a>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -226,95 +221,78 @@
             </div>
         </div>
 
-        <!-- Kartu yang Ditambahkan -->
-        <div class="mb-8">
-            <div class="flex items-center mb-4">
-                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3 shadow-sm">
-                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                </div>
-                <h2 class="text-xl font-bold text-gray-900">Kartu yang Ditambahkan</h2>
-            </div>
+        <hr class="my-6 border-gray-200">
 
-            <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-                <div class="p-4 md:p-6">
+        <div class="mb-12" id="added-cards-section">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3 shadow-md">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900">Kartu yang Ditambahkan</h2>
+                </div>
+                <button id="toggle-added-cards"
+                    class="px-6 py-2 bg-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-300 transition-colors duration-300 text-sm hidden">
+                    Lihat Semua
+                </button>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <div class="p-6">
                     @if($recentAdded->isEmpty())
-                        <div class="text-center py-8">
-                            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
-                                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                </svg>
-                            </div>
-                            <p class="text-gray-500 text-lg">Belum ada kartu yang ditambahkan.</p>
+                        <div class="text-center py-12">
+                            <div
+                                class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+                                <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
+                                </path>
+                            </svg>
                         </div>
+                        <p class="text-gray-500 text-lg font-medium">Belum ada kartu yang ditambahkan.</p>
                     @else
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            @foreach($recentAdded as $activity)
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+                            id="added-cards-container">
+                            @foreach($recentAdded as $index => $activity)
                                 @php
                                     $cardData = $activity->new_values ?? [];
-                                    $card = is_array($cardData) ? (object)$cardData : $cardData;
+                                    $card = is_array($cardData) ? (object) $cardData : $cardData;
                                 @endphp
-                                <div class="bg-white border border-green-200 rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-                                    <!-- Image -->
+                                <div
+                                    class="card-item bg-white border border-green-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                                     @if(!empty($card->image_url))
                                         <div class="relative">
-                                            @php
-                                                $imagePath = $card->image_url;
-                                                if (strpos($imagePath, 'storage/') === 0) {
-                                                    $imagePath = substr($imagePath, 8);
-                                                }
-                                                $imagePath = ltrim($imagePath, '/');
-                                            @endphp
-                                            <img src="{{ asset('storage/' . $imagePath) }}" 
-                                                 alt="{{ $card->title ?? 'Card Image' }}" 
-                                                 class="w-full h-48 object-cover"
-                                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                            <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400" style="display:none;">
-                                                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            <img src="{{ Storage::url($card->image_url) }}" alt="{{ $card->title ?? 'Card Image' }}"
+                                                class="w-full h-32 object-cover"
+                                                onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzljYTZhZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkdBTUJBUiBUVUxBSzwvdGV4dD48L3N2Zz4='; this.classList.add('opacity-75')">
+                                        </div>
+                                    @else
+                                        <div class="relative">
+                                            <div class="w-full h-32 bg-gray-100 flex items-center justify-center">
+                                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                    </path>
                                                 </svg>
                                             </div>
                                         </div>
                                     @endif
-                                    
-                                    <!-- Content -->
-                                    <div class="p-4">
-                                        <!-- Title -->
-                                        <h3 class="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
+                                    <div class="p-5">
+                                        <h3 class="font-bold text-base text-gray-900 mb-1 line-clamp-1">
                                             {{ $card->title ?? 'Untitled Card' }}
                                         </h3>
-                                        
-                                        <!-- Description -->
                                         @if(!empty($card->description))
-                                            <p class="text-sm text-gray-600 mb-3 line-clamp-3">
+                                            <p class="text-xs text-gray-600 mb-2 line-clamp-2">
                                                 {{ $card->description }}
                                             </p>
                                         @endif
-                                        
-                                        <!-- External Link -->
-                                        @if(!empty($card->external_link))
-                                            <a href="{{ $card->external_link }}" 
-                                               target="_blank" 
-                                               rel="noopener noreferrer"
-                                               class="inline-flex items-center text-sm text-green-600 hover:text-green-800 font-medium">
-                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                                                </svg>
-                                                Kunjungi Link
-                                            </a>
-                                        @endif
-                                        
-                                        <!-- Activity Info -->
                                         <div class="mt-3 pt-3 border-t border-gray-100">
                                             <div class="flex items-center justify-between text-xs text-gray-500">
-                                                <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">
+                                                <span class="px-2 py-1 bg-green-100 text-green-800 font-semibold rounded-full">
                                                     Ditambahkan
                                                 </span>
                                                 <span>{{ $activity->timestamp->diffForHumans() }}</span>
-                                            </div>
-                                            <div class="mt-1 text-xs text-gray-400">
-                                                User: {{ $activity->user_id ?? 'System' }}
                                             </div>
                                         </div>
                                     </div>
@@ -328,18 +306,161 @@
     </div>
 
     <style>
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-        
-        .line-clamp-3 {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function setupCardToggle(containerId, buttonId, initialCount) {
+                const container = document.getElementById(containerId);
+                const button = document.getElementById(buttonId);
+
+                if (!container || !button) return;
+
+                const cards = container.querySelectorAll('.card-item');
+
+                if (cards.length > initialCount) {
+                    button.classList.remove('hidden');
+                    container.dataset.expanded = 'false';
+                    cards.forEach((card, index) => {
+                        if (index >= initialCount) {
+                            card.classList.add('hidden');
+                        }
+                    });
+                } else {
+                    button.classList.add('hidden');
+                }
+
+                button.addEventListener('click', function () {
+                    const isExpanded = container.dataset.expanded === 'true';
+
+                    if (isExpanded) {
+                        // Ringkas: sembunyikan kartu setelah jumlah awal
+                        cards.forEach((card, index) => {
+                            if (index >= initialCount) {
+                                card.classList.add('hidden');
+                            }
+                        });
+                        button.textContent = 'Lihat Semua';
+                        container.dataset.expanded = 'false';
+                    } else {
+                        // Lihat Semua: tampilkan semua kartu
+                        cards.forEach(card => {
+                            card.classList.remove('hidden');
+                        });
+                        button.textContent = 'Ringkas';
+                        container.dataset.expanded = 'true';
+                    }
+                });
+            }
+
+            setupCardToggle('updated-cards-container', 'toggle-updated-cards', 4);
+            setupCardToggle('deleted-cards-container', 'toggle-deleted-cards', 4);
+            setupCardToggle('added-cards-container', 'toggle-added-cards', 4);
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+            function showConfirmation(title, text, confirmButtonText = 'Ya', icon = 'warning') {
+                return Swal.fire({
+                    title: title,
+                    text: text,
+                    icon: icon,
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: confirmButtonText,
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+            }
+
+            function showSuccess(message) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sukses',
+                    text: message,
+                    timer: 2000,
+                    showConfirmButton: false,
+                    timerProgressBar: true
+                });
+            }
+
+            function showError(message) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: message,
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            async function handleAction(url, method, activityId, cardTitle, successMessage, errorMessage, actionType) {
+                const result = await showConfirmation(
+                    actionType === 'restore' ? 'Pulihkan Kartu' : 'Hapus Permanen',
+                    actionType === 'restore' ? `Apakah Anda yakin ingin memulihkan kartu "${cardTitle}"?` : `Apakah Anda yakin ingin menghapus permanen kartu "${cardTitle}"? Tindakan ini tidak dapat dibatalkan!`,
+                    actionType === 'restore' ? 'Ya, Pulihkan' : 'Ya, Hapus Permanen'
+                );
+
+                if (result.isConfirmed) {
+                    try {
+                        const response = await fetch(url, {
+                            method: method,
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken,
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({ activity_id: activityId })
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            showSuccess(data.message || successMessage);
+                            const cardElement = document.querySelector(`[data-activity-id="${activityId}"]`).closest('.card-item');
+                            if (cardElement) {
+                                cardElement.remove();
+                            }
+                        } else {
+                            showError(data.message || errorMessage);
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        showError('Terjadi kesalahan saat memproses permintaan.');
+                    }
+                }
+            }
+
+            document.querySelectorAll('.restore-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const activityId = this.dataset.activityId;
+                    const cardTitle = this.dataset.cardTitle;
+                    handleAction(`/admin/activities/${activityId}/restore`, 'POST', activityId, cardTitle, 'Kartu berhasil dipulihkan', 'Gagal memulihkan kartu', 'restore');
+                });
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const activityId = this.dataset.activityId;
+                    const cardTitle = this.dataset.cardTitle;
+                    handleAction(`/admin/activities/${activityId}/permanent-delete`, 'DELETE', activityId, cardTitle, 'Kartu berhasil dihapus permanen', 'Gagal menghapus kartu permanen', 'delete');
+                });
+            });
+        });
+    </script>
 @endsection

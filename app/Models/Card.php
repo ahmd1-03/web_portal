@@ -10,6 +10,7 @@ class Card extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'user_id',
         'title',
         'description',
         'image_url',
@@ -22,4 +23,20 @@ class Card extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    /**
+     * Relationship with User model
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Scope to filter cards by user
+     */
+    public function scopeForUser($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
 }

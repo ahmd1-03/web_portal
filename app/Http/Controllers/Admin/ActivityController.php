@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use App\Models\Card;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ActivityController extends Controller
 {
@@ -15,6 +16,7 @@ class ActivityController extends Controller
     public function index()
     {
         $activities = ActivityLog::whereNull('deleted_at')
+            ->where('user_id', Auth::id())
             ->orderBy('timestamp', 'desc')
             ->paginate(20);
 
@@ -27,6 +29,7 @@ class ActivityController extends Controller
     public function deleted()
     {
         $deletedActivities = ActivityLog::onlyTrashed()
+            ->where('user_id', Auth::id())
             ->orderBy('timestamp', 'desc')
             ->paginate(20);
 
@@ -48,21 +51,25 @@ class ActivityController extends Controller
     public function detail()
     {
         $activities = ActivityLog::whereNull('deleted_at')
+            ->where('user_id', Auth::id())
             ->orderBy('timestamp', 'desc')
             ->paginate(20);
 
         $recentUpdated = ActivityLog::whereNull('deleted_at')
+            ->where('user_id', Auth::id())
             ->where('action', 'updated')
             ->orderBy('timestamp', 'desc')
             ->limit(10)
             ->get();
 
-        $recentDeleted = ActivityLog::where('action', 'deleted')
+        $recentDeleted = ActivityLog::where('user_id', Auth::id())
+            ->where('action', 'deleted')
             ->orderBy('timestamp', 'desc')
             ->limit(10)
             ->get();
 
         $recentAdded = ActivityLog::whereNull('deleted_at')
+            ->where('user_id', Auth::id())
             ->where('action', 'created')
             ->orderBy('timestamp', 'desc')
             ->limit(10)
@@ -101,7 +108,7 @@ class ActivityController extends Controller
     public function restore($id)
     {
         try {
-            $activity = ActivityLog::withTrashed()->findOrFail($id);
+            $activity = ActivityLog::withTrashed()->where('user_id', Auth::id())->findOrFail($id);
             $wasTrashed = $activity->trashed();
 
             $restoredCard = null;
@@ -161,7 +168,7 @@ class ActivityController extends Controller
     public function permanentDelete($id)
     {
         try {
-            $activity = ActivityLog::withTrashed()->findOrFail($id);
+            $activity = ActivityLog::withTrashed()->where('user_id', Auth::id())->findOrFail($id);
             $activityTitle = $activity->title;
 
             // Hapus kartu terkait jika ada
@@ -198,7 +205,7 @@ class ActivityController extends Controller
     public function restoreFallback($id)
     {
         try {
-            $activity = ActivityLog::withTrashed()->findOrFail($id);
+            $activity = ActivityLog::withTrashed()->where('user_id', Auth::id())->findOrFail($id);
             $wasTrashed = $activity->trashed();
             $cardRestored = false;
 
@@ -243,7 +250,7 @@ class ActivityController extends Controller
     public function permanentDeleteFallback($id)
     {
         try {
-            $activity = ActivityLog::withTrashed()->findOrFail($id);
+            $activity = ActivityLog::withTrashed()->where('user_id', Auth::id())->findOrFail($id);
             $activity->forceDelete();
 
             return redirect()->route('admin.activities.deleted')->with('success', 'Aktivitas berhasil dihapus permanen');

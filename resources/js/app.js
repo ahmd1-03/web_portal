@@ -1,7 +1,6 @@
 // Import library dan modul yang diperlukan
 import "./bootstrap"; // Import file bootstrap.js untuk inisialisasi framework
 import Swal from 'sweetalert2'; // Import SweetAlert2
-import { userManager } from "./userManager"; // Import modul manajemen user
 import { cardManager } from "./cardManager"; // Import modul manajemen card
 import { TimeUpdater } from "./timeUpdater"; // Import modul untuk update waktu real-time
 
@@ -9,7 +8,6 @@ import { TimeUpdater } from "./timeUpdater"; // Import modul untuk update waktu 
 window.Swal = Swal;
 
 // Ekspos modul ke global window agar bisa diakses dari mana saja
-window.userManager = userManager; // Membuat userManager tersedia di global scope
 window.cardManager = cardManager; // Membuat cardManager tersedia di global scope
 window.TimeUpdater = TimeUpdater; // Membuat TimeUpdater tersedia di global scope
 

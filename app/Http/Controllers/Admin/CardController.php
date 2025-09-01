@@ -14,25 +14,25 @@ class CardController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Card::query();
+        $query = Card::where('user_id', Auth::id());
 
         if ($request->has('search') && !empty($request->search)) {
             $search = trim(preg_replace('/\s+/', ' ', $request->search));
             $words = explode(' ', $search);
-            
+
             $query->where(function ($q) use ($search, $words) {
                 $q->where('title', 'like', '%' . $search . '%')
-                  ->orWhere('description', 'like', '%' . $search . '%');
+                    ->orWhere('description', 'like', '%' . $search . '%');
                 foreach ($words as $word) {
                     $q->orWhere('title', 'like', '%' . $word . '%')
-                      ->orWhere('description', 'like', '%' . $word . '%');
+                        ->orWhere('description', 'like', '%' . $word . '%');
                 }
             });
         }
 
         $perPage = $this->validatePerPage($request->input('per_page', 10));
         $cards = $query->latest()->paginate($perPage);
-        
+
         return view('admin.cards.index', [
             'cards' => $cards,
             'cardsCount' => $cards->total()
@@ -47,7 +47,7 @@ class CardController extends Controller
 
     public function edit($id)
     {
-        $card = Card::findOrFail($id);
+        $card = Card::where('user_id', Auth::id())->findOrFail($id);
         return response()->json($card);
     }
 
@@ -65,6 +65,7 @@ class CardController extends Controller
         $path = $image->storeAs('cards', $filename, 'public');
 
         $card = Card::create([
+            'user_id' => Auth::id(),
             'title' => $validated['title'],
             'description' => $validated['description'],
             'image_url' => 'cards/' . $filename,
@@ -78,7 +79,7 @@ class CardController extends Controller
             'action' => 'created',
             'title' => $card->title,
             'details' => 'Kartu baru telah ditambahkan',
-            'user_id' => null,
+            'user_id' => Auth::id(),
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
             'old_values' => null,
@@ -95,7 +96,7 @@ class CardController extends Controller
 
     public function update(Request $request, $id)
     {
-        $card = Card::findOrFail($id);
+        $card = Card::where('user_id', Auth::id())->findOrFail($id);
         $oldValues = $card->toArray();
 
         $validated = $request->validate([
@@ -109,7 +110,7 @@ class CardController extends Controller
             if ($card->image_url && Storage::disk('public')->exists($card->image_url)) {
                 Storage::disk('public')->delete($card->image_url);
             }
-            
+
             $image = $request->file('image_url');
             $filename = Str::uuid() . '_' . time() . '.' . $image->getClientOriginalExtension();
             $path = $image->storeAs('cards', $filename, 'public');
@@ -128,7 +129,7 @@ class CardController extends Controller
             'action' => 'updated',
             'title' => $card->title,
             'details' => 'Kartu telah diperbarui',
-            'user_id' => null,
+            'user_id' => Auth::id(),
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
             'old_values' => $oldValues,
@@ -145,13 +146,12 @@ class CardController extends Controller
 
     public function destroy($id)
     {
-        $card = Card::findOrFail($id);
+        $card = Card::where('user_id', Auth::id())->findOrFail($id);
         $oldValues = $card->toArray();
 
-        if ($card->image_url && Storage::disk('public')->exists($card->image_url)) {
-            Storage::disk('public')->delete($card->image_url);
-        }
-        
+        // Note: Don't delete the image file during soft delete
+        // Image will only be deleted during permanent delete to preserve it for detail view
+
         $card->delete();
 
         // Log activity for card deletion
@@ -160,7 +160,7 @@ class CardController extends Controller
             'action' => 'deleted',
             'title' => $card->title,
             'details' => 'Kartu telah dihapus',
-            'user_id' => null,
+            'user_id' => Auth::id(),
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
             'old_values' => $oldValues,
@@ -174,8 +174,10 @@ class CardController extends Controller
         ]);
     }
 
-    public function toggleStatus(Request $request, Card $card)
+    public function toggleStatus(Request $request, $id)
     {
+        $card = Card::where('user_id', Auth::id())->findOrFail($id);
+
         $request->validate([
             'is_active' => 'required|boolean'
         ]);

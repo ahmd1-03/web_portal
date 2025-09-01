@@ -68,7 +68,19 @@
                                     @if(!empty($card->image_url))
                                         <div class="relative">
                                             <img src="{{ Storage::url($card->image_url) }}" alt="{{ $card->title ?? 'Card Image' }}"
-                                                class="w-full h-32 object-cover">
+                                                class="w-full h-32 object-cover"
+                                                onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzljYTZhZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkdBTUJBUiBUVUxBSzwvdGV4dD48L3N2Zz4='; this.classList.add('opacity-75')">
+                                        </div>
+                                    @else
+                                        <div class="relative">
+                                            <div class="w-full h-32 bg-gray-100 flex items-center justify-center">
+                                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                    </path>
+                                                </svg>
+                                            </div>
                                         </div>
                                     @endif
                                     <div class="p-5">
@@ -151,10 +163,22 @@
                                 @endphp
                                 <div
                                     class="card-item bg-white border border-red-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-                                    @if(!empty($card->image_url))
+                                    @if(!empty($card->image_url) && Storage::disk('public')->exists($card->image_url))
                                         <div class="relative">
                                             <img src="{{ Storage::url($card->image_url) }}" alt="{{ $card->title ?? 'Card Image' }}"
-                                                class="w-full h-32 object-cover opacity-75">
+                                                class="w-full h-32 object-cover opacity-75"
+                                                onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzljYTZhZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkdBTUJBUiBESEFQVVM8L3RleHQ+PC9zdmc+'; this.classList.add('opacity-75')">
+                                        </div>
+                                    @else
+                                        <div class="relative">
+                                            <div class="w-full h-32 bg-gray-100 flex items-center justify-center opacity-75">
+                                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg>
+                                            </div>
                                         </div>
                                     @endif
                                     <div class="p-5">
@@ -222,11 +246,10 @@
                                 class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
                                 <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
-                                    </path>
-                                </svg>
-                            </div>
-                            <p class="text-gray-500 text-lg font-medium">Belum ada kartu yang ditambahkan.</p>
+                                </path>
+                            </svg>
                         </div>
+                        <p class="text-gray-500 text-lg font-medium">Belum ada kartu yang ditambahkan.</p>
                     @else
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
                             id="added-cards-container">
@@ -240,7 +263,19 @@
                                     @if(!empty($card->image_url))
                                         <div class="relative">
                                             <img src="{{ Storage::url($card->image_url) }}" alt="{{ $card->title ?? 'Card Image' }}"
-                                                class="w-full h-32 object-cover">
+                                                class="w-full h-32 object-cover"
+                                                onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzljYTZhZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkdBTUJBUiBUVUxBSzwvdGV4dD48L3N2Zz4='; this.classList.add('opacity-75')">
+                                        </div>
+                                    @else
+                                        <div class="relative">
+                                            <div class="w-full h-32 bg-gray-100 flex items-center justify-center">
+                                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                    </path>
+                                                </svg>
+                                            </div>
                                         </div>
                                     @endif
                                     <div class="p-5">

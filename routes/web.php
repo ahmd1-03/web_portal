@@ -6,7 +6,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CardController;
-use App\Http\Controllers\Admin\UserController;
+
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\DeletedCardController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -32,10 +32,6 @@ Route::get('/home', [HomeController::class, 'index'])->name('home.alternative');
 // Pencarian AJAX
 Route::get('/search', [SearchController::class, 'search'])->name('search');
 
-// Kebijakan privasi & syarat ketentuan
-Route::view('/kebijakan-privasi', 'frontend.privacy')->name('privacy');
-Route::view('/syarat-ketentuan', 'frontend.terms')->name('terms');
-
 
 // ======================== ADMIN ========================
 Route::prefix('admin')->group(function () {
@@ -56,7 +52,6 @@ Route::prefix('admin')->group(function () {
 
         // ---------- CRUD ----------
         Route::resource('cards', CardController::class)->except(['show']);
-        Route::resource('users', UserController::class)->except(['show']);
 
         // ---------- ACTIVITIES ----------
         Route::get('/detail', [ActivityController::class, 'detail'])->name('detail');
@@ -91,11 +86,23 @@ Route::prefix('admin')->group(function () {
 
     // ---------- FORGOT PASSWORD ----------
     Route::get('lupa-password', [AuthController::class, 'showForgotPasswordForm'])->name('admin.lupaPassword');
-    Route::post('lupa-password', [AuthController::class, 'sendResetLinkEmail'])->name('admin.kirimLinkResetPassword');
+    Route::post('lupa-password', [AuthController::class, 'sendResetCodeEmail'])->name('admin.kirimLinkResetPassword');
 
-    // ---------- RESET PASSWORD ----------
+    // ---------- VERIFY CODE ----------
+    Route::get('verify-code', [AuthController::class, 'showVerifyCodeForm'])->name('admin.verifyCodeForm');
+    Route::post('verify-code', [AuthController::class, 'verifyCode'])->name('admin.verifyCode');
+    Route::post('resend-code', [AuthController::class, 'resendCode'])->name('admin.resendCode');
+
+    // ---------- NEW PASSWORD ----------
+    Route::get('new-password', [AuthController::class, 'showNewPasswordForm'])->name('admin.newPasswordForm');
+    Route::post('new-password', [AuthController::class, 'updatePassword'])->name('admin.updatePassword');
+
+    // ---------- RESET PASSWORD (LEGACY) ----------
     Route::get('reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('admin.resetPasswordForm');
     Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('admin.resetPassword');
+
+    // Route for password.reset used by Laravel's default notification
+    Route::get('password/reset/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
 
     // ---------- TOGGLE CARD STATUS ----------
     Route::post('cards/{card}/toggle-status', [CardController::class, 'toggleStatus'])

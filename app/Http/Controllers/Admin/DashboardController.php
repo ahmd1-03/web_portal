@@ -9,12 +9,13 @@ use App\Models\Card;
 use App\Models\Admin;
 use App\Models\Visitor;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index(): View
     {
-        $cardsCount = Card::count();
+        $cardsCount = Card::where('user_id', Auth::id())->count();
         $adminsCount = Admin::count();
         $visitorsCount = Visitor::count();
 
@@ -22,6 +23,7 @@ class DashboardController extends Controller
 
         // Aktivitas Ditambahkan - data baru yang dibuat
         $recentAdded = ActivityLog::active()
+            ->where('user_id', Auth::id())
             ->byAction('created')
             ->where('timestamp', '>=', $timeLimit)
             ->orderBy('timestamp', 'desc')
@@ -30,6 +32,7 @@ class DashboardController extends Controller
 
         // Aktivitas Diubah - data yang diperbarui
         $recentUpdated = ActivityLog::active()
+            ->where('user_id', Auth::id())
             ->byAction('updated')
             ->where('timestamp', '>=', $timeLimit)
             ->orderBy('timestamp', 'desc')
@@ -38,6 +41,7 @@ class DashboardController extends Controller
 
         // Aktivitas Dihapus - data yang dihapus (bukan soft deleted)
         $recentDeleted = ActivityLog::active()
+            ->where('user_id', Auth::id())
             ->byAction('deleted')
             ->where('timestamp', '>=', $timeLimit)
             ->orderBy('timestamp', 'desc')
@@ -53,16 +57,19 @@ class DashboardController extends Controller
 
         // Hitung total untuk setiap kategori
         $totalAdded = ActivityLog::active()
+            ->where('user_id', Auth::id())
             ->byAction('created')
             ->where('timestamp', '>=', $timeLimit)
             ->count();
 
         $totalUpdated = ActivityLog::active()
+            ->where('user_id', Auth::id())
             ->byAction('updated')
             ->where('timestamp', '>=', $timeLimit)
             ->count();
 
         $totalDeleted = ActivityLog::active()
+            ->where('user_id', Auth::id())
             ->byAction('deleted')
             ->where('timestamp', '>=', $timeLimit)
             ->count();
@@ -93,6 +100,7 @@ class DashboardController extends Controller
     private function getDailyCardCounts(): array
     {
         $dailyCounts = Card::selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->where('user_id', Auth::id())
             ->where('created_at', '>=', Carbon::now()->subDays(30))
             ->groupBy('date')
             ->orderBy('date', 'asc')
@@ -112,6 +120,7 @@ class DashboardController extends Controller
     private function getWeeklyCardCounts(): array
     {
         $weeklyCounts = Card::selectRaw('YEAR(created_at) as year, WEEK(created_at) as week, COUNT(*) as count')
+            ->where('user_id', Auth::id())
             ->where('created_at', '>=', Carbon::now()->subWeeks(12))
             ->groupBy('year', 'week')
             ->orderBy('year', 'asc')

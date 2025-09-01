@@ -34,12 +34,13 @@
                             <!-- Input untuk kata kunci pencarian -->
                             <input type="text" name="search" placeholder="Cari kartu..." value="{{ request('search') }}"
                                 x-model="searchQuery" x-on:input.debounce.500ms="searching = true" class="w-full text-xs rounded-lg px-3 py-1.5 pr-8 border border-gray-300 shadow-sm 
-                                          focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 
-                                          transition-all duration-300 hover:border-emerald-300 hover:shadow-md"
+                                              focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 
+                                              transition-all duration-300 hover:border-emerald-300 hover:shadow-md"
                                 aria-label="Masukkan kata kunci pencarian kartu" />
                             <!-- Tombol submit pencarian dengan ikon -->
-                            <button type="submit" class="absolute top-1/2 right-1.5 -translate-y-1/2 text-gray-400 hover:text-emerald-600 
-                                           flex items-center justify-center focus:outline-none transition-all duration-300"
+                            <button type="submit"
+                                class="absolute top-1/2 right-1.5 -translate-y-1/2 text-gray-400 hover:text-emerald-600 
+                                               flex items-center justify-center focus:outline-none transition-all duration-300"
                                 title="Cari kartu">
                                 <!-- Ikon pencarian saat tidak loading -->
                                 <template x-if="!searching">
@@ -68,8 +69,8 @@
                     <!-- Dropdown untuk memilih jumlah data per halaman -->
                     <div class="relative">
                         <select x-model="perPage" x-on:change="changePerPage" class="w-full md:w-28 text-xs rounded-lg px-3 py-1.5 border border-gray-300 shadow-sm 
-                                       focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 
-                                       transition-all duration-300 hover:border-emerald-300 hover:shadow-md"
+                                           focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 
+                                           transition-all duration-300 hover:border-emerald-300 hover:shadow-md"
                             aria-label="Jumlah data per halaman">
                             <!-- Loop untuk opsi jumlah data per halaman -->
                             @for ($i = 1; $i <= 20; $i++)
@@ -87,13 +88,13 @@
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-4 px-2 sm:px-4 lg:px-0">
             <!-- Kartu untuk menambah kartu baru -->
             <div @click="openCreateModal = true" class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg shadow-sm p-3 border border-emerald-100 
-                        hover:border-emerald-300 hover:shadow-lg transition-all duration-300 cursor-pointer 
-                        hover:-translate-y-1 transform" role="button" aria-label="Tambah kartu baru">
+                            hover:border-emerald-300 hover:shadow-lg transition-all duration-300 cursor-pointer 
+                            hover:-translate-y-1 transform" role="button" aria-label="Tambah kartu baru">
                 <div class="flex items-center gap-2">
                     <!-- Ikon untuk tombol tambah kartu -->
                     <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center 
-                                 justify-center text-white group-hover:from-emerald-600 group-hover:to-teal-600 
-                                 transition-all duration-300">
+                                     justify-center text-white group-hover:from-emerald-600 group-hover:to-teal-600 
+                                     transition-all duration-300">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
@@ -113,11 +114,11 @@
 
             <!-- Kartu untuk menampilkan total kartu -->
             <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg shadow-sm p-3 border border-blue-100 
-                        hover:shadow-md transition-all duration-300">
+                            hover:shadow-md transition-all duration-300">
                 <div class="flex items-center gap-2">
                     <!-- Ikon untuk total kartu -->
                     <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center 
-                                 justify-center text-white">
+                                     justify-center text-white">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -133,11 +134,11 @@
 
             <!-- Kartu untuk menampilkan jumlah kartu aktif -->
             <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg shadow-sm p-3 border border-green-100 
-                        hover:shadow-md transition-all duration-300">
+                            hover:shadow-md transition-all duration-300">
                 <div class="flex items-center gap-2">
                     <!-- Ikon untuk kartu aktif -->
                     <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 flex items-center 
-                                 justify-center text-white">
+                                     justify-center text-white">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -147,18 +148,19 @@
                     <div>
                         <h3 class="font-medium text-sm text-gray-800">Kartu Aktif</h3>
                         <p id="activeCount" class="text-xl font-bold text-green-700">
-                            {{ $cards->where('is_active', true)->count() }}</p>
+                            {{ $cards->where('is_active', true)->count() }}
+                        </p>
                     </div>
                 </div>
             </div>
 
             <!-- Kartu untuk menampilkan jumlah kartu tidak aktif -->
             <div class="bg-gradient-to-br from-red-50 to-pink-50 rounded-lg shadow-sm p-3 border border-red-100 
-                        hover:shadow-md transition-all duration-300">
+                            hover:shadow-md transition-all duration-300">
                 <div class="flex items-center gap-2">
                     <!-- Ikon untuk kartu tidak aktif -->
                     <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-red-500 to-pink-500 flex items-center 
-                                 justify-center text-white">
+                                     justify-center text-white">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -168,7 +170,8 @@
                     <div>
                         <h3 class="font-medium text-sm text-gray-800">Kartu Tidak Aktif</h3>
                         <p id="inactiveCount" class="text-xl font-bold text-red-700">
-                            {{ $cards->where('is_active', false)->count() }}</p>
+                            {{ $cards->where('is_active', false)->count() }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -179,7 +182,7 @@
         @if(session('success'))
             <div class="mb-4 px-2 sm:px-4 lg:px-0">
                 <div class="p-3 text-xs bg-gradient-to-r from-emerald-100 to-emerald-50 border-l-4 border-emerald-500 
-                            text-emerald-700 rounded-lg transition-all duration-300 flex items-center shadow-sm">
+                                    text-emerald-700 rounded-lg transition-all duration-300 flex items-center shadow-sm">
                     <!-- Ikon untuk notifikasi sukses -->
                     <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -203,22 +206,22 @@
                             <tr>
                                 <!-- Kolom nomor urut -->
                                 <th class="px-3 py-1.5 text-left text-xs font-medium text-white uppercase tracking-wider 
-                                           border-r border-emerald-600">No</th>
+                                               border-r border-emerald-600">No</th>
                                 <!-- Kolom judul kartu -->
                                 <th class="px-3 py-1.5 text-left text-xs font-medium text-white uppercase tracking-wider 
-                                           border-r border-emerald-600">Judul</th>
+                                               border-r border-emerald-600">Judul</th>
                                 <!-- Kolom deskripsi (tersembunyi di layar kecil) -->
                                 <th class="px-3 py-1.5 text-left text-xs font-medium text-white uppercase tracking-wider 
-                                           hidden sm:table-cell border-r border-emerald-600">Deskripsi</th>
+                                               hidden sm:table-cell border-r border-emerald-600">Deskripsi</th>
                                 <!-- Kolom status kartu -->
                                 <th class="px-3 py-1.5 text-left text-xs font-medium text-white uppercase tracking-wider 
-                                           border-r border-emerald-600">Status</th>
+                                               border-r border-emerald-600">Status</th>
                                 <!-- Kolom link eksternal (tersembunyi di layar kecil) -->
                                 <th class="px-3 py-1.5 text-left text-xs font-medium text-white uppercase tracking-wider 
-                                           hidden md:table-cell border-r border-emerald-600">Link</th>
+                                               hidden md:table-cell border-r border-emerald-600">Link</th>
                                 <!-- Kolom gambar kartu -->
                                 <th class="px-3 py-1.5 text-left text-xs font-medium text-white uppercase tracking-wider 
-                                           border-r border-emerald-600">Gambar</th>
+                                               border-r border-emerald-600">Gambar</th>
                                 <!-- Kolom aksi -->
                                 <th class="px-3 py-1.5 text-right text-xs font-medium text-white uppercase tracking-wider">
                                     Aksi</th>
@@ -232,20 +235,20 @@
                                     class="hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 transition-colors duration-150 group">
                                     <!-- Nomor urut kartu -->
                                     <td class="px-3 py-1.5 whitespace-nowrap text-xs text-gray-500 group-hover:text-gray-700 
-                                                  transition-colors duration-300">
+                                                          transition-colors duration-300">
                                         {{ ($cards->currentPage() - 1) * $cards->perPage() + $index + 1 }}
                                     </td>
                                     <!-- Judul kartu -->
                                     <td class="px-3 py-1.5 whitespace-nowrap">
                                         <div class="text-xs font-medium text-gray-900 group-hover:text-emerald-700 
-                                                        transition-colors duration-300">
+                                                                transition-colors duration-300">
                                             {{ $card->title }}
                                         </div>
                                     </td>
                                     <!-- Deskripsi kartu (tersembunyi di layar kecil) -->
                                     <td class="px-3 py-1.5 whitespace-nowrap hidden sm:table-cell">
                                         <div class="text-xs text-gray-500 max-w-xs truncate group-hover:text-gray-700 
-                                                        transition-colors duration-300">
+                                                                transition-colors duration-300">
                                             {{ Str::limit($card->description, 50) }}
                                         </div>
                                     </td>
@@ -260,7 +263,7 @@
                                     <!-- Link eksternal kartu (tersembunyi di layar kecil) -->
                                     <td class="px-3 py-1.5 whitespace-nowrap hidden md:table-cell">
                                         <a href="{{ $card->external_link }}" target="_blank" class="text-xs text-blue-600 hover:text-blue-800 hover:underline transition-all 
-                                                      duration-300 inline-flex items-center group/link">
+                                                              duration-300 inline-flex items-center group/link">
                                             {{ Str::limit($card->external_link, 20) }}
                                             <!-- Ikon untuk link eksternal -->
                                             <svg class="w-3 h-3 ml-1 group-hover/link:translate-x-1 transition-transform duration-300"
@@ -277,10 +280,11 @@
                                             <img src="{{ Storage::url($card->image_url) }}" @click="showImageModal = true"
                                                 alt="Gambar Kartu {{ $card->title }}"
                                                 class="h-10 w-10 sm:h-12 sm:w-12 object-cover rounded-md cursor-pointer 
-                                                            border-2 border-gray-200 hover:border-emerald-400 transition-all duration-300" />
+                                                                    border-2 border-gray-200 hover:border-emerald-400 transition-all duration-300" />
                                             <!-- Modal pratinjau gambar -->
                                             <div x-show="showImageModal" x-cloak @click.away="showImageModal = false" class="fixed inset-0 z-50 flex items-center justify-center p-3 backdrop-blur-sm 
-                                                            bg-black/80" role="dialog" aria-labelledby="imageModalTitle">
+                                                                    bg-black/80" role="dialog"
+                                                aria-labelledby="imageModalTitle">
                                                 <div class="relative max-w-3xl max-h-[85vh]">
                                                     <!-- Gambar dalam modal -->
                                                     <img :src="'{{ Storage::url($card->image_url) }}'"
@@ -289,7 +293,7 @@
                                                     <!-- Tombol tutup modal -->
                                                     <button @click="showImageModal = false"
                                                         class="absolute top-3 right-3 p-1.5 rounded-full bg-white/80 
-                                                                       hover:bg-white text-gray-800 shadow-md transition-all duration-300"
+                                                                               hover:bg-white text-gray-800 shadow-md transition-all duration-300"
                                                         aria-label="Tutup modal pratinjau gambar">
                                                         <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                             viewBox="0 0 24 24">
@@ -306,7 +310,7 @@
                                         <div class="flex justify-end space-x-1.5">
                                             <!-- Tombol edit kartu -->
                                             <button @click="openEditModal({{ $card->id }})" class="flex items-center gap-1.5 px-1.5 py-0.5 rounded-lg transition-all duration-300 
-                                                               bg-blue-600 text-white hover:bg-blue-700 group/edit"
+                                                                       bg-blue-600 text-white hover:bg-blue-700 group/edit"
                                                 title="Edit kartu" aria-label="Edit kartu {{ $card->title }}">
                                                 <svg xmlns="http://www.w3.org/2000/svg"
                                                     class="w-3 h-3 group-hover/edit:scale-110 transition-transform duration-300"
@@ -318,7 +322,7 @@
                                             </button>
                                             <!-- Tombol hapus kartu -->
                                             <button @click="openDeleteModal({{ $card->id }})" class="flex items-center gap-1.5 px-1.5 py-0.5 rounded-lg transition-all duration-300 
-                                                               bg-red-600 text-white hover:bg-red-700 group/delete"
+                                                                       bg-red-600 text-white hover:bg-red-700 group/delete"
                                                 title="Hapus kartu" aria-label="Hapus kartu {{ $card->title }}">
                                                 <svg xmlns="http://www.w3.org/2000/svg"
                                                     class="w-3 h-3 group-hover/delete:scale-110 transition-transform duration-300"
@@ -333,7 +337,7 @@
                                             <button
                                                 @click="toggleCardStatus({{ $card->id }}, {{ $card->is_active ? 'true' : 'false' }})"
                                                 class="flex items-center gap-1.5 px-1.5 py-0.5 rounded-lg transition-all duration-300 
-                                                               {{ $card->is_active ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-red-600 text-white hover:bg-red-700' }}"
+                                                                       {{ $card->is_active ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-red-600 text-white hover:bg-red-700' }}"
                                                 title="{{ $card->is_active ? 'Nonaktifkan kartu' : 'Aktifkan kartu' }}"
                                                 aria-label="{{ $card->is_active ? 'Nonaktifkan kartu' : 'Aktifkan kartu' }} {{ $card->title }}">
                                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -384,7 +388,7 @@
                 x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
                 x-transition:leave="ease-in duration-100" x-transition:leave-start="opacity-100 scale-100"
                 x-transition:leave-end="opacity-0 scale-95" @click.away="openCreateModal = false" class="bg-white rounded-lg shadow-2xl w-full max-w-sm max-h-[85vh] overflow-y-auto 
-                        border-2 border-emerald-200">
+                            border-2 border-emerald-200">
                 <!-- Header modal tambah kartu -->
                 <div class="border-b border-gray-200 p-4 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-t-lg">
                     <!-- Judul modal -->
@@ -407,8 +411,8 @@
                                 x-model="createForm.title"
                                 :class="errors.title ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-emerald-500 focus:border-emerald-500'"
                                 class="w-full px-3 py-1.5 text-xs border rounded-lg shadow-sm focus:outline-none 
-                                          focus:ring-2 focus:ring-opacity-50 transition-all duration-300 
-                                          hover:border-emerald-300 hover:shadow-md" aria-required="true"
+                                              focus:ring-2 focus:ring-opacity-50 transition-all duration-300 
+                                              hover:border-emerald-300 hover:shadow-md" aria-required="true"
                                 aria-describedby="create_title_error" />
                             <!-- Pesan error untuk judul -->
                             <template x-if="errors.title">
@@ -424,8 +428,8 @@
                                 placeholder="Tulis deskripsi singkat..." x-model="createForm.description"
                                 :class="errors.description ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-emerald-500 focus:border-emerald-500'"
                                 class="w-full px-3 py-1.5 text-xs border rounded-lg shadow-sm focus:outline-none 
-                                             focus:ring-2 focus:ring-opacity-50 transition-all duration-300 resize-none 
-                                             hover:border-emerald-300 hover:shadow-md" aria-required="true"
+                                                 focus:ring-2 focus:ring-opacity-50 transition-all duration-300 resize-none 
+                                                 hover:border-emerald-300 hover:shadow-md" aria-required="true"
                                 aria-describedby="create_description_error"></textarea>
                             <!-- Pesan error untuk deskripsi -->
                             <template x-if="errors.description">
@@ -439,9 +443,10 @@
                                 Gambar Kartu <span class="text-red-500">*</span>
                             </label>
                             <div class="flex items-center justify-center w-full">
-                                <label for="create_image_url" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 
-                                              border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 
-                                              transition-colors duration-300 hover:border-emerald-300 hover:shadow-inner">
+                                <label for="create_image_url"
+                                    class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 
+                                                  border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 
+                                                  transition-colors duration-300 hover:border-emerald-300 hover:shadow-inner">
                                     <!-- Teks placeholder jika belum ada gambar -->
                                     <template x-if="!preview">
                                         <div class="flex flex-col items-center justify-center pt-4 pb-5">
@@ -481,8 +486,8 @@
                                 placeholder="https://contoh.com" x-model="createForm.external_link"
                                 :class="errors.external_link ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-emerald-500 focus:border-emerald-500'"
                                 class="w-full px-3 py-1.5 text-xs border rounded-lg shadow-sm focus:outline-none 
-                                          focus:ring-2 focus:ring-opacity-50 transition-all duration-300 
-                                          hover:border-emerald-300 hover:shadow-md" aria-required="true"
+                                              focus:ring-2 focus:ring-opacity-50 transition-all duration-300 
+                                              hover:border-emerald-300 hover:shadow-md" aria-required="true"
                                 aria-describedby="create_external_link_error" />
                             <!-- Pesan error untuk link eksternal -->
                             <template x-if="errors.external_link">
@@ -506,17 +511,17 @@
                 </div>
                 <!-- Footer modal dengan tombol aksi -->
                 <div class="border-t border-gray-200 px-4 py-3 flex justify-end gap-2 
-                            bg-gradient-to-r from-gray-50 to-gray-100 rounded-b-lg">
+                                bg-gradient-to-r from-gray-50 to-gray-100 rounded-b-lg">
                     <!-- Tombol batal -->
                     <button type="button" @click="openCreateModal = false" class="px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 
-                                   shadow-sm text-xs font-medium transition-all duration-300 hover:-translate-y-0.5 
-                                   hover:shadow-md" aria-label="Batal menambah kartu">Batal</button>
+                                       shadow-sm text-xs font-medium transition-all duration-300 hover:-translate-y-0.5 
+                                       hover:shadow-md" aria-label="Batal menambah kartu">Batal</button>
                     <!-- Tombol simpan -->
-                    <button type="button" @click="submitCreateForm" :disabled="loading" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 
-                                   hover:from-emerald-700 hover:to-teal-700 text-white shadow-md text-xs font-medium 
-                                   transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed 
-                                   flex items-center justify-center min-w-[80px] hover:-translate-y-0.5 hover:shadow-lg"
-                        aria-label="Simpan kartu baru">
+                    <button type="button" @click="submitCreateForm" :disabled="loading"
+                        class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 
+                                       hover:from-emerald-700 hover:to-teal-700 text-white shadow-md text-xs font-medium 
+                                       transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed 
+                                       flex items-center justify-center min-w-[80px] hover:-translate-y-0.5 hover:shadow-lg" aria-label="Simpan kartu baru">
                         <!-- Teks tombol saat tidak loading -->
                         <span x-show="!loading">Simpan</span>
                         <!-- Teks dan ikon loading saat memproses -->
@@ -548,7 +553,7 @@
                 x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
                 x-transition:leave="ease-in duration-100" x-transition:leave-start="opacity-100 scale-100"
                 x-transition:leave-end="opacity-0 scale-95" @click.away="openEditModalId = null" class="bg-white rounded-lg shadow-2xl w-full max-w-md max-h-[85vh] overflow-y-auto 
-                        border-2 border-blue-200">
+                            border-2 border-blue-200">
                 <!-- Header modal edit kartu -->
                 <div class="border-b border-gray-200 p-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-t-lg">
                     <!-- Judul modal -->
@@ -569,8 +574,8 @@
                             <input type="text" name="title" id="edit_title" required x-model="cardData.title"
                                 :class="errors.title ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
                                 class="w-full px-3 py-1.5 text-xs border rounded-lg shadow-sm focus:outline-none 
-                                          focus:ring-2 focus:ring-opacity-50 transition-all duration-300 
-                                          hover:border-blue-300 hover:shadow-md" aria-required="true"
+                                              focus:ring-2 focus:ring-opacity-50 transition-all duration-300 
+                                              hover:border-blue-300 hover:shadow-md" aria-required="true"
                                 aria-describedby="edit_title_error" />
                             <!-- Pesan error untuk judul -->
                             <template x-if="errors.title">
@@ -586,8 +591,8 @@
                                 x-model="cardData.description"
                                 :class="errors.description ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
                                 class="w-full px-3 py-1.5 text-xs border rounded-lg shadow-sm focus:outline-none 
-                                             focus:ring-2 focus:ring-opacity-50 transition-all duration-300 resize-none 
-                                             hover:border-blue-300 hover:shadow-md" aria-required="true"
+                                                 focus:ring-2 focus:ring-opacity-50 transition-all duration-300 resize-none 
+                                                 hover:border-blue-300 hover:shadow-md" aria-required="true"
                                 aria-describedby="edit_description_error"></textarea>
                             <!-- Pesan error untuk deskripsi -->
                             <template x-if="errors.description">
@@ -605,7 +610,7 @@
                                 <img x-show="cardData && cardData.image_url"
                                     :src="cardData.image_url ? '/storage/' + cardData.image_url : ''"
                                     :alt="cardData && cardData.name ? cardData.name : ''" class="h-32 w-full object-contain rounded-lg border-2 border-gray-200 
-                                            hover:border-blue-300 transition-all duration-300 cursor-pointer"
+                                                hover:border-blue-300 transition-all duration-300 cursor-pointer"
                                     @click="cardData && cardData.image_url && openImageModal('/storage/' + cardData.image_url)">
                             </div>
                             <!-- Upload gambar baru -->
@@ -614,8 +619,8 @@
                                 <div class="flex items-center justify-center w-full">
                                     <label for="edit_image_url"
                                         class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 
-                                                  border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 
-                                                  transition-colors duration-300 hover:border-blue-300 hover:shadow-inner relative">
+                                                      border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 
+                                                      transition-colors duration-300 hover:border-blue-300 hover:shadow-inner relative">
                                         <!-- Teks placeholder jika belum ada gambar -->
                                         <template x-if="!previewEdit">
                                             <div class="flex flex-col items-center justify-center pt-4 pb-5">
@@ -656,8 +661,8 @@
                                 x-model="cardData.external_link"
                                 :class="errors.external_link ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'"
                                 class="w-full px-3 py-1.5 text-xs border rounded-lg shadow-sm focus:outline-none 
-                                          focus:ring-2 focus:ring-opacity-50 transition-all duration-300 
-                                          hover:border-blue-300 hover:shadow-md" aria-required="true"
+                                              focus:ring-2 focus:ring-opacity-50 transition-all duration-300 
+                                              hover:border-blue-300 hover:shadow-md" aria-required="true"
                                 aria-describedby="edit_external_link_error" />
                             <!-- Pesan error untuk link eksternal -->
                             <template x-if="errors.external_link">
@@ -681,17 +686,17 @@
                 </div>
                 <!-- Footer modal dengan tombol aksi -->
                 <div class="border-t border-gray-200 px-4 py-3 flex justify-end gap-2 
-                            bg-gradient-to-r from-gray-50 to-gray-100 rounded-b-lg">
+                                bg-gradient-to-r from-gray-50 to-gray-100 rounded-b-lg">
                     <!-- Tombol batal -->
                     <button type="button" @click="openEditModalId = null" class="px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 
-                                   shadow-sm text-xs font-medium transition-all duration-300 hover:-translate-y-0.5 
-                                   hover:shadow-md" aria-label="Batal mengedit kartu">Batal</button>
+                                       shadow-sm text-xs font-medium transition-all duration-300 hover:-translate-y-0.5 
+                                       hover:shadow-md" aria-label="Batal mengedit kartu">Batal</button>
                     <!-- Tombol simpan perubahan -->
-                    <button type="button" @click="submitEditForm" :disabled="loading" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 
-                                   hover:from-blue-700 hover:to-indigo-700 text-white shadow-md text-xs font-medium 
-                                   transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed 
-                                   flex items-center justify-center min-w-[80px] hover:-translate-y-0.5 hover:shadow-lg"
-                        aria-label="Simpan perubahan kartu">
+                    <button type="button" @click="submitEditForm" :disabled="loading"
+                        class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 
+                                       hover:from-blue-700 hover:to-indigo-700 text-white shadow-md text-xs font-medium 
+                                       transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed 
+                                       flex items-center justify-center min-w-[80px] hover:-translate-y-0.5 hover:shadow-lg" aria-label="Simpan perubahan kartu">
                         <!-- Teks tombol saat tidak loading -->
                         <span x-show="!loading">Simpan Perubahan</span>
                         <!-- Teks dan ikon loading saat memproses -->
@@ -761,17 +766,17 @@
                 </div>
                 <!-- Footer modal dengan tombol aksi -->
                 <div class="border-t border-gray-200 px-4 py-3 flex justify-end gap-2 
-                            bg-gradient-to-r from-gray-50 to-gray-100 rounded-b-lg">
+                                bg-gradient-to-r from-gray-50 to-gray-100 rounded-b-lg">
                     <!-- Tombol batal -->
                     <button type="button" @click="openDeleteModalId = null" class="px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 
-                                   shadow-sm text-xs font-medium transition-all duration-300 hover:-translate-y-0.5 
-                                   hover:shadow-md" aria-label="Batal menghapus kartu">Batal</button>
+                                       shadow-sm text-xs font-medium transition-all duration-300 hover:-translate-y-0.5 
+                                       hover:shadow-md" aria-label="Batal menghapus kartu">Batal</button>
                     <!-- Tombol hapus -->
-                    <button type="button" @click="submitDeleteForm" :disabled="loading" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-600 to-pink-600 
-                                   hover:from-red-700 hover:to-pink-700 text-white shadow-md text-xs font-medium 
-                                   transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed 
-                                   flex items-center justify-center min-w-[80px] hover:-translate-y-0.5 hover:shadow-lg"
-                        aria-label="Hapus kartu">
+                    <button type="button" @click="submitDeleteForm" :disabled="loading"
+                        class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-600 to-pink-600 
+                                       hover:from-red-700 hover:to-pink-700 text-white shadow-md text-xs font-medium 
+                                       transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed 
+                                       flex items-center justify-center min-w-[80px] hover:-translate-y-0.5 hover:shadow-lg" aria-label="Hapus kartu">
                         <!-- Teks tombol saat tidak loading -->
                         <span x-show="!loading">Hapus</span>
                         <!-- Teks dan ikon loading saat memproses -->

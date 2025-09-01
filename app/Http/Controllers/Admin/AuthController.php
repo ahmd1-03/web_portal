@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Admin;
+use App\Models\PasswordResetCode;
+use App\Mail\SendPasswordResetCode;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -190,39 +193,67 @@ class AuthController extends Controller
     }
 
     /**
-     * Send password reset link
+     * Send password reset code
      */
-    public function sendResetLinkEmail(Request $request)
+    public function sendResetCodeEmail(Request $request)
     {
         $request->validate(['email' => 'required|email']);
 
-        $status = Password::broker('admins')->sendResetLink(
-            $request->only('email')
-        );
+        // Check if admin exists
+        $admin = Admin::where('email', $request->email)->first();
 
-        if ($request->ajax() || $request->wantsJson()) {
-            if ($status === Password::RESET_LINK_SENT) {
-                return response()->json([
-                    'success' => true,
-                    'message' => __($status)
-                ]);
-            } else {
+        if (!$admin) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'errors' => ['email' => __($status)]
+                    'errors' => ['email' => 'Email tidak ditemukan dalam sistem.']
                 ], 422);
             }
+            return back()->withErrors(['email' => 'Email tidak ditemukan dalam sistem.']);
         }
 
-        return $status === Password::RESET_LINK_SENT
-            ? back()->with(['status' => __($status)])
-            : back()->withErrors(['email' => __($status)]);
+        // Generate 6-digit code
+        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+        // Delete any existing codes for this email
+        PasswordResetCode::where('email', $request->email)->delete();
+
+        // Create new reset code
+        PasswordResetCode::create([
+            'email' => $request->email,
+            'code' => $code,
+            'expires_at' => now()->addMinutes(15),
+        ]);
+
+        // Send email
+        try {
+            Mail::to($request->email)->send(new SendPasswordResetCode($code, $request->email));
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Kode reset password telah dikirim ke email Anda.',
+                    'redirect' => route('admin.verifyCodeForm', ['email' => $request->email])
+                ]);
+            }
+
+            return redirect()->route('admin.verifyCodeForm', ['email' => $request->email])
+                ->with('status', 'Kode reset password telah dikirim ke email Anda.');
+        } catch (\Exception $e) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => ['email' => 'Gagal mengirim email. Silakan coba lagi.']
+                ], 422);
+            }
+            return back()->withErrors(['email' => 'Gagal mengirim email. Silakan coba lagi.']);
+        }
     }
 
     /**
      * Show reset password form
      */
-    public function showResetPasswordForm($token)
+    public function showResetPasswordForm($token = null)
     {
         return view('admin.reset-password', ['token' => $token]);
     }
@@ -265,6 +296,154 @@ class AuthController extends Controller
         return $status === Password::PASSWORD_RESET
             ? redirect()->route('admin.login')->with('status', __($status))
             : back()->withErrors(['email' => [__($status)]]);
+    }
+
+    /**
+     * Show verify code form
+     */
+    public function showVerifyCodeForm(Request $request)
+    {
+        $email = $request->query('email');
+        return view('admin.verify-code', compact('email'));
+    }
+
+    /**
+     * Verify the reset code
+     */
+    public function verifyCode(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'code' => 'required|string|size:6',
+        ]);
+
+        $resetCode = PasswordResetCode::findByEmailAndCode($request->email, $request->code);
+
+        if (!$resetCode) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => ['code' => 'Kode verifikasi tidak valid atau telah kedaluwarsa.']
+                ], 422);
+            }
+            return back()->withErrors(['code' => 'Kode verifikasi tidak valid atau telah kedaluwarsa.']);
+        }
+
+        // Delete the used code
+        $resetCode->delete();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Kode verifikasi berhasil.',
+                'redirect' => route('admin.newPasswordForm', ['email' => $request->email])
+            ]);
+        }
+
+        return redirect()->route('admin.newPasswordForm', ['email' => $request->email])
+            ->with('status', 'Kode verifikasi berhasil.');
+    }
+
+    /**
+     * Resend reset code
+     */
+    public function resendCode(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        // Check if admin exists
+        $admin = Admin::where('email', $request->email)->first();
+
+        if (!$admin) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => ['email' => 'Email tidak ditemukan dalam sistem.']
+                ], 422);
+            }
+            return back()->withErrors(['email' => 'Email tidak ditemukan dalam sistem.']);
+        }
+
+        // Generate new 6-digit code
+        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+        // Delete any existing codes for this email
+        PasswordResetCode::where('email', $request->email)->delete();
+
+        // Create new reset code
+        PasswordResetCode::create([
+            'email' => $request->email,
+            'code' => $code,
+            'expires_at' => now()->addMinutes(15),
+        ]);
+
+        // Send email
+        try {
+            Mail::to($request->email)->send(new SendPasswordResetCode($code, $request->email));
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Kode reset password baru telah dikirim ke email Anda.'
+                ]);
+            }
+
+            return back()->with('status', 'Kode reset password baru telah dikirim ke email Anda.');
+        } catch (\Exception $e) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => ['email' => 'Gagal mengirim email. Silakan coba lagi.']
+                ], 422);
+            }
+            return back()->withErrors(['email' => 'Gagal mengirim email. Silakan coba lagi.']);
+        }
+    }
+
+    /**
+     * Show new password form
+     */
+    public function showNewPasswordForm(Request $request)
+    {
+        $email = $request->query('email');
+        return view('admin.new-password', compact('email'));
+    }
+
+    /**
+     * Update password with new password
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $admin = Admin::where('email', $request->email)->first();
+
+        if (!$admin) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => ['email' => 'Email tidak ditemukan dalam sistem.']
+                ], 422);
+            }
+            return back()->withErrors(['email' => 'Email tidak ditemukan dalam sistem.']);
+        }
+
+        // Update password
+        $admin->password = Hash::make($request->password);
+        $admin->save();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Password berhasil diubah.',
+                'redirect' => route('admin.login')
+            ]);
+        }
+
+        return redirect()->route('admin.login')->with('status', 'Password berhasil diubah.');
     }
 
     /**
