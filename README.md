@@ -315,7 +315,6 @@ chmod -R 755 bootstrap/cache
 ## 📊 Database Schema
 
 ### Tabel Utama:
-- `users` - Data admin/user
 - `cards` - Data kartu layanan
 - `activity_logs` - Log aktivitas admin
 - `visitors` - Data pengunjung
@@ -357,32 +356,4 @@ chmod -R 755 bootstrap/cache
 - **Password Hashing:** Gunakan bcrypt untuk hash password
 - **Session Security:** Konfigurasi session dengan aman
 
-## 🤝 Contributing
 
-1. Fork repository
-2. Buat branch fitur baru (`git checkout -b feature/AmazingFeature`)
-3. Commit perubahan (`git commit -m 'Add some AmazingFeature'`)
-4. Push ke branch (`git push origin feature/AmazingFeature`)
-5. Buat Pull Request
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
-## 📞 Support & Contact
-
-Jika mengalami masalah selama instalasi atau penggunaan, pastikan:
-1. Semua prerequisites terinstall dengan benar
-2. Port 8000 dan 3306 tidak digunakan aplikasi lain
-3. File `.env` sudah dikonfigurasi dengan benar
-4. Cache sudah dibersihkan jika ada error
-
-### Kontak Developer:
-- Email: developer@karawang.go.id
-- Website: https://karawang.go.id
-
----
-
-**Dibangun dengan ❤️ untuk masyarakat Kabupaten Karawang**
-
-Selamat coding! 🚀
