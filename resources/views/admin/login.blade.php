@@ -60,6 +60,28 @@
             animation: spin 1s linear infinite;
         }
 
+        /* Styling untuk tombol loading */
+        .btn-loading {
+            background-color: #059669 !important;
+            transform: scale(0.98);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-loading:hover {
+            background-color: #047857 !important;
+            transform: scale(0.98);
+        }
+
+        /* Animasi pulse untuk tombol loading */
+        @keyframes pulse-loading {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
         /* Keyframes untuk animasi spinner */
         @keyframes spin {
             100% {
@@ -234,9 +256,9 @@
 
                 <!-- Tombol submit -->
                 <button type="submit" id="submitBtn"
-                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 px-4 rounded-lg font-medium transition duration-200 flex justify-center items-center">
-                    <span id="btnText">Masuk</span>
-                    <svg id="loadingIcon" class="hidden loading-spinner -ml-1 mr-3 h-5 w-5 text-white"
+                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 px-4 rounded-lg font-medium transition-all duration-300 ease-in-out flex justify-center items-center transform hover:scale-105 active:scale-95">
+                    <span id="btnText" class="transition-opacity duration-200">Masuk</span>
+                    <svg id="loadingIcon" class="hidden loading-spinner -ml-1 mr-3 h-5 w-5 text-white transition-opacity duration-200"
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
                         </circle>
@@ -276,9 +298,89 @@
             }
         }
 
+        // Fungsi validasi form sebelum submit
+        function validateForm() {
+            let isValid = true;
+            const loginInput = document.getElementById('login');
+            const passwordInput = document.getElementById('password');
+            const loginValue = loginInput.value.trim();
+            const passwordValue = passwordInput.value;
+
+            // Hapus error sebelumnya
+            document.querySelectorAll('.error-message').forEach(el => el.remove());
+            document.querySelectorAll('.input-error').forEach(el => {
+                el.classList.remove('input-error');
+            });
+
+            // Validasi field login (email/username)
+            if (!loginValue) {
+                showError(loginInput, 'Email atau nama pengguna wajib diisi');
+                isValid = false;
+            } else if (loginValue.includes('@')) {
+                // Jika mengandung @, validasi sebagai email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(loginValue)) {
+                    showError(loginInput, 'Format email tidak valid. Contoh: user@example.com');
+                    isValid = false;
+                }
+            } else {
+                // Validasi sebagai username
+                if (loginValue.length < 3) {
+                    showError(loginInput, 'Nama pengguna minimal 3 karakter');
+                    isValid = false;
+                } else if (!/^[a-zA-Z0-9_]+$/.test(loginValue)) {
+                    showError(loginInput, 'Nama pengguna hanya boleh berisi huruf, angka, dan underscore');
+                    isValid = false;
+                }
+            }
+
+            // Validasi password
+            if (!passwordValue) {
+                showError(passwordInput, 'Password wajib diisi');
+                isValid = false;
+            } else if (passwordValue.length < 8) {
+                showError(passwordInput, 'Password minimal 8 karakter');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Fungsi untuk menampilkan error
+        function showError(inputElement, message) {
+            inputElement.classList.add('input-error');
+
+            // Cari container field yang tepat
+            const fieldContainer = inputElement.closest('div');
+
+            // Hapus error yang sudah ada di field ini
+            const existingError = fieldContainer.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'text-red-600 text-sm mt-1 error-message flex items-start';
+            errorDiv.innerHTML = `
+                <svg class="h-4 w-4 mt-0.5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                </svg>
+                <span>${message}</span>
+            `;
+
+            // Sisipkan error message setelah input container
+            const inputContainer = inputElement.parentNode;
+            inputContainer.parentNode.insertBefore(errorDiv, inputContainer.nextSibling);
+        }
+
         // Handle form submission dengan AJAX
         document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
+
+            // Validasi form terlebih dahulu
+            if (!validateForm()) {
+                return;
+            }
 
             // Mendapatkan elemen form dan tombol
             const form = e.target;
@@ -290,19 +392,32 @@
             const recaptchaResponse = grecaptcha.getResponse();
             if (!recaptchaResponse) {
                 Swal.fire({
-                    title: 'Perhatian!',
-                    text: 'Silakan verifikasi bahwa Anda bukan robot',
+                    title: 'Verifikasi Diperlukan!',
+                    text: 'Silakan centang kotak "Saya bukan robot" untuk melanjutkan login',
                     icon: 'warning',
                     confirmButtonColor: '#f59e0b',
-                    confirmButtonText: 'OK'
+                    confirmButtonText: 'Mengerti',
+                    customClass: {
+                        popup: 'max-w-sm',
+                        title: 'text-base',
+                        content: 'text-sm'
+                    }
                 });
                 return;
             }
 
-            // Mengatur tombol ke state loading
+            // Mengatur tombol ke state loading dengan animasi smooth
             submitBtn.disabled = true;
-            btnText.textContent = 'Memverifikasi...';
-            loadingIcon.classList.remove('hidden');
+            submitBtn.classList.add('btn-loading');
+            submitBtn.style.animation = 'pulse-loading 1.5s ease-in-out infinite';
+
+            // Ubah teks dan tampilkan spinner dengan transisi smooth
+            btnText.style.opacity = '0';
+            setTimeout(() => {
+                btnText.textContent = 'Sedang Masuk...';
+                btnText.style.opacity = '1';
+                loadingIcon.classList.remove('hidden');
+            }, 150);
 
             try {
                 // Mengirim request AJAX ke server
@@ -317,14 +432,35 @@
                 });
 
                 // Parsing response JSON
-                const data = await response.json();
+                let data;
+                try {
+                    data = await response.json();
+                } catch (parseError) {
+                    // Jika response bukan JSON valid
+                    if (response.status === 422) {
+                        Swal.fire({
+                            title: 'Data Tidak Valid',
+                            text: 'Data yang dikirim tidak dapat diproses. Pastikan semua field diisi dengan benar.',
+                            icon: 'warning',
+                            confirmButtonColor: '#f59e0b',
+                            confirmButtonText: 'Perbaiki Data',
+                            customClass: {
+                                popup: 'max-w-sm',
+                                title: 'text-base',
+                                content: 'text-sm'
+                            }
+                        });
+                        return;
+                    }
+                    throw new Error('Response tidak valid');
+                }
 
                 // Jika login berhasil
                 if (response.ok && data.success) {
                     // Menampilkan popup SweetAlert dengan progress bar di bawah
                     Swal.fire({
-                        title: 'Berhasil!',
-                        text: data.message || 'Login berhasil',
+                        title: 'Login Berhasil!',
+                        text: data.message || 'Selamat datang kembali di Portal Admin Karawang',
                         icon: 'success',
                         confirmButtonColor: '#10b981',
                         showClass: {
@@ -351,10 +487,69 @@
                         // Menonaktifkan tombol OK agar redirect otomatis
                         allowOutsideClick: false,
                         allowEscapeKey: false,
-                        showConfirmButton: false
+                        showConfirmButton: false,
+                        customClass: {
+                            popup: 'max-w-sm',
+                            title: 'text-base',
+                            content: 'text-sm'
+                        }
                     });
                 } else {
-                    // Menangani error dari server dengan validasi inline
+                    // Reset reCAPTCHA jika login gagal
+                    grecaptcha.reset();
+
+                    // Handle khusus untuk error 422 (Unprocessable Content)
+                    if (response.status === 422) {
+                        if (data.errors) {
+                            // Hapus error sebelumnya
+                            document.querySelectorAll('.error-message').forEach(el => el.remove());
+                            document.querySelectorAll('.input-error').forEach(el => {
+                                el.classList.remove('input-error');
+                            });
+
+                            // Tampilkan error spesifik untuk setiap field
+                            for (const [field, messages] of Object.entries(data.errors)) {
+                                const input = document.querySelector(`[name="${field}"]`);
+                                if (input) {
+                                    let errorMessage = messages[0];
+
+                                    // Sesuaikan pesan error untuk validasi server
+                                    if (field === 'login') {
+                                        if (errorMessage.includes('required')) {
+                                            errorMessage = 'Email atau nama pengguna wajib diisi';
+                                        } else if (errorMessage.includes('format') || errorMessage.includes('email')) {
+                                            errorMessage = 'Format email tidak valid';
+                                        }
+                                    } else if (field === 'password') {
+                                        if (errorMessage.includes('required')) {
+                                            errorMessage = 'Password wajib diisi';
+                                        } else if (errorMessage.includes('min')) {
+                                            errorMessage = 'Password minimal 8 karakter';
+                                        }
+                                    }
+
+                                    showError(input, errorMessage);
+                                }
+                            }
+                        } else {
+                            // Error 422 tanpa detail spesifik
+                            Swal.fire({
+                                title: 'Data Tidak Lengkap',
+                                text: 'Mohon lengkapi semua data yang diperlukan sebelum login.',
+                                icon: 'warning',
+                                confirmButtonColor: '#f59e0b',
+                                confirmButtonText: 'Perbaiki',
+                                customClass: {
+                                    popup: 'max-w-sm',
+                                    title: 'text-base',
+                                    content: 'text-sm'
+                                }
+                            });
+                        }
+                        return;
+                    }
+
+                    // Menangani berbagai jenis error dari server
                     if (data.errors) {
                         // Hapus error sebelumnya
                         document.querySelectorAll('.error-message').forEach(el => el.remove());
@@ -362,50 +557,134 @@
                             el.classList.remove('input-error');
                         });
 
-                        // Menampilkan error baru
+                        // Menampilkan error spesifik untuk setiap field
                         for (const [field, messages] of Object.entries(data.errors)) {
                             const input = document.querySelector(`[name="${field}"]`);
                             if (input) {
                                 input.classList.add('input-error');
 
-                                const errorDiv = document.createElement('div');
-                                errorDiv.className = 'text-red-600 text-sm mt-1 error-message flex items-start';
-                                errorDiv.innerHTML = `
-                                    <svg class="h-4 w-4 mt-0.5 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                                    </svg>
-                                    <span>${messages[0]}</span>
-                                `;
+                                let errorMessage = messages[0];
 
-                                input.parentNode.parentNode.appendChild(errorDiv);
+                                // Sesuaikan pesan error berdasarkan jenis field dan error
+                                if (field === 'login') {
+                                    if (errorMessage.includes('not found') || errorMessage.includes('tidak ditemukan')) {
+                                        errorMessage = 'Email atau nama pengguna tidak terdaftar dalam sistem';
+                                    } else if (errorMessage.includes('format') || errorMessage.includes('invalid')) {
+                                        errorMessage = 'Format email tidak valid. Pastikan email yang dimasukkan benar';
+                                    }
+                                } else if (field === 'password') {
+                                    if (errorMessage.includes('wrong') || errorMessage.includes('salah')) {
+                                        errorMessage = 'Password yang dimasukkan tidak sesuai. Silakan coba lagi';
+                                    } else if (errorMessage.includes('required')) {
+                                        errorMessage = 'Password wajib diisi untuk login';
+                                    }
+                                }
+
+                                // Gunakan fungsi showError yang sudah diperbaiki
+                                showError(input, errorMessage);
                             }
                         }
+                    } else if (data.message) {
+                        // Error umum dari server
+                        let errorTitle = 'Login Gagal';
+                        let errorText = data.message;
+
+                        // Sesuaikan pesan berdasarkan jenis error
+                        if (data.message.includes('blocked') || data.message.includes('diblokir')) {
+                            errorTitle = 'Akun Diblokir';
+                            errorText = 'Akun Anda telah diblokir. Silakan hubungi administrator untuk informasi lebih lanjut';
+                        } else if (data.message.includes('suspended') || data.message.includes('suspend')) {
+                            errorTitle = 'Akun Ditangguhkan';
+                            errorText = 'Akun Anda sedang ditangguhkan sementara. Coba lagi beberapa saat lagi';
+                        } else if (data.message.includes('too many') || data.message.includes('terlalu banyak')) {
+                            errorTitle = 'Terlalu Banyak Percobaan';
+                            errorText = 'Terlalu banyak percobaan login gagal. Silakan tunggu 15 menit sebelum mencoba lagi';
+                        } else if (data.message.includes('network') || data.message.includes('koneksi')) {
+                            errorTitle = 'Masalah Koneksi';
+                            errorText = 'Terjadi masalah koneksi. Periksa koneksi internet Anda dan coba lagi';
+                        }
+
+                        Swal.fire({
+                            title: errorTitle,
+                            text: errorText,
+                            icon: 'error',
+                            confirmButtonColor: '#ef4444',
+                            confirmButtonText: 'Mengerti',
+                            customClass: {
+                                popup: 'max-w-sm',
+                                title: 'text-base',
+                                content: 'text-sm'
+                            }
+                        });
+                    } else {
+                        // Error tidak spesifik
+                        Swal.fire({
+                            title: 'Login Gagal',
+                            text: 'Terjadi kesalahan saat proses login. Silakan coba lagi dalam beberapa saat',
+                            icon: 'error',
+                            confirmButtonColor: '#ef4444',
+                            confirmButtonText: 'Coba Lagi',
+                            customClass: {
+                                popup: 'max-w-sm',
+                                title: 'text-base',
+                                content: 'text-sm'
+                            }
+                        });
                     }
                 }
             } catch (error) {
-                // Menangani error sistem dengan validasi inline
+                // Reset reCAPTCHA jika terjadi error
+                grecaptcha.reset();
+
                 console.error('Error:', error);
+
                 // Hapus error sebelumnya
                 document.querySelectorAll('.error-message').forEach(el => el.remove());
                 document.querySelectorAll('.input-error').forEach(el => {
                     el.classList.remove('input-error');
                 });
 
-                // Tambahkan pesan error umum
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'text-red-600 text-sm mt-1 error-message flex items-start';
-                errorDiv.innerHTML = `
-                    <svg class="h-4 w-4 mt-0.5 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                    </svg>
-                    <span>Terjadi kesalahan pada sistem</span>
-                `;
-                form.appendChild(errorDiv);
+                // Error koneksi atau sistem
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    Swal.fire({
+                        title: 'Koneksi Bermasalah',
+                        text: 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda dan coba lagi',
+                        icon: 'error',
+                        confirmButtonColor: '#ef4444',
+                        confirmButtonText: 'Coba Lagi',
+                        customClass: {
+                            popup: 'max-w-sm',
+                            title: 'text-base',
+                            content: 'text-sm'
+                        }
+                    });
+                } else {
+                    // Error sistem lainnya
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'text-red-600 text-sm mt-1 error-message flex items-start';
+                    errorDiv.innerHTML = `
+                        <svg class="h-4 w-4 mt-0.5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span>Terjadi kesalahan sistem. Silakan coba lagi atau hubungi administrator</span>
+                    `;
+                    form.appendChild(errorDiv);
+                }
             } finally {
-                // Mengembalikan tombol ke state normal
-                submitBtn.disabled = false;
-                btnText.textContent = 'Masuk';
-                loadingIcon.classList.add('hidden');
+                // Mengembalikan tombol ke state normal dengan animasi smooth
+                setTimeout(() => {
+                    // Sembunyikan spinner dan ubah teks dengan transisi
+                    loadingIcon.classList.add('hidden');
+                    btnText.style.opacity = '0';
+
+                    setTimeout(() => {
+                        btnText.textContent = 'Masuk';
+                        btnText.style.opacity = '1';
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('btn-loading');
+                        submitBtn.style.animation = '';
+                    }, 150);
+                }, 300);
             }
         });
 
@@ -419,6 +698,42 @@
                 }, 500);
             }, 5000);
         }
+
+        // Event listener untuk validasi real-time pada input
+        document.getElementById('login').addEventListener('blur', function() {
+            const value = this.value.trim();
+            if (value && value.includes('@')) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(value)) {
+                    if (!this.parentNode.parentNode.querySelector('.error-message')) {
+                        showError(this, 'Format email tidak valid');
+                    }
+                } else {
+                    // Hapus error jika valid
+                    const errorElement = this.parentNode.parentNode.querySelector('.error-message');
+                    if (errorElement) {
+                        errorElement.remove();
+                        this.classList.remove('input-error');
+                    }
+                }
+            }
+        });
+
+        document.getElementById('password').addEventListener('input', function() {
+            const value = this.value;
+            if (value && value.length < 8) {
+                if (!this.parentNode.parentNode.querySelector('.error-message')) {
+                    showError(this, 'Password minimal 8 karakter untuk keamanan yang lebih baik');
+                }
+            } else if (value && value.length >= 8) {
+                // Hapus error jika sudah memenuhi syarat
+                const errorElement = this.parentNode.parentNode.querySelector('.error-message');
+                if (errorElement && errorElement.textContent.includes('minimal 8')) {
+                    errorElement.remove();
+                    this.classList.remove('input-error');
+                }
+            }
+        });
     </script>
 </body>
 

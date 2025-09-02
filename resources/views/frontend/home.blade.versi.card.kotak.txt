@@ -265,7 +265,21 @@
         searchBtn.disabled = true;
 
         try {
-          const response = await fetch(`/search?query=${encodeURIComponent(query)}&page=${page}`);
+          let url, headers;
+          if (!query) {
+            // If query is empty, call home page AJAX endpoint to get all data
+            url = `/?page=${page}`;
+            headers = {
+              'X-Requested-With': 'XMLHttpRequest',
+              'Accept': 'application/json'
+            };
+          } else {
+            url = `/search?query=${encodeURIComponent(query)}&page=${page}`;
+            headers = {};
+          }
+          const response = await fetch(url, {
+            headers: headers
+          });
           const data = await response.json();
 
           displaySearchResults(data);

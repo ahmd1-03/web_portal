@@ -8,6 +8,10 @@
 
   <title>@yield('title', 'Admin Panel') - Website Portal Karawang</title>
 
+  <!-- ===================== FAVICON ===================== -->
+  <!-- Favicon untuk browser tab - menggunakan logo Karawang -->
+  <link rel="icon" href="{{ asset('images/logokrw.png') }}" type="image/png">
+
   @vite(['resources/css/app.css', 'resources/js/app.js'])
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 

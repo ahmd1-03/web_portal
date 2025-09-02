@@ -19,8 +19,9 @@
             <!-- Card Image -->
             @if($card->image_url)
                 <div class="relative">
-                    <img src="{{ Storage::url($card->image_url) }}" 
-                         alt="{{ $card->title ?? 'Card Image' }}" 
+                    <!-- Use the accessor directly, which already returns URL with /storage/ prefix -->
+                    <img src="{{ $card->image_url }}"
+                         alt="{{ $card->title ?? 'Card Image' }}"
                          class="w-full h-64 md:h-96 object-cover">
                     @if($card->trashed())
                         <div class="absolute top-4 right-4">

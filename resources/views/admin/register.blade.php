@@ -248,12 +248,12 @@
                 for (const [key, element] of Object.entries(checklist)) {
                     element.classList.toggle('text-green-500', isValid[key]); // Hijau jika valid
                     element.classList.toggle('text-red-500', !isValid[key]); // Merah jika tidak valid
-                }
+                };
 
                 // Aktifkan tombol submit hanya jika semua kriteria terpenuhi
                 const allValid = Object.values(isValid).every(v => v);
                 submitButton.disabled = !allValid;
-            }
+            };
 
             // Event listener untuk validasi password saat mengetik
             passwordInput.addEventListener('input', validatePassword);
@@ -276,9 +276,75 @@
                 });
             });
 
-            // Handle submit form dengan AJAX
-            const form = document.getElementById('registrationForm');
+            // Fungsi validasi form sebelum submit
+            function validateForm() {
+                let valid = true;
 
+                // Validasi nama lengkap
+                const name = document.getElementById('name').value.trim();
+                const nameError = document.getElementById('name-error');
+                if (name === '') {
+                    nameError.textContent = 'Nama lengkap wajib diisi.';
+                    nameError.classList.remove('hidden');
+                    valid = false;
+                } else {
+                    nameError.textContent = '';
+                    nameError.classList.add('hidden');
+                }
+
+                // Validasi email
+                const email = document.getElementById('email').value.trim();
+                const emailError = document.getElementById('email-error');
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (email === '') {
+                    emailError.textContent = 'Email wajib diisi.';
+                    emailError.classList.remove('hidden');
+                    valid = false;
+                } else if (!emailPattern.test(email)) {
+                    emailError.textContent = 'Format email tidak valid.';
+                    emailError.classList.remove('hidden');
+                    valid = false;
+                } else {
+                    emailError.textContent = '';
+                    emailError.classList.add('hidden');
+                }
+
+                // Validasi password (menggunakan checklist yang sudah ada)
+                const passwordValid = Object.values({
+                    minLength: passwordRegex.minLength.test(passwordInput.value),
+                    uppercase: passwordRegex.uppercase.test(passwordInput.value),
+                    lowercase: passwordRegex.lowercase.test(passwordInput.value),
+                    number: passwordRegex.number.test(passwordInput.value),
+                    specialChar: passwordRegex.specialChar.test(passwordInput.value)
+                }).every(v => v);
+
+                const passwordError = document.getElementById('password-error');
+                if (!passwordValid) {
+                    passwordError.textContent = 'Password tidak memenuhi kriteria keamanan.';
+                    passwordError.classList.remove('hidden');
+                    valid = false;
+                } else {
+                    passwordError.textContent = '';
+                    passwordError.classList.add('hidden');
+                }
+
+                // Validasi konfirmasi password
+                const passwordConfirmation = passwordConfirmationInput.value;
+                const passwordConfirmationError = document.getElementById('password_confirmation-error');
+                if (passwordConfirmation !== passwordInput.value) {
+                    passwordConfirmationError.textContent = 'Konfirmasi password tidak cocok.';
+                    passwordConfirmationError.classList.remove('hidden');
+                    valid = false;
+                } else {
+                    passwordConfirmationError.textContent = '';
+                    passwordConfirmationError.classList.add('hidden');
+                }
+
+                return valid;
+            }
+
+            // Event listener untuk validasi form saat submit
+            const form = document.getElementById('registrationForm');
             form.addEventListener('submit', function (e) {
                 e.preventDefault(); // Mencegah submit default
 
@@ -289,6 +355,11 @@
                         el.innerHTML = '';
                     }
                 });
+
+                // Validasi form sebelum submit
+                if (!validateForm()) {
+                    return;
+                }
 
                 // Tampilkan loading spinner
                 submitText.classList.add('hidden');

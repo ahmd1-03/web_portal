@@ -28,10 +28,11 @@
     </div>
 
     <!-- ===================== MENU NAVIGASI ===================== -->
-    <!-- Daftar menu navigasi untuk admin -->
+    <!-- Daftar menu navigasi untuk admin dengan ikon dan link ke halaman utama -->
     <nav class="flex flex-col mt-6 space-y-3 px-2">
-        
+
         <!-- ========== MENU LIHAT WEBSITE ========== -->
+        <!-- Menu untuk melihat halaman website utama (frontend) -->
         <a href="{{ url('/') }}" class="flex items-center gap-3 px-3 py-2 rounded transition hover:bg-emerald-700
            {{ request()->is('/') ? 'bg-emerald-900 text-emerald-100' : 'text-white' }}"
             :class="$store.sidebar.open ? 'justify-start' : 'justify-center'">
@@ -45,6 +46,7 @@
         </a>
 
         <!-- ========== MENU HOME/DASHBOARD ========== -->
+        <!-- Menu untuk halaman dashboard admin dengan statistik dan overview -->
         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 rounded transition hover:bg-emerald-700
            {{ request()->routeIs('admin.dashboard') ? 'bg-emerald-900 text-emerald-100' : 'text-white' }}"
             :class="$store.sidebar.open ? 'justify-start' : 'justify-center'">
@@ -57,6 +59,7 @@
         </a>
 
         <!-- ========== MENU MANAJEMEN KARTU ========== -->
+        <!-- Menu untuk mengelola kartu informasi yang ditampilkan di website -->
         <a href="{{ route('admin.cards.index') }}" class="flex items-center gap-3 px-3 py-2 rounded transition hover:bg-emerald-700
            {{ request()->routeIs('admin.cards.index') ? 'bg-emerald-900 text-emerald-100' : 'text-white' }}"
             :class="$store.sidebar.open ? 'justify-start' : 'justify-center'">
@@ -68,6 +71,7 @@
         </a>
 
         <!-- ========== MENU PENGATURAN PROFIL ========== -->
+        <!-- Menu untuk mengubah informasi profil admin (nama, email, foto, password) -->
         <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-3 px-3 py-2 rounded transition hover:bg-emerald-700
            {{ request()->routeIs('admin.profile.edit') ? 'bg-emerald-900 text-emerald-100' : 'text-white' }}"
             :class="$store.sidebar.open ? 'justify-start' : 'justify-center'">
@@ -82,14 +86,14 @@
 </div>
 
 <!-- ===================== BAGIAN JAVASCRIPT ===================== -->
-<!-- Script untuk mengelola state sidebar dengan Alpine.js -->
+<!-- Script untuk mengelola state sidebar dengan Alpine.js dan localStorage -->
 <script>
     // Inisialisasi Alpine.js store untuk sidebar
     document.addEventListener('alpine:init', () => {
         Alpine.store('sidebar', {
-            open: false, // Default tertutup
+            open: false, // Default sidebar tertutup
             init() {
-                // Mengambil status sidebar dari localStorage
+                // Mengambil status sidebar dari localStorage untuk persistensi
                 const savedState = localStorage.getItem('sidebarOpen');
                 this.open = savedState ? JSON.parse(savedState) : false;
             }
@@ -97,6 +101,7 @@
     });
 
     // Fungsi untuk menyimpan status sidebar ke localStorage
+    // Memungkinkan sidebar tetap terbuka/tutup setelah refresh halaman
     function saveSidebarState() {
         const sidebarOpen = Alpine.store('sidebar').open;
         localStorage.setItem('sidebarOpen', JSON.stringify(sidebarOpen));

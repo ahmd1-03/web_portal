@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Portal Resmi Kabupaten Karawang</title>
   <meta name="description" content="Jelajahi informasi dan layanan publik resmi dari Pemerintah Kabupaten Karawang.">
+  <link rel="icon" href="{{ asset('images/logokrw.png') }}" type="image/png">
 
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
   @vite('resources/css/app.css')

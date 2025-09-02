@@ -131,26 +131,78 @@
                 </div>
 
                 <!-- ===================== BAGIAN TOMBOL SIMPAN ===================== -->
-                <!-- Container untuk tombol submit form -->
+                <!-- Container untuk tombol submit form dengan loading state -->
                 <div class="flex justify-end mt-12 pt-6 border-t border-gray-200">
-                    <button type="submit"
-                        class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200">
-                        <i class="fas fa-save mr-2"></i>Simpan Perubahan
-                    </button>
+                <button type="submit" id="saveProfileBtn"
+                    class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200 flex justify-center items-center">
+                    <!-- Ikon save FontAwesome -->
+                    <i class="fas fa-save mr-2"></i>
+                    <!-- Teks tombol yang akan berubah saat loading -->
+                    <span id="saveProfileBtnText">Simpan Perubahan</span>
+                    <!-- SVG Spinner loading - tersembunyi secara default -->
+                    <svg id="saveProfileLoadingIcon" class="hidden loading-spinner -ml-1 mr-3 h-5 w-5 text-white transition-opacity duration-200"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <!-- Lingkaran luar dengan opacity rendah -->
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <!-- Path untuk animasi loading dengan efek melingkar -->
+                        <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- ===================== BAGIAN SCRIPTS ===================== -->
+    <!-- ===================== BAGIAN STYLES ===================== -->
+    <!-- Push styles ke stack styles untuk animasi tombol loading -->
+    @push('styles')
+        <style>
+            /* Styling untuk tombol loading - memberikan efek visual saat proses submit */
+            .btn-loading {
+                background-color: #4f46e5 !important;
+                transform: scale(0.98);
+                transition: all 0.2s ease-in-out;
+            }
+
+            .btn-loading:hover {
+                background-color: #4338ca !important;
+                transform: scale(0.98);
+            }
+
+            /* Animasi pulse untuk tombol loading - memberikan efek berkedip halus */
+            @keyframes pulse-loading {
+                0%, 100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.8;
+                }
+            }
+
+            /* Styling untuk spinner loading - animasi putaran untuk indikator loading */
+            .loading-spinner {
+                animation: spin 1s linear infinite;
+            }
+
+            /* Keyframes untuk animasi spinner - rotasi 360 derajat */
+            @keyframes spin {
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+    @endpush
+
     <!-- Push scripts ke stack scripts -->
     @push('scripts')
-        <!-- Library SweetAlert untuk notifikasi -->
+        <!-- Library SweetAlert untuk notifikasi popup -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <script>
             // ===================== PREVIEW FOTO PROFIL =====================
-            // Event listener untuk preview foto sebelum upload
+            // Event listener untuk preview foto sebelum upload - menampilkan gambar yang dipilih tanpa upload
             document.getElementById('profile_photo').addEventListener('change', function (e) {
                 const file = e.target.files[0];
                 if (file) {
@@ -167,12 +219,28 @@
             });
 
             // ===================== SUBMIT FORM AJAX =====================
-            // Event listener untuk submit form dengan AJAX
+            // Event listener untuk submit form dengan AJAX - mengirim data tanpa reload halaman
             document.getElementById('profileForm').addEventListener('submit', function (e) {
                 e.preventDefault();
                 const formData = new FormData(this);
 
-                // Kirim request AJAX ke server
+                // Ambil elemen tombol dan ikon loading untuk state management
+                const saveBtn = document.getElementById('saveProfileBtn');
+                const saveBtnText = document.getElementById('saveProfileBtnText');
+                const saveLoadingIcon = document.getElementById('saveProfileLoadingIcon');
+
+                // Tampilkan loading state pada tombol dengan animasi smooth
+                saveBtn.disabled = true;
+                saveBtn.classList.add('btn-loading');
+                saveBtn.style.animation = 'pulse-loading 1.5s ease-in-out infinite';
+                saveBtnText.style.opacity = '0';
+                setTimeout(() => {
+                    saveBtnText.textContent = 'Menyimpan...';
+                    saveBtnText.style.opacity = '1';
+                    saveLoadingIcon.classList.remove('hidden');
+                }, 150);
+
+                // Kirim request AJAX ke server dengan CSRF token
                 fetch(this.action, {
                     method: 'POST',
                     headers: {
@@ -184,7 +252,7 @@
                     .then(async res => {
                         const data = await res.json();
 
-                        // Handle response sukses
+                        // Handle response sukses - tampilkan notifikasi dan update UI
                         if (res.ok && data.success) {
                             Swal.fire({
                                 icon: 'success',
@@ -193,11 +261,11 @@
                                 confirmButtonColor: '#4f46e5'
                             });
 
-                            // Update navbar tanpa reload halaman
+                            // Update navbar tanpa reload halaman - real-time update
                             document.querySelectorAll('.navbar-username').forEach(el => el.textContent = data.data.name);
                             document.querySelectorAll('.navbar-email').forEach(el => el.textContent = data.data.email);
 
-                            // Update foto profil di navbar
+                            // Update foto profil di navbar jika ada perubahan
                             if (data.data.profile_url) {
                                 document.querySelectorAll('.navbar-photo').forEach(img => {
                                     img.src = data.data.profile_url;
@@ -206,7 +274,7 @@
                                 document.querySelectorAll('.navbar-avatar').forEach(el => el.classList.add('hidden'));
                             }
                         } else {
-                            // Handle error response
+                            // Handle error response - tampilkan pesan error
                             let errors = '';
                             if (data.errors) {
                                 Object.values(data.errors).forEach(err => errors += `<li>${err}</li>`);
@@ -220,13 +288,29 @@
                         }
                     })
                     .catch(() => {
-                        // Handle network error
+                        // Handle network error - tampilkan pesan error koneksi
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
                             text: 'Terjadi kesalahan server.',
                             confirmButtonColor: '#ef4444'
                         });
+                    })
+                    .finally(() => {
+                        // Mengembalikan tombol ke state normal dengan animasi smooth
+                        setTimeout(() => {
+                            // Sembunyikan spinner dan ubah teks dengan transisi
+                            saveLoadingIcon.classList.add('hidden');
+                            saveBtnText.style.opacity = '0';
+
+                            setTimeout(() => {
+                                saveBtnText.textContent = 'Simpan Perubahan';
+                                saveBtnText.style.opacity = '1';
+                                saveBtn.disabled = false;
+                                saveBtn.classList.remove('btn-loading');
+                                saveBtn.style.animation = '';
+                            }, 150);
+                        }, 300);
                     });
             });
         </script>

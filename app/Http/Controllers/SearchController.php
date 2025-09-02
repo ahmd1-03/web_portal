@@ -58,7 +58,8 @@ class SearchController extends Controller
                 'id' => $card->id,
                 'title' => $card->title,
                 'description' => $card->description,
-                'image_url' => $card->image_url ? Storage::url($card->image_url) : '/images/placeholder.jpg',
+                // Use the accessor directly, which already returns URL with /storage/ prefix
+                'image_url' => $card->image_url ? $card->image_url : '/images/placeholder.jpg',
                 'external_link' => $card->external_link,
                 'created_at' => $card->created_at->diffForHumans()
             ];

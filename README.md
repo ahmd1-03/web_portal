@@ -157,7 +157,7 @@ Buat database baru di phpMyAdmin atau MySQL dengan nama yang sesuai.
 php artisan migrate
 
 # Jalankan seeder untuk data contoh
-php artisan db:seed
+# php artisan db:seed
 ```
 
 ### Langkah 7: Create Storage Symlink

@@ -279,19 +279,19 @@
                                                 <div x-data="{ showImageModal: false }">
                                                     <!-- Gambar kartu -->
                                                     <img src="{{ $card->image_url }}" @click="showImageModal = true"
-                                                        alt="Gambar Kartu {{ $card->title }}" class="h-10 w-10 sm:h-12 sm:w-12 object-cover rounded-md cursor-pointer 
+                                                        alt="Gambar Kartu {{ $card->title }}" class="h-10 w-10 sm:h-12 sm:w-12 object-cover rounded-md cursor-pointer
                                 border-2 border-gray-200 hover:border-emerald-400 transition-all duration-300" />
                                                     <!-- Modal pratinjau gambar -->
-                                                    <div x-show="showImageModal" x-cloak @click.away="showImageModal = false" class="fixed inset-0 z-50 flex items-center justify-center p-3 backdrop-blur-sm 
+                                                    <div x-show="showImageModal" x-cloak @click.away="showImageModal = false" class="fixed inset-0 z-50 flex items-center justify-center p-3 backdrop-blur-sm
                                                                                     bg-black/80" role="dialog"
                                                         aria-labelledby="imageModalTitle">
                                                         <div class="relative max-w-3xl max-h-[85vh]">
                                                             <!-- Gambar dalam modal -->
-                                                            <img :src="cardData.image_url" alt="Gambar Kartu {{ $card->title }}"
+                                                            <img src="{{ $card->image_url }}" alt="Gambar Kartu {{ $card->title }}"
                                                                 class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl" />
                                                             <!-- Tombol tutup modal -->
                                                             <button @click="showImageModal = false"
-                                                                class="absolute top-3 right-3 p-1.5 rounded-full bg-white/80 
+                                                                class="absolute top-3 right-3 p-1.5 rounded-full bg-white/80
                                                                                                hover:bg-white text-gray-800 shadow-md transition-all duration-300"
                                                                 aria-label="Tutup modal pratinjau gambar">
                                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor"
